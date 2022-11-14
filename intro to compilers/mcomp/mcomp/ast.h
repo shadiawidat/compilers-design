@@ -79,6 +79,8 @@
 
 using namespace std;
 
+
+
 /**
  * classes 
  */
@@ -111,8 +113,21 @@ public :
     if (right_) delete right_;
     if (atom_) delete atom_;
   }
-
   
+  /*codel and code r*/
+  public void codel(const Expr& exp, ostream& os) {
+      os << "ldc " << "5" << endl;
+      /*ST.find(id_name)*/
+  }
+  public void coder(const Expr& exp, ostream& os) {
+      os << "ldc " << "5" << endl << "ind" << endl;
+      /*ST.find(id_name)*/
+  }
+
+
+
+
+  /*end codel and coder*/
   void print (ostream& os) {
     os<<"Node name : Expr"<<endl;
     assert(op_);
@@ -135,6 +150,15 @@ public :
       }
       else {      
           assert(left_ && right_);
+          switch (op_)
+          {
+          case 286://ADD
+              codel(left_, os);
+              coder(right_,os);
+              os << "ADD" << endl;
+          default:
+              break;
+          }
           left_->pcodegen(os);
           right_->pcodegen(os);
       }
@@ -698,7 +722,7 @@ public :
       assert(var_ && exp_);
       var_->pcodegen(os);
       exp_->pcodegen(os);
-  //    cout << "sto" << endl;
+      os << "sto" << endl;
   }
   virtual Object * clone () const { return new Assign(*this);}
 
