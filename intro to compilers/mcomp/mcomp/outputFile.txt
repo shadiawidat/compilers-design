@@ -1,4 +1,11 @@
 ==================  Abstract Syntax Tree ================
+ldc ST.find(id_name)
+ldc 1
+fuck you 
 sto
-ADD
+ldc ST.find(id_name)
+ldc 9
+fuck you 
+add
+fuck you 
 sto

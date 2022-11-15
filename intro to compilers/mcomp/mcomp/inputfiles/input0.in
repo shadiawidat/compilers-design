@@ -1,6 +1,8 @@
 PROGRAM omer
 	x FIXED;
+	y FIXED;
+	z FIXED;
 {
-	x = -1;
-	x=5+1;
+	x = 1;
+	x=x+9;
 }

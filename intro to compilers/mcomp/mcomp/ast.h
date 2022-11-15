@@ -76,11 +76,80 @@
 #include <iostream>
 #include <assert.h>
 #include <string>
-
+static int Stack_Address = 5;
+const int MAX = 100;
 using namespace std;
 
-
-
+///*symboltable*/
+//class SymbolTable {
+//    /* Think! what can you add to  symbol_table */
+//
+//    Var* head[MAX];
+//public:
+//
+//    SymbolTable()
+//    {
+//        for (int i = 0; i < MAX; i++)
+//            head[i] = NULL;
+//    }
+//
+//     Function to find an identifier 
+//    int find(string id)
+//    {
+//        int index = hashf(id);
+//        Var* start = head[index];
+//
+//        if (start == NULL)
+//            return -1;
+//
+//        while (start != NULL) {
+//
+//            if (start->identifier == id) {
+//                return start->address;
+//            }
+//
+//            start = start->next;
+//        }
+//
+//        return -1; // not found 
+//    }
+//
+//     Function to insert an identifier 
+//    bool insert(string id, string type, int address, int size)
+//    {
+//        int index = hashf(id);
+//        Var* p = new Variable(id, type, address, size);
+//
+//        if (head[index] == NULL) {
+//            head[index] = p;
+//            return true;
+//        }
+//
+//        else {
+//            Var* start = head[index];
+//            while (start->next != NULL)
+//                start = start->next;
+//            start->next = p;
+//            return true;
+//        }
+//
+//        return false;
+//    }
+//
+//    int hashf(string id)
+//    {
+//        int asciiSum = 0;
+//
+//        for (int i = 0; i < id.length(); i++) {
+//            asciiSum = asciiSum + id[i];
+//        }
+//
+//        return (asciiSum % MAX);
+//    }
+//
+//};
+//SymbolTable ST;
+///*end symboltable*/
 /**
  * classes 
  */
@@ -91,6 +160,15 @@ public:
  virtual void pcodegen(ostream& os) = 0;
  virtual Object * clone () const {return NULL;}
  virtual ~Object () {}
+ /*codel and code r*/
+ void codel(Object* left_, ostream& os) {
+     os << "ldc " << "ST.find(id_name)" << endl;
+     /*ST.find(id_name)*/
+ }
+ void coder(Object* right_, ostream& os) {
+    //s os << "ldc " << "ST.find(id_name)" << endl << "11ind" << endl;
+     /*ST.find(id_name)*/
+ }
 };
 
 class Expr : public Object {
@@ -114,15 +192,7 @@ public :
     if (atom_) delete atom_;
   }
   
-  /*codel and code r*/
-  void codel(const Expr& exp, ostream& os) {
-      os << "ldc " << "5" << endl;
-      /*ST.find(id_name)*/
-  }
-  void coder(const Expr& exp, ostream& os) {
-      os << "ldc " << "5" << endl << "ind" << endl;
-      /*ST.find(id_name)*/
-  }
+  
 
 
 
@@ -146,21 +216,49 @@ public :
       assert(op_);
       if (unary_) {      
           assert(atom_);
-          atom_->pcodegen(os);
+          switch (op_)
+          {
+          case 310://ID
+              codel(atom_, os);
+              //atom_->pcodegen(os);
+              break;
+          case 309://INTCONST
+              atom_->pcodegen(os);
+              break;
+          default:
+              break;
+          }
+               
       }
       else {      
           assert(left_ && right_);
           switch (op_)
           {
           case 286://ADD
-              //codel(left_, os);
-              //coder(right_,os);
-              os << "ADD" << endl;
+              coder(left_,os);
+              coder(right_, os);
+              left_->pcodegen(os);
+              right_->pcodegen(os);
+              os << "add" << endl;
+              break;
+          case 288://MUL
+              coder(left_, os);
+              coder(right_, os);
+              left_->pcodegen(os);
+              right_->pcodegen(os);
+              os << "mul" << endl;
+              break;
+          case 287:
+              coder(left_, os);
+              coder(right_, os);
+              left_->pcodegen(os);
+              right_->pcodegen(os);
+              os << "sub" << endl;
+              break;
           default:
               break;
           }
-          left_->pcodegen(os);
-          right_->pcodegen(os);
+
       }
   }
   virtual Object * clone () const { return new Expr(*this);}
@@ -248,6 +346,7 @@ private:
 };
 
 class Atom : public Object {
+
 };
 
 class IntConst : public Atom {
@@ -259,6 +358,7 @@ public:
     os<<"Node name : IntConst. Value is :"<<i_<<endl;
   }
   void pcodegen(ostream& os) {
+      os << "ldc " << i_ << endl;
   }
   virtual Object * clone () const { return new IntConst(*this);}
 
@@ -305,8 +405,9 @@ public :
 };
 
 class Var : public Atom {
-
+ 
 };
+
 
 class ArrayRef : public Var {
 public :
@@ -720,6 +821,8 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_ && exp_);
+      codel(var_, os);
+      coder(exp_, os);
       var_->pcodegen(os);
       exp_->pcodegen(os);
       os << "sto" << endl;
@@ -851,6 +954,7 @@ public:
   void print (ostream& os) {
     os<<"Node name : IdeType"<<endl;
   }
+
   void pcodegen(ostream& os) {
   }
   virtual Object * clone () const { return new IdeType(*this);}
