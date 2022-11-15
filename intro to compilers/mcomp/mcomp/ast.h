@@ -79,6 +79,10 @@
 static int Stack_Address = 5;
 const int MAX = 100;
 using namespace std;
+static int if_count = 0;
+static int if_else_count = 0;
+static int while_count = 0;
+
 
 ///*symboltable*/
 //class SymbolTable {
@@ -165,7 +169,8 @@ public:
      os << "ldc " << "ST.find(id_name)" << endl;
      /*ST.find(id_name)*/
  }
- void coder(Object* right_, ostream& os) {
+ void coder(Object* exp_, ostream& os) {
+     exp_->pcodegen(os);
     //s os << "ldc " << "ST.find(id_name)" << endl << "11ind" << endl;
      /*ST.find(id_name)*/
  }
@@ -212,6 +217,62 @@ public :
       right_->print(os);
     }
   }
+  /*   PROGRAM = 258,
+      BBEGIN = 259,
+      END = 260,
+      DECLARE = 261,
+      PROCEDURE = 262,
+      FUNCTION = 263,
+      LABEL = 264,
+      INTEGER = 265,
+      REAL = 266,
+      RECORD = 267,
+      BOOLEAN = 268,
+      ARRAY = 269,
+      OF = 270,
+      ASSIGN = 271,
+      LC = 272,
+      RC = 273,
+      IF = 274,
+      THEN = 275,
+      ELSE = 276,
+      WHILE = 277,
+      REPEAT = 278,
+      FI = 279,
+      DO = 280,
+      OD = 281,
+      READ = 282,
+      WRITE = 283,
+      TRUE = 284,
+      FALSE = 285,
+      ADD = 286,
+      MIN = 287,
+      MUL = 288,
+      DIV = 289,
+      GOTO = 290,
+      MOD = 291,
+      LES = 292,
+      LEQ = 293,
+      EQU = 294,
+      NEQ = 295,
+      GRE = 296,
+      GEQ = 297,
+      AND = 298,
+      OR = 299,
+      NOT = 300,
+      CASE = 301,
+      FOR = 302,
+      FIN = 303,
+      IDENTICAL = 304,
+      FROM = 305,
+      BY = 306,
+      TO = 307,
+      NEW = 308,
+      INTCONST = 309,
+      IDE = 310,
+      REALCONST = 311,
+      STRING = 312,
+      DUMMY = 313*/
   void pcodegen(ostream& os) {
       assert(op_);
       if (unary_) {      
@@ -220,10 +281,17 @@ public :
           {
           case 310://ID
               codel(atom_, os);
-              //atom_->pcodegen(os);
               break;
           case 309://INTCONST
-              atom_->pcodegen(os);
+              //atom_->pcodegen(os);
+              coder(atom_, os);
+              break;
+          case 311://REALCONST
+              coder(atom_, os);
+              break;
+          case 300://NOT
+              coder(atom_, os);
+              os << "not" << endl;          ////////// need to check
               break;
           default:
               break;
@@ -235,25 +303,64 @@ public :
           switch (op_)
           {
           case 286://ADD
-              coder(left_,os);
-              coder(right_, os);
-              left_->pcodegen(os);
-              right_->pcodegen(os);
+              coder(right_,os);
+              coder(left_, os);
               os << "add" << endl;
               break;
-          case 288://MUL
-              coder(left_, os);
+          case 287://SUB   **MIN
               coder(right_, os);
-              left_->pcodegen(os);
-              right_->pcodegen(os);
+              coder(left_, os);
+              os << "sub" << endl;
+              break;
+          case 288://MUL
+              coder(right_, os);
+              coder(left_, os);
               os << "mul" << endl;
               break;
-          case 287:
-              coder(left_, os);
+          case 289://DIV
               coder(right_, os);
-              left_->pcodegen(os);
-              right_->pcodegen(os);
-              os << "sub" << endl;
+              coder(left_, os);
+              os << "div" << endl;
+              break; 
+          case 292://LES
+              coder(right_, os);
+              coder(left_, os);
+              os << "les" << endl;
+              break;
+          case 293://LEQ
+              coder(right_, os);
+              coder(left_, os);
+              os << "leq" << endl;
+              break;
+          case 294://EQU
+              coder(right_, os);
+              coder(left_, os);
+              os << "equ" << endl;
+              break;
+          case 295://NEQ
+              coder(right_, os);
+              coder(left_, os);
+              os << "neq" << endl;
+              break;
+          case 296://GRE
+              coder(right_, os);
+              coder(left_, os);
+              os << "grt" << endl;
+              break;
+          case 297://GEQ
+              coder(right_, os);
+              coder(left_, os);
+              os << "geq" << endl;
+              break;
+          case 298://AND
+              coder(right_, os);
+              coder(left_, os);
+              os << "and" << endl;
+              break;
+          case 299://OR
+              coder(right_, os);
+              coder(left_, os);
+              os << "or" << endl;
               break;
           default:
               break;
@@ -346,6 +453,7 @@ private:
 };
 
 class Atom : public Object {
+    void pcodegen(ostream& os) = 0;
 
 };
 
@@ -353,11 +461,10 @@ class IntConst : public Atom {
 public:
   IntConst(const int i) : i_(i) {}
   IntConst(const IntConst& in) : i_(in.i_) {}
-  
   void print (ostream& os) {
     os<<"Node name : IntConst. Value is :"<<i_<<endl;
   }
-  void pcodegen(ostream& os) {
+  virtual void pcodegen(ostream& os) {
       os << "ldc " << i_ << endl;
   }
   virtual Object * clone () const { return new IntConst(*this);}
@@ -370,12 +477,11 @@ class RealConst : public Atom {
 public:
   RealConst(const double r) : r_(r) {}
   RealConst(const RealConst& in) : r_(in.r_) {}  
-
   void print (ostream& os) {
     os<<"Node name : RealConst. Value is :"<<r_<<endl;
   }
   void pcodegen(ostream& os) {
-      
+      os << "ldc " << r_ << endl;
   }
   virtual Object * clone () const { return new RealConst(*this);}
 
@@ -821,10 +927,10 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_ && exp_);
-      codel(var_, os);
-      coder(exp_, os);
-      var_->pcodegen(os);
-      exp_->pcodegen(os);
+      /*codel(var_, os);
+      coder(exp_, os);*/
+      codel(exp_, os);
+      coder(var_, os);
       os << "sto" << endl;
   }
   virtual Object * clone () const { return new Assign(*this);}
@@ -932,12 +1038,12 @@ public:
   void pcodegen(ostream& os) {
   }
   virtual Object * clone () const { return new SimpleType(*this);}
-
 private:
   string * name_;
 };
 
 class IdeType : public Type {
+
 public:
   IdeType (const char * name) { 
     name_ = new string(name); 
@@ -956,6 +1062,8 @@ public:
   }
 
   void pcodegen(ostream& os) {
+      os <<"SSSS"<< name_ << endl;
+      os << "ldc " << "addresss in ST" << endl << "ind" << endl;
   }
   virtual Object * clone () const { return new IdeType(*this);}
 
