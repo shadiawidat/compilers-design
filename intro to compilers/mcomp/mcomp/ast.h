@@ -115,11 +115,11 @@ public :
   }
   
   /*codel and code r*/
-  public void codel(const Expr& exp, ostream& os) {
+  void codel(const Expr& exp, ostream& os) {
       os << "ldc " << "5" << endl;
       /*ST.find(id_name)*/
   }
-  public void coder(const Expr& exp, ostream& os) {
+  void coder(const Expr& exp, ostream& os) {
       os << "ldc " << "5" << endl << "ind" << endl;
       /*ST.find(id_name)*/
   }
@@ -153,8 +153,8 @@ public :
           switch (op_)
           {
           case 286://ADD
-              codel(left_, os);
-              coder(right_,os);
+              //codel(left_, os);
+              //coder(right_,os);
               os << "ADD" << endl;
           default:
               break;
