@@ -3,9 +3,6 @@ PROGRAM omer
 	y FIXED;
 	z FIXED;
 {
-	y=5-2;
-	x=3*9;
-	x=(5+y)*8;
-	y=y/x;
-	z=x>y;
+	z = 11;
+	
 }

@@ -82,78 +82,9 @@ using namespace std;
 static int if_count = 0;
 static int if_else_count = 0;
 static int while_count = 0;
+static int inc_flag = 0;
+static int dec_flag = 0;
 
-
-///*symboltable*/
-//class SymbolTable {
-//    /* Think! what can you add to  symbol_table */
-//
-//    Var* head[MAX];
-//public:
-//
-//    SymbolTable()
-//    {
-//        for (int i = 0; i < MAX; i++)
-//            head[i] = NULL;
-//    }
-//
-//     Function to find an identifier 
-//    int find(string id)
-//    {
-//        int index = hashf(id);
-//        Var* start = head[index];
-//
-//        if (start == NULL)
-//            return -1;
-//
-//        while (start != NULL) {
-//
-//            if (start->identifier == id) {
-//                return start->address;
-//            }
-//
-//            start = start->next;
-//        }
-//
-//        return -1; // not found 
-//    }
-//
-//     Function to insert an identifier 
-//    bool insert(string id, string type, int address, int size)
-//    {
-//        int index = hashf(id);
-//        Var* p = new Variable(id, type, address, size);
-//
-//        if (head[index] == NULL) {
-//            head[index] = p;
-//            return true;
-//        }
-//
-//        else {
-//            Var* start = head[index];
-//            while (start->next != NULL)
-//                start = start->next;
-//            start->next = p;
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    int hashf(string id)
-//    {
-//        int asciiSum = 0;
-//
-//        for (int i = 0; i < id.length(); i++) {
-//            asciiSum = asciiSum + id[i];
-//        }
-//
-//        return (asciiSum % MAX);
-//    }
-//
-//};
-//SymbolTable ST;
-///*end symboltable*/
 /**
  * classes 
  */
@@ -171,13 +102,18 @@ public:
  }
  void coder(Object* exp_, ostream& os) {
      exp_->pcodegen(os);
-    //s os << "ldc " << "ST.find(id_name)" << endl << "11ind" << endl;
-     /*ST.find(id_name)*/
+     //s os << "ldc " << "ST.find(id_name)" << endl << "11ind" << endl;
+      /*ST.find(id_name)*/
  }
+ /*codel and code r*/
+
+ string name;
+
 };
 
 class Expr : public Object {
 public :
+
   // Unary operations
   Expr (int op, Object * atom) : op_(op), atom_(atom), left_(NULL), right_(NULL), unary_(true) {}
   // Binary operations
@@ -196,7 +132,6 @@ public :
     if (right_) delete right_;
     if (atom_) delete atom_;
   }
-  
   
 
 
@@ -304,13 +239,27 @@ public :
           {
           case 286://ADD
               coder(right_,os);
-              coder(left_, os);
-              os << "add" << endl;
+              if (left_->name == "IntConst" || left_->name == "RealConst")
+              {
+                  inc_flag = 1;
+                  coder(left_, os);
+              }
+              else {
+                  coder(left_, os);
+                  os << "add" << endl;
+              }
               break;
           case 287://SUB   **MIN
               coder(right_, os);
-              coder(left_, os);
-              os << "sub" << endl;
+              if (left_->name == "IntConst" || left_->name == "RealConst")
+              {
+                  dec_flag = 1;
+                  coder(left_, os);
+              }
+              else {
+                  coder(left_, os);
+                  os << "sub" << endl;
+              }
               break;
           case 288://MUL
               coder(right_, os);
@@ -376,6 +325,7 @@ private:
   Object * left_;
   Object * right_;
   Object * atom_;
+  //string* name;
 };
 
 class ExprList : public Object {
@@ -453,35 +403,61 @@ private:
 };
 
 class Atom : public Object {
-    void pcodegen(ostream& os) = 0;
-
 };
 
 class IntConst : public Atom {
 public:
-  IntConst(const int i) : i_(i) {}
-  IntConst(const IntConst& in) : i_(in.i_) {}
+  IntConst(const int i) : i_(i) {
+      name = "IntConst";
+  }
+  IntConst(const IntConst& in) : i_(in.i_) {} 
   void print (ostream& os) {
     os<<"Node name : IntConst. Value is :"<<i_<<endl;
   }
   virtual void pcodegen(ostream& os) {
-      os << "ldc " << i_ << endl;
+      if (inc_flag == 1) {
+          os << "inc " << i_ << endl;
+          inc_flag = 0;
+      }
+      else {
+          if (dec_flag == 1) {
+              os << "dec " << i_ << endl;
+              dec_flag = 0;
+          }
+          else {
+              os << "ldc " << i_ << endl;
+          }
+      }
+     
   }
   virtual Object * clone () const { return new IntConst(*this);}
-
 private:
   const int i_;
 };
 
 class RealConst : public Atom {
 public:
-  RealConst(const double r) : r_(r) {}
+  RealConst(const double r) : r_(r) {
+      name = "RealConst";
+  }
   RealConst(const RealConst& in) : r_(in.r_) {}  
   void print (ostream& os) {
     os<<"Node name : RealConst. Value is :"<<r_<<endl;
   }
   void pcodegen(ostream& os) {
-      os << "ldc " << r_ << endl;
+      if (inc_flag == 1) {
+          os << "inc " << r_ << endl;
+          inc_flag = 0;
+      }
+      else {
+          if (dec_flag == 1) {
+              os << "dec " << r_ << endl;
+              dec_flag = 0;
+          }
+          else {
+              os << "ldc " << r_ << endl;
+          }
+      }
   }
   virtual Object * clone () const { return new RealConst(*this);}
 
@@ -495,6 +471,8 @@ public:
     os<<"Node name : trueConst. Value is true"<<endl;
   }
   void pcodegen(ostream& os) {
+      os << "ldc " << "1" << endl;
+
   }
   virtual Object * clone () const { return new True();}
 
@@ -506,12 +484,13 @@ public :
     os<<"Node name : trueConst. Value is false"<<endl;
   }
   void pcodegen(ostream& os) {
+      os << "ldc " << "0" << endl;
+
   }
   virtual Object * clone () const { return new False();}
 };
 
 class Var : public Atom {
- 
 };
 
 
@@ -1016,7 +995,6 @@ private:
 
 class Type : public Object {
 };
-
 class SimpleType : public Type {
 public:
   SimpleType (const char * name) { 
@@ -1038,6 +1016,7 @@ public:
   void pcodegen(ostream& os) {
   }
   virtual Object * clone () const { return new SimpleType(*this);}
+
 private:
   string * name_;
 };
@@ -1217,6 +1196,7 @@ public :
   void pcodegen(ostream& os) {
       printWayOfPassing(os);
       assert(type_);
+
       type_->pcodegen(os);
   }
 protected:
@@ -1493,7 +1473,77 @@ private:
   string * name_;
 };
 
+///*symboltable*/
+//class SymbolTable {
+//    /* Think! what can you add to  symbol_table */
+//
+//public:
+//    Var* head[MAX];
+//
+//    SymbolTable()
+//    {
+//        for (int i = 0; i < MAX; i++)
+//            head[i] = NULL;
+//    }
+//
+//    // Function to find an identifier 
+//    int find(string id)
+//    {
+//        int index = hashf(id);
+//        Var* start = head[index];
+//
+//        if (start == NULL)
+//            return -1;
+//
+//        while (start != NULL) {
+//
+//            if (start->identifier == id) {
+//                return start->address;
+//            }
+//
+//            start = start->next;
+//        }
+//
+//        return -1; // not found 
+//    }
+//
+//    // Function to insert an identifier 
+//    bool insert(string id, string type, int address, int size)
+//    {
+//        int index = hashf(id);
+//        Var* p = new Var(id, type, address, size);
+//
+//        if (head[index] == NULL) {
+//            head[index] = p;
+//            return true;
+//        }
+//
+//        else {
+//            Var* start = head[index];
+//            while (start->next != NULL)
+//                start = start->next;
+//            start->next = p;
+//            return true;
+//        }
+//
+//        return false;
+//    }
+//
+//    int hashf(string id)
+//    {
+//        int asciiSum = 0;
+//
+//        for (int i = 0; i < id.length(); i++) {
+//            asciiSum = asciiSum + id[i];
+//        }
+//
+//        return (asciiSum % MAX);
+//    }
+//
+//};
+//SymbolTable ST;
 
+///*end symboltable*/
 
 
 

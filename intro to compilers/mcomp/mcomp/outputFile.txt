@@ -1,31 +1,4 @@
 ==================  Abstract Syntax Tree ================
 ldc ST.find(id_name)
-sto
-ldc ST.find(id_name)
-ldc 6
-SSSS0xfcc500
-ldc addresss in ST
-ind
-sub
-ldc 7
-add
-sto
-SSSS0xfcc5a8
-ldc addresss in ST
-ind
-ldc 5
-grt
-SSSS0xe42658
-ldc addresss in ST
-ind
-ldc 7
-les
-ldc ST.find(id_name)
-ldc 99
-sto
-ldc ST.find(id_name)
-ldc 99
-sto
-ldc ST.find(id_name)
-ldc 33
+ldc 11
 sto
