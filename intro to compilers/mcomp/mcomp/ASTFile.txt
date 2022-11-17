@@ -1,18 +1,46 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: omer
+Node name : Root/Program. Program name is: yossi
 Node name : Begin
 Node name : DeclarationList
-Node name : DeclarationList
-Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: x
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: y
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: z
+Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :11
+Node name : AssignNode name : IntConst. Value is :3
+Node name : IdeType
+Node name : StatementList
+Node name : ProcedureStatement. Proc name : 0xfac538
+Node name : ExprListNode name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :6
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :10
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :6
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :10
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :50
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :30
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :6
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :10
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :50
 Node name : IdeType

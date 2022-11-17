@@ -1092,7 +1092,7 @@ TreeNode* obj_tree(treenode* root)
 
 		case TN_WHILE:
 			/* While case */
-		{
+		{//sdfsdfsd
 			TreeNode* While_node = new While(while_counter++);
 			While_node->son1 = obj_tree(root->lnode);
 			While_node->son2 = obj_tree(root->rnode);

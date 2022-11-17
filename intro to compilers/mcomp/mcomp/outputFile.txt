@@ -1,4 +1,0 @@
-==================  Abstract Syntax Tree ================
-ldc ST.find(id_name)
-ldc 11
-sto

@@ -79,9 +79,12 @@
 static int Stack_Address = 5;
 const int MAX = 100;
 using namespace std;
-static int if_count = 0;
-static int if_else_count = 0;
-static int while_count = 0;
+static int if_count = 1;
+static int if_else_count = 1;
+static int while_count = 1;
+static int switch_count = 1;
+static int case_count = 1;
+
 static int inc_flag = 0;
 static int dec_flag = 0;
 
@@ -133,11 +136,6 @@ public :
     if (atom_) delete atom_;
   }
   
-
-
-
-
-  /*end codel and coder*/
   void print (ostream& os) {
     os<<"Node name : Expr"<<endl;
     assert(op_);
@@ -152,62 +150,7 @@ public :
       right_->print(os);
     }
   }
-  /*   PROGRAM = 258,
-      BBEGIN = 259,
-      END = 260,
-      DECLARE = 261,
-      PROCEDURE = 262,
-      FUNCTION = 263,
-      LABEL = 264,
-      INTEGER = 265,
-      REAL = 266,
-      RECORD = 267,
-      BOOLEAN = 268,
-      ARRAY = 269,
-      OF = 270,
-      ASSIGN = 271,
-      LC = 272,
-      RC = 273,
-      IF = 274,
-      THEN = 275,
-      ELSE = 276,
-      WHILE = 277,
-      REPEAT = 278,
-      FI = 279,
-      DO = 280,
-      OD = 281,
-      READ = 282,
-      WRITE = 283,
-      TRUE = 284,
-      FALSE = 285,
-      ADD = 286,
-      MIN = 287,
-      MUL = 288,
-      DIV = 289,
-      GOTO = 290,
-      MOD = 291,
-      LES = 292,
-      LEQ = 293,
-      EQU = 294,
-      NEQ = 295,
-      GRE = 296,
-      GEQ = 297,
-      AND = 298,
-      OR = 299,
-      NOT = 300,
-      CASE = 301,
-      FOR = 302,
-      FIN = 303,
-      IDENTICAL = 304,
-      FROM = 305,
-      BY = 306,
-      TO = 307,
-      NEW = 308,
-      INTCONST = 309,
-      IDE = 310,
-      REALCONST = 311,
-      STRING = 312,
-      DUMMY = 313*/
+ 
   void pcodegen(ostream& os) {
       assert(op_);
       if (unary_) {      
@@ -631,6 +574,7 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(str_);
+
   }
   virtual Object * clone () { return new WriteStrStatement(*this);}
   
@@ -695,6 +639,8 @@ public :
   void pcodegen(ostream& os) {
       if (expr_list_) {
           expr_list_->pcodegen(os);
+          os << "print" << endl;
+
       }
   }
   virtual Object * clone () const { return new ProcedureStatement(*this);}
@@ -764,10 +710,18 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(case_);
-      case_->pcodegen(os);
+      os << "case_" << case_count++ << "_" << switch_count-1 << " :"  << endl;
+      coder(case_, os);
+      os << "ujp " << "end_switch_" << switch_count-1 << endl;
+
       if (case_list_) {
-          case_list_->pcodegen(os);
+          coder(case_list_, os);
       }
+      else {
+          case_count--;
+      }
+      os << "ujp case_" << case_count-- << "_" << switch_count-1 << endl;
+
   }
   virtual Object * clone () const { return new CaseList(*this);}
 
@@ -797,9 +751,15 @@ public :
 		case_list_->print(os);
   }
   void pcodegen(ostream& os) {
+      int switch_number = switch_count++;
       assert(exp_ && case_list_);
-      exp_->pcodegen(os);
-      case_list_->pcodegen(os);
+      coder(exp_, os);
+      os << "neg" << endl << "ixj end_switch_" << switch_number << endl;
+      coder(case_list_, os);
+      os << "end_switch_" << switch_number <<":" << endl;
+      case_count = 1;
+
+
   }
   virtual Object * clone () const { return new CaseStatement(*this);}
   
@@ -810,6 +770,8 @@ private:
 
 class LoopStatement : public Statement {
 public :
+   int statement_number = while_count++;
+
   LoopStatement (Object * exp, Object * stat_list) : exp_(exp),stat_list_(stat_list) {assert(exp_ && stat_list_);}
 
   LoopStatement(const LoopStatement& ls){
@@ -830,8 +792,13 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(exp_ && stat_list_);
-      exp_->pcodegen(os);
-      stat_list_->pcodegen(os);
+      os << "loop_" << statement_number << ":" << endl;
+      coder(exp_, os);
+      os << "fjp end_loop_" << statement_number << endl;
+      coder(stat_list_, os);
+      os << "ujp loop_" << statement_number << endl;
+      os << "end_loop_" << statement_number << ":" << endl;
+
   }
   virtual Object * clone () const { return new LoopStatement(*this);}
 
@@ -868,12 +835,24 @@ public :
 		}
   }
   void pcodegen(ostream& os) {
+      int statement_number = if_count++;
+
       assert(exp_ && stat_list_if_);
-      exp_->pcodegen(os);
-      stat_list_if_->pcodegen(os);
+      coder(exp_, os);
       if (stat_list_else_) {
-          stat_list_else_->pcodegen(os);
+          os << "fjp else_" << statement_number << endl;
       }
+      else {
+          os << "fjp end_if_" << statement_number << endl;
+      }
+      coder(stat_list_if_, os);
+      if (stat_list_else_) {
+          os << "ujp end_if_" << statement_number << endl;
+          os << "else_" << statement_number << endl;
+          coder(stat_list_else_, os);
+      }
+      os << "end_if_" << statement_number  << endl;
+
   }
   virtual Object * clone () const { return new ConditionalStatement(*this);}
   
@@ -1544,7 +1523,6 @@ private:
 //SymbolTable ST;
 
 ///*end symboltable*/
-
 
 
 #endif //AST_H
