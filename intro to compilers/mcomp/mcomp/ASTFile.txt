@@ -2,45 +2,37 @@
 Node name : Root/Program. Program name is: yossi
 Node name : Begin
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: a
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: x
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: y
 Node name : SimpleType
 Type is : Integer
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :3
-Node name : IdeType
-Node name : StatementList
-Node name : ProcedureStatement. Proc name : 0xfac538
-Node name : ExprListNode name : IdeType
-Node name : StatementList
-Node name : CaseStatementNode name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
-Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
 Node name : AssignNode name : IntConst. Value is :10
 Node name : IdeType
 Node name : StatementList
-Node name : CaseStatementNode name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
-Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :10
-Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :50
-Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :30
+Node name : AssignNode name : IntConst. Value is :15
 Node name : IdeType
 Node name : StatementList
-Node name : CaseStatementNode name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :5
+Node name : Expr
+Binary op is : 288Node name : IdeType
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :10
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :50
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 288Node name : IntConst. Value is :10
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 287Node name : IntConst. Value is :9
+Node name : Expr
+Unary op is : 287Node name : IdeType
 Node name : IdeType

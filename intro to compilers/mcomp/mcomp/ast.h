@@ -84,15 +84,144 @@ static int if_else_count = 1;
 static int while_count = 1;
 static int switch_count = 1;
 static int case_count = 1;
-
+static string idhelp = "";
 static int inc_flag = 0;
 static int dec_flag = 0;
-
+static int codel_coder_flag = 0;
+static string codel_name_help = "";
 /**
  * classes 
  */
+
+class Base {
+public:
+    /* Think! what does a Variable contain? */
+    string identifier, type;
+    int address, size;
+    Base* next;
+
+
+    Base()
+    {
+        next = NULL;
+    }
+
+    Base(string key, string type, int address, int size)
+    {
+        this->identifier = key;
+        this->size = size;
+        this->type = type;
+        this->address = address;
+        next = NULL;
+    }
+    
+    void setidentifier(string id){
+        identifier = id;
+    }
+    string getidentifier() {
+        return identifier;
+    }
+    void settype(string tp) {
+        type = tp;
+    }
+    string gettype() {
+        return type;
+    }
+    void setaddress(int ad) {
+        address = ad;
+    }
+    int getaddress() {
+        return address;
+    }
+    void setsize(int s) {
+        size = s;
+    }
+    int getsize() {
+        return size;
+    }
+    void setnext(Base* n) {
+        next = n;
+    }
+    Base* getnext() {
+        return next;
+    }
+
+    friend class SymbolTable;
+
+};
+
+class SymbolTable {
+    /* Think! what can you add to  symbol_table */
+
+    Base* head[MAX];
+public:
+
+    SymbolTable()
+    {
+        for (int i = 0; i < MAX; i++)
+            head[i] = NULL;
+    }
+
+    // Function to find an identifier 
+    int find(string id)
+    {
+        int index = hashf(id);
+        Base* start = head[index];
+
+        if (start == NULL)
+            return -1;
+
+        while (start != NULL) {
+
+            if (start->identifier == id) {
+                return start->address;
+            }
+
+            start = start->next;
+        }
+
+        return -1; // not found 
+    }
+
+    // Function to insert an identifier 
+    bool insert(string id, string type, int address, int size)
+    {
+        int index = hashf(id);
+        Base* p = new Base(id, type, address, size);
+
+        if (head[index] == NULL) {
+            head[index] = p;
+            return true;
+        }
+
+        else {
+            Base* start = head[index];
+            while (start->next != NULL)
+                start = start->next;
+            start->next = p;
+            return true;
+        }
+
+        return false;
+    }
+
+    int hashf(string id)
+    {
+        int asciiSum = 0;
+
+        for (int i = 0; i < id.length(); i++) {
+            asciiSum = asciiSum + id[i];
+        }
+
+        return (asciiSum % MAX);
+    }
+
+};
+static SymbolTable SYT;
+
+
 // base class for tree nodes
-class Object {
+class Object :public Base {
 public:
  virtual void print (ostream& os) = 0;
  virtual void pcodegen(ostream& os) = 0;
@@ -100,13 +229,13 @@ public:
  virtual ~Object () {}
  /*codel and code r*/
  void codel(Object* left_, ostream& os) {
-     os << "ldc " << "ST.find(id_name)" << endl;
-     /*ST.find(id_name)*/
+     codel_coder_flag = 0;
+     left_->pcodegen(os);
+     os << "ldc " << SYT.find(codel_name_help) << endl;
  }
  void coder(Object* exp_, ostream& os) {
+     codel_coder_flag = 1;
      exp_->pcodegen(os);
-     //s os << "ldc " << "ST.find(id_name)" << endl << "11ind" << endl;
-      /*ST.find(id_name)*/
  }
  /*codel and code r*/
 
@@ -116,7 +245,7 @@ public:
 
 class Expr : public Object {
 public :
-
+    
   // Unary operations
   Expr (int op, Object * atom) : op_(op), atom_(atom), left_(NULL), right_(NULL), unary_(true) {}
   // Binary operations
@@ -129,7 +258,7 @@ public :
     right_ = exp.right_->clone();
     atom_ = exp.atom_->clone();
   }
-
+  
   virtual ~Expr(){
     if (left_) delete left_;
     if (right_) delete right_;
@@ -169,7 +298,11 @@ public :
               break;
           case 300://NOT
               coder(atom_, os);
-              os << "not" << endl;          ////////// need to check
+              os << "not" << endl;
+              break;
+          case 287://NEG
+              coder(atom_, os);
+              os << "neg" << endl;
               break;
           default:
               break;
@@ -257,7 +390,6 @@ public :
           default:
               break;
           }
-
       }
   }
   virtual Object * clone () const { return new Expr(*this);}
@@ -631,16 +763,18 @@ public :
 	} 
 
   void print (ostream& os) {
-    os<<"Node name : ProcedureStatement. Proc name : "<<str_<<endl;
+    os<<"Node name : ProcedureStatement. Proc name : "<<*str_<<endl;
     if (expr_list_ ){
       expr_list_->print(os);
     }
   }
   void pcodegen(ostream& os) {
       if (expr_list_) {
-          expr_list_->pcodegen(os);
-          os << "print" << endl;
-
+          if (*str_=="print") {
+              coder(expr_list_, os);
+            //  expr_list_->pcodegen(os);
+              os << "print" << endl;
+          }
       }
   }
   virtual Object * clone () const { return new ProcedureStatement(*this);}
@@ -978,7 +1112,8 @@ class SimpleType : public Type {
 public:
   SimpleType (const char * name) { 
 		name_ = new string(name); 
-	}
+        idhelp = *name_;
+    }
 
   virtual ~SimpleType () {
 		if (name_ )delete name_;
@@ -991,8 +1126,11 @@ public:
   void print (ostream& os) {
 		os<<"Node name : SimpleType"<<endl;;
 		os<<"Type is : "<< (*name_) <<endl;
+        idhelp = *name_;
+
 	}
   void pcodegen(ostream& os) {
+      
   }
   virtual Object * clone () const { return new SimpleType(*this);}
 
@@ -1020,8 +1158,12 @@ public:
   }
 
   void pcodegen(ostream& os) {
-      os <<"SSSS"<< name_ << endl;
-      os << "ldc " << "addresss in ST" << endl << "ind" << endl;
+      if (codel_coder_flag == 0) {
+          codel_name_help = *name_;
+      }
+      else {
+          os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+      }
   }
   virtual Object * clone () const { return new IdeType(*this);}
 
@@ -1121,6 +1263,7 @@ public:
   VariableDeclaration (Object * type, const char * str) : type_(type){
     assert(type_);
     name_ = new string(str);
+    idhelp = *name_;
   }
 
   VariableDeclaration(const VariableDeclaration& p){
@@ -1141,6 +1284,12 @@ public:
   void pcodegen(ostream& os) {
       assert(type_);
       type_->pcodegen(os);
+      if (idhelp == "Integer") {
+          SYT.insert(*name_, "Integer", Stack_Address, sizeof(int));
+          Stack_Address += 1;
+      }
+      //if(idhelp == "Integer"){
+      //}
   }
   virtual Object * clone () const { return new VariableDeclaration(*this);}
 
@@ -1451,78 +1600,5 @@ private:
   Block * block_;
   string * name_;
 };
-
-///*symboltable*/
-//class SymbolTable {
-//    /* Think! what can you add to  symbol_table */
-//
-//public:
-//    Var* head[MAX];
-//
-//    SymbolTable()
-//    {
-//        for (int i = 0; i < MAX; i++)
-//            head[i] = NULL;
-//    }
-//
-//    // Function to find an identifier 
-//    int find(string id)
-//    {
-//        int index = hashf(id);
-//        Var* start = head[index];
-//
-//        if (start == NULL)
-//            return -1;
-//
-//        while (start != NULL) {
-//
-//            if (start->identifier == id) {
-//                return start->address;
-//            }
-//
-//            start = start->next;
-//        }
-//
-//        return -1; // not found 
-//    }
-//
-//    // Function to insert an identifier 
-//    bool insert(string id, string type, int address, int size)
-//    {
-//        int index = hashf(id);
-//        Var* p = new Var(id, type, address, size);
-//
-//        if (head[index] == NULL) {
-//            head[index] = p;
-//            return true;
-//        }
-//
-//        else {
-//            Var* start = head[index];
-//            while (start->next != NULL)
-//                start = start->next;
-//            start->next = p;
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    int hashf(string id)
-//    {
-//        int asciiSum = 0;
-//
-//        for (int i = 0; i < id.length(); i++) {
-//            asciiSum = asciiSum + id[i];
-//        }
-//
-//        return (asciiSum % MAX);
-//    }
-//
-//};
-//SymbolTable ST;
-
-///*end symboltable*/
-
 
 #endif //AST_H
