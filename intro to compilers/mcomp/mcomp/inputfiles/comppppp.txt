@@ -1,6 +1,6 @@
-C:\Users\hp\Desktop\Software\compilers-design\intro to compilers\mcomp\mcomp
+cd C:\Users\hp\Desktop\Software\compilers-design\intro to compilers\mcomp\mcomp
 gcc -g -c lex.yy.c
 g++ -g -c miny.tab.cpp
 g++ -g -c main.cpp
 g++ -o pcodeGen main.o miny.tab.o lex.yy.o
-pcodeGen ./inputfiles/input0.in
+pcodeGen ./inputfiles/input8.in

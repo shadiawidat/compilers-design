@@ -73,17 +73,22 @@
 #ifndef AST_H 
 #define AST_H
 
+#include <iomanip>
 #include <iostream>
 #include <assert.h>
 #include <string>
 static int Stack_Address = 5;
-const int MAX = 100;
+const int MAX = 150;
 using namespace std;
 static int if_count = 1;
 static int if_else_count = 1;
 static int while_count = 1;
 static int switch_count = 1;
 static int case_count = 1;
+static int caselist_count = 1;
+static int current_switch = 1;
+static int current_case= 1;
+
 static string idhelp = "";
 static int inc_flag = 0;
 static int dec_flag = 0;
@@ -95,9 +100,10 @@ static string codel_name_help = "";
 
 class Base {
 public:
-    /* Think! what does a Variable contain? */
-    string identifier, type;
-    int address, size;
+    string key;
+    string type;
+    int address;
+    int size;
     Base* next;
 
 
@@ -108,18 +114,18 @@ public:
 
     Base(string key, string type, int address, int size)
     {
-        this->identifier = key;
+        this->key = key;
         this->size = size;
         this->type = type;
         this->address = address;
         next = NULL;
     }
     
-    void setidentifier(string id){
-        identifier = id;
+    void setkey(string id){
+        key = id;
     }
-    string getidentifier() {
-        return identifier;
+    string getkey() {
+        return key;
     }
     void settype(string tp) {
         type = tp;
@@ -151,69 +157,49 @@ public:
 };
 
 class SymbolTable {
-    /* Think! what can you add to  symbol_table */
-
-    Base* head[MAX];
+    Base* table[MAX];
 public:
 
     SymbolTable()
     {
         for (int i = 0; i < MAX; i++)
-            head[i] = NULL;
+            table[i] = NULL;
     }
-
-    // Function to find an identifier 
-    int find(string id)
+    int hashf(string name)
     {
-        int index = hashf(id);
-        Base* start = head[index];
-
-        if (start == NULL)
-            return -1;
-
-        while (start != NULL) {
-
-            if (start->identifier == id) {
-                return start->address;
-            }
-
-            start = start->next;
-        }
-
-        return -1; // not found 
+        return (name[0] % MAX);
     }
-
-    // Function to insert an identifier 
-    bool insert(string id, string type, int address, int size)
+    bool insert(string name, string type, int address, int size)
     {
-        int index = hashf(id);
-        Base* p = new Base(id, type, address, size);
-
-        if (head[index] == NULL) {
-            head[index] = p;
+        int i = hashf(name);
+        Base* newvar = new Base(name, type, address, size);
+        if (table[i] == NULL) {
+            table[i] = newvar;
             return true;
         }
-
         else {
-            Base* start = head[index];
-            while (start->next != NULL)
-                start = start->next;
-            start->next = p;
+            Base* head = table[i];
+            while (head->next != NULL)
+                head = head->next;
+            head->next = newvar;
             return true;
         }
-
         return false;
     }
-
-    int hashf(string id)
+    int find(string name)
     {
-        int asciiSum = 0;
+        int i = hashf(name);
+        Base* head = table[i];
+        if (head == NULL)
+            return -1;
+        while (head != NULL) {
 
-        for (int i = 0; i < id.length(); i++) {
-            asciiSum = asciiSum + id[i];
+            if (head->key == name) {
+                return head->address;
+            }
+            head = head->next;
         }
-
-        return (asciiSum % MAX);
+        return -1;
     }
 
 };
@@ -521,16 +507,21 @@ public:
   }
   void pcodegen(ostream& os) {
       if (inc_flag == 1) {
-          os << "inc " << r_ << endl;
+          os << "inc " << setprecision(1) << fixed<< r_ << endl;
+         // os << "inc " << r_ << endl;
           inc_flag = 0;
       }
       else {
           if (dec_flag == 1) {
-              os << "dec " << r_ << endl;
+              os << "dec " << setprecision(1) << fixed << r_ << endl;
+
+              //os << "dec " << r_ << endl;
               dec_flag = 0;
           }
           else {
-              os << "ldc " << r_ << endl;
+              os << "ldc " << setprecision(1) << fixed << r_ << endl;
+
+             // os << "ldc " << r_ << endl;
           }
       }
   }
@@ -706,6 +697,8 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(str_);
+      os << "ldc " << *str_ << endl;
+      os << "print" << endl;
 
   }
   virtual Object * clone () { return new WriteStrStatement(*this);}
@@ -733,7 +726,8 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(exp_);
-      exp_->pcodegen(os);
+      coder(exp_, os);
+      os << "print" << endl;
   }
   virtual Object * clone () const { return new WriteVarStatement(*this);}
   
@@ -770,11 +764,12 @@ public :
   }
   void pcodegen(ostream& os) {
       if (expr_list_) {
-          if (*str_=="print") {
-              coder(expr_list_, os);
-            //  expr_list_->pcodegen(os);
-              os << "print" << endl;
-          }
+          //if (*str_=="print") {
+          //    coder(expr_list_, os);
+          //  //  expr_list_->pcodegen(os);
+          //    os << "print" << endl;
+          //}
+          expr_list_->pcodegen(os);
       }
   }
   virtual Object * clone () const { return new ProcedureStatement(*this);}
@@ -808,8 +803,12 @@ public :
 	  stat_list_->print(os);
   }
   void pcodegen(ostream& os) {
+     //int switchnum = current_switch;
+      //int casenum = case_count++;
       assert(stat_list_);
-      stat_list_->pcodegen(os);
+     
+     // stat_list_->pcodegen(os);
+      coder(stat_list_, os);
   }
   virtual Object * clone () const { return new Case(*this);}
 
@@ -844,18 +843,28 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(case_);
-      os << "case_" << case_count++ << "_" << switch_count-1 << " :"  << endl;
+      int switchnum = current_switch;
+      int casenum = current_case;;
+      
+      os << "case_" << casenum << "_" << switchnum << " :" << endl;
+      //os << "case_" << case_count++ << "_" << switch_count-1 << " :"  << endl;
       coder(case_, os);
-      os << "ujp " << "end_switch_" << switch_count-1 << endl;
+      current_case = casenum;
+      current_switch = switchnum;
+
+      os << "ujp " << "end_switch_" << switchnum << endl;
 
       if (case_list_) {
+          current_case++;
           coder(case_list_, os);
       }
       else {
           case_count--;
       }
-      os << "ujp case_" << case_count-- << "_" << switch_count-1 << endl;
-
+      current_switch = switchnum;
+      current_case = casenum;
+      current_switch = switchnum;
+      os << "ujp case_" << casenum << "_" << switchnum << endl;
   }
   virtual Object * clone () const { return new CaseList(*this);}
 
@@ -881,17 +890,31 @@ public :
   void print (ostream& os) {
 		os<<"Node name : CaseStatement";
 		assert( exp_ && case_list_);
-    exp_->print(os);
+        exp_->print(os);
 		case_list_->print(os);
   }
   void pcodegen(ostream& os) {
       int switch_number = switch_count++;
+      current_switch = switch_number;
+      assert(exp_ && case_list_);
+      coder(exp_, os);
+      os << "neg" << endl;
+      os<<"ixj end_switch_" << switch_number << endl;
+      current_switch = switch_number;
+
+      coder(case_list_, os);
+      current_switch = switch_number;
+
+      //current_switch = switch_number;
+
+      os << "end_switch_" << switch_number << ":" << endl;
+     /* int switch_number = switch_count++;
       assert(exp_ && case_list_);
       coder(exp_, os);
       os << "neg" << endl << "ixj end_switch_" << switch_number << endl;
       coder(case_list_, os);
       os << "end_switch_" << switch_number <<":" << endl;
-      case_count = 1;
+      case_count = 1;*/
 
 
   }
@@ -974,7 +997,7 @@ public :
       assert(exp_ && stat_list_if_);
       coder(exp_, os);
       if (stat_list_else_) {
-          os << "fjp else_" << statement_number << endl;
+          os << "fjp else_if_" << statement_number << endl;
       }
       else {
           os << "fjp end_if_" << statement_number << endl;
@@ -982,10 +1005,10 @@ public :
       coder(stat_list_if_, os);
       if (stat_list_else_) {
           os << "ujp end_if_" << statement_number << endl;
-          os << "else_" << statement_number << endl;
+          os << "else_if_" << statement_number <<":"<< endl;
           coder(stat_list_else_, os);
       }
-      os << "end_if_" << statement_number  << endl;
+      os << "end_if_" << statement_number  <<":" << endl;
 
   }
   virtual Object * clone () const { return new ConditionalStatement(*this);}
@@ -1284,10 +1307,10 @@ public:
   void pcodegen(ostream& os) {
       assert(type_);
       type_->pcodegen(os);
-      if (idhelp == "Integer") {
+      //if (idhelp == "Integer") {
           SYT.insert(*name_, "Integer", Stack_Address, sizeof(int));
           Stack_Address += 1;
-      }
+      //}
       //if(idhelp == "Integer"){
       //}
   }

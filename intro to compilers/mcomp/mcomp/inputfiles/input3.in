@@ -2,25 +2,11 @@ PROGRAM yossi
 	a FIXED;
 {
 	a=3;
-	print("dfgdfg");
-	CASE a OF
-	{
-		1:a=6;
-		2:a=10;
-	
-	}
 	CASE a OF
 	{
 		1:a=6;
 		2:a=10;
 		3:a=50;
 		4:a=30;
-	}
-	CASE a OF
-	{
-		1:a=6;
-		2:a=10;
-		3:a=50;
-		
 	}
 }
