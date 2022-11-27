@@ -1,7 +1,8 @@
-ROGRAM omer
-{
+PROGRAM omer
+
 	a FIXED;
 	b FIXED;
+{
               a=9;
 	b=a+3;
 	

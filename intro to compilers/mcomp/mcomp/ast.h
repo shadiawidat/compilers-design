@@ -77,23 +77,24 @@
 #include <iostream>
 #include <assert.h>
 #include <string>
-static int Stack_Address = 5;
-const int MAX = 150;
 using namespace std;
-static int if_count = 1;
-static int if_else_count = 1;
-static int while_count = 1;
-static int switch_count = 1;
-static int case_count = 1;
-static int caselist_count = 1;
-static int current_switch = 1;
-static int current_case= 1;
 
-static string idhelp = "";
-static int inc_flag = 0;
-static int dec_flag = 0;
-static int codel_coder_flag = 0;
-static string codel_name_help = "";
+static int Stack_Address = 5;
+const int TableSize = 150;
+
+extern int if_count;
+extern int if_else_count;
+extern int while_count;
+extern int switch_count;
+extern int case_count;
+extern int caselist_count;
+extern int current_switch;
+extern int current_case;
+extern string idhelp;
+extern int inc_flag;
+extern int dec_flag;
+extern int codel_coder_flag;
+extern string codel_name_help;
 /**
  * classes 
  */
@@ -157,17 +158,17 @@ public:
 };
 
 class SymbolTable {
-    Base* table[MAX];
+    Base* table[TableSize];
 public:
 
     SymbolTable()
     {
-        for (int i = 0; i < MAX; i++)
+        for (int i = 0; i < TableSize; i++)
             table[i] = NULL;
     }
     int hashf(string name)
     {
-        return (name[0] % MAX);
+        return (name[0] % TableSize);
     }
     bool insert(string name, string type, int address, int size)
     {

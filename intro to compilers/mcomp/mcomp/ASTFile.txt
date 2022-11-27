@@ -1,6 +1,9 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: nestedCaseExample
+Node name : Root/Program. Program name is: assign2
 Node name : Begin
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
@@ -13,31 +16,42 @@ Type is : Integer
 Node name : VariableDeclaration. Var name is: c
 Node name : SimpleType
 Type is : Integer
+Node name : VariableDeclaration. Var name is: d
+Node name : SimpleType
+Type is : Real
+Node name : VariableDeclaration. Var name is: e
+Node name : SimpleType
+Type is : Real
+Node name : VariableDeclaration. Var name is: f
+Node name : SimpleType
+Type is : Real
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
+Node name : AssignNode name : IntConst. Value is :3
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :2
+Node name : AssignNode name : IntConst. Value is :20
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
+Node name : AssignNode name : Expr
+Binary op is : 289Node name : Expr
+Binary op is : 288Node name : IdeType
+Node name : IdeType
+Node name : Expr
+Binary op is : 286Node name : IdeType
+Node name : IdeType
 Node name : IdeType
 Node name : StatementList
-Node name : CaseStatementNode name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : CaseStatementNode name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :5
+Node name : AssignNode name : RealConst. Value is :10
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
+Node name : StatementList
+Node name : AssignNode name : RealConst. Value is :2
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :4
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 289Node name : IdeType
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :5
 Node name : IdeType
-Node name : CaseListNode name : CaseNode name : StatementList
-Node name : AssignNode name : IntConst. Value is :5
 Node name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType

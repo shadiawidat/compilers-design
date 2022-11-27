@@ -1,53 +1,39 @@
 ==================  Abstract Syntax Tree ================
 ldc 5
-ldc 1
+ldc 3
 sto
 ldc 6
-ldc 2
+ldc 20
 sto
 ldc 7
-ldc 1
-sto
 ldc 5
 ind
-neg
-ixj end_switch_1
-case_1_1 :
 ldc 6
 ind
-neg
-ixj end_switch_2
-case_1_2 :
-ldc 7
-ldc 5
-sto
-ujp end_switch_2
-case_2_2 :
-ldc 7
+add
 ldc 6
-sto
-ujp end_switch_2
-ujp case_2_2
-ujp case_1_2
-end_switch_2:
-ujp end_switch_1
-case_2_1 :
-ldc 7
-ldc 4
-sto
-ujp end_switch_1
-case_3_1 :
-ldc 7
+ind
 ldc 5
+ind
+mul
+div
 sto
-ujp end_switch_1
-case_4_1 :
-ldc 7
-ldc 5
+ldc 8
+ldc 10.0
 sto
-ujp end_switch_1
-ujp case_4_1
-ujp case_3_1
-ujp case_2_1
-ujp case_1_1
-end_switch_1:
+ldc 9
+ldc 2.0
+sto
+ldc 10
+ldc 8
+ind
+ldc 9
+ind
+ldc 10
+ind
+div
+add
+sto
+ldc 10
+ind
+print

@@ -15,6 +15,21 @@
  **************************************/
 
 #include "main.h"
+int if_count = 1;
+int if_else_count = 1;
+int while_count = 1;
+int switch_count = 1;
+int case_count = 1;
+int caselist_count = 1;
+int current_switch = 1;
+int current_case = 1;
+string idhelp = "";
+int inc_flag = 0;
+int dec_flag = 0;
+int codel_coder_flag = 0;
+string codel_name_help = "";
+
+
 
 extern int yydebug;
 
