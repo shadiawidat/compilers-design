@@ -1,57 +1,36 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: assign2
+Node name : Root/Program. Program name is: aa
 Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : DeclarationList
-Node name : DeclarationList
-Node name : DeclarationList
-Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: a
+Node name : VariableDeclaration. Var name is: x
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: b
+Node name : VariableDeclaration. Var name is: y
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: c
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: d
-Node name : SimpleType
-Type is : Real
-Node name : VariableDeclaration. Var name is: e
-Node name : SimpleType
-Type is : Real
-Node name : VariableDeclaration. Var name is: f
-Node name : SimpleType
-Type is : Real
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
 Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :3
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :20
+Node name : ConditionalStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IntConst. Value is :100
+Node name : StatementList
+Node name : ConditionalStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IntConst. Value is :200
+Node name : StatementList
+Node name : WriteVarStatementNode name : IntConst. Value is :300
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 294Node name : IdeType
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : Expr
-Binary op is : 289Node name : Expr
-Binary op is : 288Node name : IdeType
-Node name : IdeType
-Node name : Expr
-Binary op is : 286Node name : IdeType
-Node name : IdeType
-Node name : IdeType
+Node name : ProcedureStatement. Proc name : WRIYE
+Node name : ExprListNode name : IntConst. Value is :400
 Node name : StatementList
-Node name : AssignNode name : RealConst. Value is :10
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : RealConst. Value is :2
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : Expr
-Binary op is : 286Node name : Expr
-Binary op is : 289Node name : IdeType
-Node name : IdeType
-Node name : IdeType
-Node name : IdeType
-Node name : StatementList
-Node name : WriteVarStatementNode name : IdeType
+Node name : WriteVarStatementNode name : IntConst. Value is :500

@@ -845,9 +845,9 @@ public :
   void pcodegen(ostream& os) {
       assert(case_);
       int switchnum = current_switch;
-      int casenum = current_case;;
+      int casenum = current_case;
       
-      os << "case_" << casenum << "_" << switchnum << " :" << endl;
+      os << "case_" << casenum << "_" << switchnum << ":" << endl;
       //os << "case_" << case_count++ << "_" << switch_count-1 << " :"  << endl;
       coder(case_, os);
       current_case = casenum;
@@ -896,6 +896,7 @@ public :
   }
   void pcodegen(ostream& os) {
       int switch_number = switch_count++;
+      current_case = 1;
       current_switch = switch_number;
       assert(exp_ && case_list_);
       coder(exp_, os);
@@ -928,7 +929,6 @@ private:
 
 class LoopStatement : public Statement {
 public :
-   int statement_number = while_count++;
 
   LoopStatement (Object * exp, Object * stat_list) : exp_(exp),stat_list_(stat_list) {assert(exp_ && stat_list_);}
 
@@ -950,12 +950,13 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(exp_ && stat_list_);
-      os << "loop_" << statement_number << ":" << endl;
+      int loop_num = while_count++;
+      os << "loop_" << loop_num << ":" << endl;
       coder(exp_, os);
-      os << "fjp end_loop_" << statement_number << endl;
+      os << "fjp end_loop_" << loop_num << endl;
       coder(stat_list_, os);
-      os << "ujp loop_" << statement_number << endl;
-      os << "end_loop_" << statement_number << ":" << endl;
+      os << "ujp loop_" << loop_num << endl;
+      os << "end_loop_" << loop_num << ":" << endl;
 
   }
   virtual Object * clone () const { return new LoopStatement(*this);}
