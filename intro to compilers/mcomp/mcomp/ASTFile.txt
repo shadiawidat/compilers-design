@@ -1,36 +1,302 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: aa
+Node name : Root/Program. Program name is: a
 Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: x
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: y
+Node name : VariableDeclaration. Var name is: b
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: c
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: d
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: e
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: wow
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: lastTest
 Node name : SimpleType
 Type is : Integer
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :5
+Node name : AssignNode name : RealConst. Value is :24.22
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :3
+Node name : AssignNode name : RealConst. Value is :11
 Node name : IdeType
 Node name : StatementList
-Node name : ConditionalStatementNode name : IdeType
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 287Node name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 287Node name : Expr
+Binary op is : 287Node name : Expr
+Binary op is : 286Node name : RealConst. Value is :3.021
+Node name : IdeType
+Node name : Expr
+Binary op is : 287Node name : IntConst. Value is :14
+Node name : IntConst. Value is :3
+Node name : IdeType
+Node name : Expr
+Binary op is : 286Node name : IntConst. Value is :1
+Node name : Expr
+Binary op is : 287Node name : IdeType
+Node name : IntConst. Value is :4
+Node name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 288Node name : RealConst. Value is :4
+Node name : IntConst. Value is :8
+Node name : Expr
+Binary op is : 289Node name : IntConst. Value is :1
+Node name : IdeType
+Node name : IdeType
+Node name : IdeType
 Node name : StatementList
-Node name : WriteVarStatementNode name : IntConst. Value is :100
+Node name : AssignNode name : Expr
+Binary op is : 294Node name : IdeType
+Node name : IdeType
+Node name : IdeType
 Node name : StatementList
-Node name : ConditionalStatementNode name : IdeType
+Node name : AssignNode name : IntConst. Value is :2
+Node name : IdeType
 Node name : StatementList
-Node name : WriteVarStatementNode name : IntConst. Value is :200
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : Expr
+Unary op is : 287Node name : IdeType
+Node name : Expr
+Binary op is : 288Node name : IdeType
+Node name : IdeType
+Node name : IdeType
 Node name : StatementList
-Node name : WriteVarStatementNode name : IntConst. Value is :300
+Node name : AssignNode name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 299Node name : IntConst. Value is :1
+Node name : IntConst. Value is :1
+Node name : trueConst. Value is true
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : RealConst. Value is :5.55555
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 288Node name : IntConst. Value is :88
+Node name : IdeType
+Node name : IntConst. Value is :150
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 294Node name : IntConst. Value is :5
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :99
+Node name : IdeType
+Node name : IdeType
 Node name : StatementList
 Node name : ConditionalStatementNode name : Expr
 Binary op is : 294Node name : IdeType
 Node name : IdeType
 Node name : StatementList
-Node name : ProcedureStatement. Proc name : WRIYE
-Node name : ExprListNode name : IntConst. Value is :400
+Node name : AssignNode name : IntConst. Value is :2222
+Node name : IdeType
 Node name : StatementList
-Node name : WriteVarStatementNode name : IntConst. Value is :500
+Node name : AssignNode name : IntConst. Value is :888888
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :0
+Node name : IdeType
+Node name : StatementList
+Node name : LoopStatementNode name : Expr
+Binary op is : 297Node name : Expr
+Binary op is : 287Node name : IntConst. Value is :1
+Node name : IntConst. Value is :1
+Node name : Expr
+Binary op is : 289Node name : Expr
+Binary op is : 287Node name : RealConst. Value is :2.923
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : LoopStatementNode name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 294Node name : IdeType
+Node name : IdeType
+Node name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 294Node name : IntConst. Value is :0
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : LoopStatementNode name : Expr
+Binary op is : 294Node name : Expr
+Binary op is : 287Node name : RealConst. Value is :2
+Node name : IdeType
+Node name : Expr
+Binary op is : 287Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :2
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :6
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :4
+Node name : IdeType
+Node name : StatementList
+Node name : ConditionalStatementNode name : trueConst. Value is false
+Node name : StatementList
+Node name : WriteVarStatementNode name : IntConst. Value is :2
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 292Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IdeType
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :0
+Node name : IdeType
+Node name : StatementList
+Node name : LoopStatementNode name : Expr
+Binary op is : 292Node name : IntConst. Value is :6
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :1
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :15
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :16
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :4
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : IdeType
+Node name : StatementList
+Node name : CaseStatementNode name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :15
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : AssignNode name : IntConst. Value is :16
+Node name : IdeType
+Node name : StatementList
+Node name : ConditionalStatementNode name : trueConst. Value is true
+Node name : StatementList
+Node name : WriteVarStatementNode name : trueConst. Value is false
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 293Node name : IntConst. Value is :94
+Node name : IntConst. Value is :99
+Node name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 297Node name : IntConst. Value is :94
+Node name : IntConst. Value is :99
+Node name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 296Node name : IntConst. Value is :94
+Node name : IntConst. Value is :99
+Node name : Expr
+Binary op is : 292Node name : IntConst. Value is :94
+Node name : IntConst. Value is :99
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IdeType
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 299Node name : Expr
+Binary op is : 298Node name : Expr
+Binary op is : 294Node name : IntConst. Value is :0
+Node name : Expr
+Binary op is : 289Node name : IntConst. Value is :2
+Node name : IdeType
+Node name : Expr
+Binary op is : 294Node name : IntConst. Value is :0
+Node name : IntConst. Value is :1
+Node name : Expr
+Binary op is : 299Node name : trueConst. Value is false
+Node name : IntConst. Value is :0
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IdeType
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : Expr
+Binary op is : 292Node name : IdeType
+Node name : Expr
+Binary op is : 298Node name : IdeType
+Node name : IdeType
