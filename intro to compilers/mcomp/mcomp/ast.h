@@ -78,10 +78,8 @@
 #include <assert.h>
 #include <string>
 using namespace std;
-
-static int Stack_Address = 5;
 const int TableSize = 150;
-
+extern int Stack_Address;
 extern int if_count;
 extern int if_else_count;
 extern int while_count;
@@ -277,7 +275,6 @@ public :
               codel(atom_, os);
               break;
           case 309://INTCONST
-              //atom_->pcodegen(os);
               coder(atom_, os);
               break;
           case 311://REALCONST
@@ -387,7 +384,6 @@ private:
   Object * left_;
   Object * right_;
   Object * atom_;
-  //string* name;
 };
 
 class ExprList : public Object {
@@ -509,20 +505,15 @@ public:
   void pcodegen(ostream& os) {
       if (inc_flag == 1) {
           os << "inc " << setprecision(1) << fixed<< r_ << endl;
-         // os << "inc " << r_ << endl;
           inc_flag = 0;
       }
       else {
           if (dec_flag == 1) {
               os << "dec " << setprecision(1) << fixed << r_ << endl;
-
-              //os << "dec " << r_ << endl;
               dec_flag = 0;
           }
           else {
               os << "ldc " << setprecision(1) << fixed << r_ << endl;
-
-             // os << "ldc " << r_ << endl;
           }
       }
   }
@@ -765,11 +756,6 @@ public :
   }
   void pcodegen(ostream& os) {
       if (expr_list_) {
-          //if (*str_=="print") {
-          //    coder(expr_list_, os);
-          //  //  expr_list_->pcodegen(os);
-          //    os << "print" << endl;
-          //}
           expr_list_->pcodegen(os);
       }
   }
@@ -804,11 +790,7 @@ public :
 	  stat_list_->print(os);
   }
   void pcodegen(ostream& os) {
-     //int switchnum = current_switch;
-      //int casenum = case_count++;
       assert(stat_list_);
-     
-     // stat_list_->pcodegen(os);
       coder(stat_list_, os);
   }
   virtual Object * clone () const { return new Case(*this);}
@@ -848,7 +830,6 @@ public :
       int casenum = current_case;
       
       os << "case_" << casenum << "_" << switchnum << ":" << endl;
-      //os << "case_" << case_count++ << "_" << switch_count-1 << " :"  << endl;
       coder(case_, os);
       current_case = casenum;
       current_switch = switchnum;
@@ -903,22 +884,9 @@ public :
       os << "neg" << endl;
       os<<"ixj end_switch_" << switch_number << endl;
       current_switch = switch_number;
-
       coder(case_list_, os);
       current_switch = switch_number;
-
-      //current_switch = switch_number;
-
       os << "end_switch_" << switch_number << ":" << endl;
-     /* int switch_number = switch_count++;
-      assert(exp_ && case_list_);
-      coder(exp_, os);
-      os << "neg" << endl << "ixj end_switch_" << switch_number << endl;
-      coder(case_list_, os);
-      os << "end_switch_" << switch_number <<":" << endl;
-      case_count = 1;*/
-
-
   }
   virtual Object * clone () const { return new CaseStatement(*this);}
   
@@ -1044,8 +1012,6 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_ && exp_);
-      /*codel(var_, os);
-      coder(exp_, os);*/
       codel(exp_, os);
       coder(var_, os);
       os << "sto" << endl;
