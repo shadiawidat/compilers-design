@@ -96,13 +96,25 @@ extern string codel_name_help;
 /**
  * classes 
  */
+//******************************
+static string var_name_temp = "";
+static int var_size_help = 0;
+static int not_assign_flag = 0;
+//******************************
+class Linkedlist {
+public:
+    int low;
+    int up;
+    Linkedlist* next=NULL;
 
+};
 class Base {
 public:
     string key;
     string type;
     int address;
     int size;
+    Linkedlist* dimensions;
     Base* next;
 
 
@@ -156,9 +168,9 @@ public:
 };
 
 class SymbolTable {
-    Base* table[TableSize];
+   
 public:
-
+    Base* table[TableSize];
     SymbolTable()
     {
         for (int i = 0; i < TableSize; i++)
@@ -185,6 +197,21 @@ public:
         }
         return false;
     }
+    Base* findBase(string name)
+    {
+        int i = hashf(name);
+        Base* head = table[i];
+        if (head == NULL)
+            return NULL;
+        while (head != NULL) {
+
+            if (head->key == name) {
+                return head;
+            }
+            head = head->next;
+        }
+        return NULL;
+    }
     int find(string name)
     {
         int i = hashf(name);
@@ -195,6 +222,36 @@ public:
 
             if (head->key == name) {
                 return head->address;
+            }
+            head = head->next;
+        }
+        return -1;
+    }
+    string findType(string name)
+    {
+        int i = hashf(name);
+        Base* head = table[i];
+        if (head == NULL)
+            return "NotFound";
+        while (head != NULL) {
+
+            if (head->key == name) {
+                return head->type;
+            }
+            head = head->next;
+        }
+        return "NotFound";
+    }
+    string findSize(string name)
+    {
+        int i = hashf(name);
+        Base* head = table[i];
+        if (head == NULL)
+            return -1;
+        while (head != NULL) {
+
+            if (head->key == name) {
+                return head->size;
             }
             head = head->next;
         }
@@ -216,7 +273,12 @@ public:
  void codel(Object* left_, ostream& os) {
      codel_coder_flag = 0;
      left_->pcodegen(os);
-     os << "ldc " << SYT.find(codel_name_help) << endl;
+     if (!not_assign_flag) {
+         os << "ldc " << SYT.find(codel_name_help) << endl;
+     }else{
+
+     }
+     
  }
  void coder(Object* exp_, ostream& os) {
      codel_coder_flag = 1;
@@ -661,7 +723,10 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_);
-      var_->pcodegen(os);
+      codel(var_,os);
+      Base* t = SYT.findBase(codel_name_help);
+      os << "ldc "<< t->getsize() << endl;
+      os << "new" << endl;
   }
   virtual Object * clone () { return new NewStatement(*this);}
   
@@ -1146,15 +1211,20 @@ public:
 
   void print (ostream& os) {
     os<<"Node name : IdeType"<<endl;
+    os << "name is : " <<(*name_)  << endl;
+
+    var_name_temp = *name_;
   }
 
   void pcodegen(ostream& os) {
       if (codel_coder_flag == 0) {
+          var_name_temp = *name_;
           codel_name_help = *name_;
       }
       else {
           os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
       }
+
   }
   virtual Object * clone () const { return new IdeType(*this);}
 
@@ -1208,6 +1278,7 @@ public :
 	  record_list_->print(os);
   }
   void pcodegen(ostream& os) {
+      int size = 0;
       assert(record_list_);
       record_list_->pcodegen(os);
   }
@@ -1255,6 +1326,7 @@ public:
     assert(type_);
     name_ = new string(str);
     idhelp = *name_;
+    var_name_temp = *name_;
   }
 
   VariableDeclaration(const VariableDeclaration& p){
@@ -1274,13 +1346,21 @@ public:
   }
   void pcodegen(ostream& os) {
       assert(type_);
+      var_name_temp = *name_;
       type_->pcodegen(os);
-      //if (idhelp == "Integer") {
-          SYT.insert(*name_, "Integer", Stack_Address, sizeof(int));
+      if (idhelp == "Integer") {
+          SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
-      //}
-      //if(idhelp == "Integer"){
-      //}
+      }
+      else if (idhelp == "Real") {
+          SYT.insert(*name_, "Integer", Stack_Address, 1);
+          Stack_Address += 1;
+      }else if(idhelp == ""){
+
+      }
+      
+      
+      
   }
   virtual Object * clone () const { return new VariableDeclaration(*this);}
 
