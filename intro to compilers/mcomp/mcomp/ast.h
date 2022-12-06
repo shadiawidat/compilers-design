@@ -106,17 +106,32 @@ static int not_assign_flag = 0;
 static int if_decliration = 0;
 static int if_ldc_print = 1;
 static int dim_temp = 1;
+static int record_index = 0;
+static string record_name = "";
 //******************************
-class Linkedlist {
+class ArrayList {
 public:
     int low;
     int up;
     int len;
     string type;
-    Linkedlist* next;
-    Linkedlist() {
+    ArrayList* next;
+    
+    ArrayList() {
         len = 0;
         next=NULL;
+    }
+
+};
+class RecList {
+public:
+    string key;
+    int index;
+    int size;
+    RecList* next;
+
+    RecList() {
+        next = NULL;
     }
 
 };
@@ -126,7 +141,8 @@ public:
     string type;
     int address;
     int size;
-    Linkedlist* dimensions;
+    ArrayList* dimensions;
+    RecList* reclist;
     Base* next;
 
 
@@ -522,64 +538,27 @@ public:
   void pcodegen(ostream& os) {
       assert(exp_);
       exp_->pcodegen(os);
-      //os << "1" << endl;
-      //codel_name_help
+      int dim_num = SYT.findBase(codel_name_help)->dimensions->len;
       int dim = dim_temp;
       dim_temp++;
       int ixa = 1;
-      int dim_num = SYT.findBase(codel_name_help)->dimensions->len;
-     // os << "2" << endl;
-      Linkedlist* temp = SYT.findBase(codel_name_help)->dimensions;
-      //os << dim << endl;
-      //os << dim_num << endl;
-
-      if (dim < dim_num) {
-          //os << "2.5" << endl;
-          for (int i = 0; i < dim; i++) {
-              temp = temp->next;
-          }
-
-
-          //os << "3" << endl;
-
-          for (int i = dim; i < dim_num ; i++) {
-              //os << i << endl;
-              ixa *= (temp->up - temp->low + 1);
-              temp = temp->next;
-          }
-          ixa *= SYT.findBase(SYT.findBase(codel_name_help)->dimensions->type)->size;
+      ArrayList* temp = SYT.findBase(codel_name_help)->dimensions;
+      for (int i = 0; i < dim; i++) {
+          temp = temp->next;
       }
-      else {
-          if (SYT.findBase(codel_name_help)->dimensions->type == "Integer" && SYT.findBase(codel_name_help)->dimensions->type == "Real" && SYT.findBase(codel_name_help)->dimensions->type == "Bool") {
-              ixa *= 1;
-          }
-          else {
-              ixa = 1;
-              dim = dim - dim_num;
-              dim_num = SYT.findBase(SYT.findBase(codel_name_help)->type)->dimensions->len;
-
-              temp = SYT.findBase(SYT.findBase(codel_name_help)->type)->dimensions;
-              for (int i = 0; i < dim; i++) {
-                  temp = temp->next;
-              }
-              for (int i = dim; i < dim_num; i++) {
-                  //os << i << endl;
-                  ixa *= (temp->up - temp->low + 1);
-                  temp = temp->next;
-              }
-          }
-          ////////////////////////////////
-
+      for (int i = dim; i < dim_num; i++) {
+          ixa *= (temp->up - temp->low + 1);
+          temp = temp->next;
       }
-  
-      //os << SYT.findBase(codel_name_help)->dimensions->type << endl;
-
 
       os << "ixa " << ixa << endl;
       if (dim_) {
           dim_->pcodegen(os);
       }
   }
+
+
+
   virtual Object * clone () const { return new Dim(*this);}
 
 private:
@@ -706,20 +685,26 @@ public :
       //var_->pcodegen(os);
       dim_temp = 1;
       dim_->pcodegen(os);
-      //int subpart = 0;
-      //Linkedlist* l = SYT.findBase(codel_name_help)->dimensions;
-      //for (int i = 0; i < SYT.findBase(codel_name_help)->dimensions->len; i++) {
-      //    int y = l->low * SYT.findBase(l->type)->size;
-      //    l = l->next;
-      //    int x = 1;
-      //    Linkedlist* l1 = l;
-      //    for (int j = i+1; j < SYT.findBase(codel_name_help)->dimensions->len ; j++) {
-      //        x *= (l1->up - l1->low + 1);
-      //        l1 = l1->next;
-      //    }
-      //    subpart += x * y;
-      //}
-      //os << "dec " << subpart << endl;;
+      int subpart = 0;
+      int y;
+      ArrayList* l = SYT.findBase(codel_name_help)->dimensions;
+      for (int i = 0; i < SYT.findBase(codel_name_help)->dimensions->len; i++) {
+
+          if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool") {
+              y = l->low * SYT.findBase(l->type)->size;
+          }else{
+              y = l->low * 1;
+          }
+          l = l->next;
+          int x = 1;
+          ArrayList* l1 = l;
+          for (int j = i+1; j < SYT.findBase(codel_name_help)->dimensions->len ; j++) {
+              x *= (l1->up - l1->low + 1);
+              l1 = l1->next;
+          }
+          subpart += x * y;
+      }
+      os << "dec " << subpart << endl;;
   }
   virtual Object * clone () const { return new ArrayRef(*this);}
 
@@ -1228,15 +1213,21 @@ public :
 	  if (record_list_){
 		  record_list_->print(os);
 	  }
+
 	  assert(var_decl_);
 	  var_decl_->print(os);
+
   }
   void pcodegen(ostream& os) {
       if (record_list_) {
+          record_index++;
           record_list_->pcodegen(os);
+          
       }
+
       assert(var_decl_);
       var_decl_->pcodegen(os);
+
   }
   virtual Object * clone () const { return new RecordList(*this);}
   
@@ -1254,6 +1245,7 @@ public:
         idhelp = *name_;
         var_type_temp = *name_;
         var_size_temp = 1;
+        
     }
 
   virtual ~SimpleType () {
@@ -1351,9 +1343,9 @@ public :
       type_->pcodegen(os);
 
       if (SYT.find(var_name_temp) == -1) {
-          Linkedlist* l = new Linkedlist();
+          ArrayList* l = new ArrayList();
          // os << "this is our name " << var_name_temp << endl;
-          SYT.insert(var_name_temp, var_type_temp, Stack_Address, 0);
+          SYT.insert(var_name_temp, var_type_temp, Stack_Address,0);      ///////////////////////////////size is zero check in the future
           SYT.findBase(var_name_temp)->dimensions = l;
           var_len_temp=1;
           SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
@@ -1361,22 +1353,29 @@ public :
           SYT.findBase(var_name_temp)->dimensions->up = up_;
           SYT.findBase(var_name_temp)->dimensions->next = NULL;
           SYT.findBase(var_name_temp)->dimensions->type = var_type_temp;
+          //SYT.findBase(var_name_temp)->dimensions->type = "Array";
           var_size_temp = var_size_temp * (up_ - low_ + 1);
           SYT.findBase(var_name_temp)->size = var_size_temp;
-          //Linkedlist l = new Linkedlist();
+          if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool") {
+              if (SYT.findBase(var_type_temp)->dimensions != NULL) {
+                  SYT.findBase(var_name_temp)->dimensions->next = SYT.findBase(var_type_temp)->dimensions;
+                  var_len_temp = 1 + SYT.findBase(var_type_temp)->dimensions->len;
+                  SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
+              }
+          }
+
       }
       else {
-          //SYT.findBase(var_name_temp);
-          
-          Linkedlist* l = new Linkedlist();
+          ArrayList* l = new ArrayList();
           var_len_temp++;
           l->len = var_len_temp;
-          os << "addat" << l->len << endl;
+
           l->low = low_;
           l->up = up_;
           l->next = SYT.findBase(var_name_temp)->dimensions;
           SYT.findBase(var_name_temp)->dimensions = l;
           l->type = var_type_temp;   //////////////////////////////////////////////////////////////
+          //l->type = "Array";
           //Linkedlist* temp=l;
           //while (temp != NULL) {
           //    temp->len = var_len_temp;
@@ -1412,6 +1411,11 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(record_list_);
+      record_name = var_name_temp;
+      SYT.insert(var_name_temp, "Record", Stack_Address, 0);
+      RecList* l = new RecList();
+      SYT.findBase(var_name_temp)->reclist = l;
+      SYT.findBase(var_name_temp)->dimensions = NULL;
       record_list_->pcodegen(os);
   }
   virtual Object * clone () const { return new RecordType(*this);}
@@ -1478,6 +1482,7 @@ public:
 	  type_->print(os);
   }
   void pcodegen(ostream& os) {
+      os <<"decleration " << *name_ << endl;
       assert(type_);
       if_decliration = 1;
       var_name_temp = *name_;
@@ -1491,7 +1496,11 @@ public:
           SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
       }else if(idhelp == "Array"){
+          SYT.findBase(*name_)->size = var_size_temp;
           Stack_Address += var_size_temp;
+      }
+      else if (idhelp == "Record") {
+
       }
       if_decliration = 0;
   }

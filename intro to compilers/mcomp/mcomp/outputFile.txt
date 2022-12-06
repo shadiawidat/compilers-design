@@ -1,17 +1,35 @@
 ==================  Abstract Syntax Tree ================
-addat2
-addat2
-ldc 1623
+decleration s
+decleration rec
+kom mra 3ml he
+here
+decleration a
+1
+kom mra 3ml he
+here
+decleration b
+1
+kom mra 3ml he
+1
+decleration c
+2
+2
+2
+decleration aaa
+kom mra 3ml he
+here
+decleration x
+1
+kom mra 3ml he
+here
+decleration y
+1
+kom mra 3ml he
+1
+decleration z
+2
+2
+2
+ldc 98
 ldc 3
-sto
-ldc 250
-ldc 5
-ixa 196
-ldc 3
-ixa 49
-ldc 4
-ixa 7
-ldc 4
-ixa 1
-ldc 6
 sto
