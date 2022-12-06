@@ -1,14 +1,17 @@
 ==================  Abstract Syntax Tree ================
-name is : a
-name is : a
-name is : y
-ldc 9
+addat2
+addat2
+ldc 1623
 ldc 3
 sto
-name is : c
+ldc 250
 ldc 5
+ixa 196
 ldc 3
+ixa 49
 ldc 4
-ldc 7
+ixa 7
+ldc 4
+ixa 1
 ldc 6
 sto
