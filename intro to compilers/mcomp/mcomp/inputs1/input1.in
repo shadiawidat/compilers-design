@@ -1,12 +1,10 @@
 PROGRAM H
 	x FIXED;
 	y FIXED;
-	rec    RECORD{	
-		a     FIXED;                                                            
-		b     ^rec;  		
-		arr ARRAY[1:2] OF ARRAY [1:3] OF ARRAY [1:4] OF FIXED;		
-	};
-	point ^rec;
+	c ARRAY[2:8] OF x;
+	point ^ARRAY[2:8] OF FIXED;
 {
-	NEW(point);    
+	y=4;
+	point^[3]=5;
+	y=3;  
 }

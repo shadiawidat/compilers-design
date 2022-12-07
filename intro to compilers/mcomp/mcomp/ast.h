@@ -108,6 +108,7 @@ static int if_ldc_print = 1;
 static int dim_temp = 1;
 static int record_index = 0;
 static string record_name = "";
+static string addres_name_temp = "";
 //******************************
 class ArrayList {
 public:
@@ -135,6 +136,16 @@ public:
     }
 
 };
+class Pointers {
+public:
+    string key;
+    int size;
+    string type;
+    Pointers() {
+        
+    }
+
+};
 class Base {
 public:
     string key;
@@ -143,6 +154,7 @@ public:
     int size;
     ArrayList* dimensions;
     RecList* reclist;
+    Pointers* var;
     Base* next;
 
 
@@ -537,20 +549,28 @@ public:
   }
   void pcodegen(ostream& os) {
       assert(exp_);
+      os << codel_name_help <<"inside dim" << endl;
+
       exp_->pcodegen(os);
+      os << codel_name_help << "after exp pcode" << endl;
+
+      os << "fuck you 2" << endl;
       int dim_num = SYT.findBase(codel_name_help)->dimensions->len;
+      os << "fuck you 3" << endl;
+
       int dim = dim_temp;
       dim_temp++;
       int ixa = 1;
       ArrayList* temp = SYT.findBase(codel_name_help)->dimensions;
+      os << "fuck you 4" << endl;
       for (int i = 0; i < dim; i++) {
           temp = temp->next;
       }
+      os << dim<<"    " <<dim_num<< endl;
       for (int i = dim; i < dim_num; i++) {
           ixa *= (temp->up - temp->low + 1);
           temp = temp->next;
       }
-
       os << "ixa " << ixa << endl;
       if (dim_) {
           dim_->pcodegen(os);
@@ -592,7 +612,7 @@ public:
               os << "ldc " << i_ << endl;
           }
       }
-     
+      os << "fuck you "<<endl;
   }
   virtual Object * clone () const { return new IntConst(*this);}
 private:
@@ -762,7 +782,11 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_);
+      
       var_->pcodegen(os);
+      //os << "ldc " << SYT.findBase(var_name_temp)->address << endl;
+      //os << "ind" << endl;
+
   }
   virtual Object * clone () { return new AddressRef(*this);}
 
@@ -1244,6 +1268,7 @@ public:
 		name_ = new string(name); 
         idhelp = *name_;
         var_type_temp = *name_;
+        var_name_temp = *name_;
         var_size_temp = 1;
         
     }
@@ -1267,6 +1292,8 @@ public:
   void pcodegen(ostream& os) {
       idhelp = *name_;
       var_type_temp = *name_;
+      var_name_temp = *name_;
+
       var_size_temp = 1;
   }
   virtual Object * clone () const { return new SimpleType(*this);}
@@ -1341,11 +1368,18 @@ public :
   void pcodegen(ostream& os) {
       assert(type_);
       type_->pcodegen(os);
+      if (addres_name_temp != "") {
+          var_name_temp = addres_name_temp;
+      }
+      os << "twwwwwwwwwwwwwwwwe " << var_name_temp << endl;
 
-      if (SYT.find(var_name_temp) == -1) {
+      if (SYT.find(var_name_temp) == -1|| addres_name_temp != "") {
+          os << "hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo" << endl;
           ArrayList* l = new ArrayList();
-         // os << "this is our name " << var_name_temp << endl;
-          SYT.insert(var_name_temp, var_type_temp, Stack_Address,0);      ///////////////////////////////size is zero check in the future
+          os << "this is our name " << var_name_temp << endl;
+          if (addres_name_temp == "") {
+              SYT.insert(var_name_temp, var_type_temp, Stack_Address, 0);      ///////////////////////////////size is zero check in the future
+          }
           SYT.findBase(var_name_temp)->dimensions = l;
           var_len_temp=1;
           SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
@@ -1444,7 +1478,27 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(type_);
+      string name = var_name_temp;
+      addres_name_temp = name;
+      os << "1" << endl;
+
+      SYT.insert(var_name_temp, "Address", Stack_Address, 1);
+      Pointers* p = new Pointers();
+      SYT.findBase(name)->var = p;
       type_->pcodegen(os);
+      os << "2" << endl;
+      SYT.findBase(name)->var->size = var_size_temp;
+      os <<"size is :" << var_size_temp << endl;
+
+      SYT.findBase(name)->var->key = var_name_temp;
+      os << "name is :" << var_name_temp << endl;
+
+      SYT.findBase(name)->var->type = var_type_temp;
+      os << "type is :" << var_type_temp << endl;
+      if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool"){
+          SYT.findBase(name)->dimensions = SYT.findBase(SYT.findBase(name)->var->key)->dimensions;
+      }
+      idhelp = "Address";
   }
   virtual Object * clone () const { return new AddressType(*this);}
 
@@ -1498,6 +1552,10 @@ public:
       }else if(idhelp == "Array"){
           SYT.findBase(*name_)->size = var_size_temp;
           Stack_Address += var_size_temp;
+      }
+      else if (idhelp == "Address") {
+          Stack_Address += 1;
+          addres_name_temp = "";
       }
       else if (idhelp == "Record") {
 

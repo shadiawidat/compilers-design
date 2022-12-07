@@ -4,37 +4,31 @@ Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: s
-Node name : ArrayType: low bound is: 1, up bound is: 6
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: rec
-Node name : RecordType
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: a
-Node name : SimpleType
-Type is : Integer
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: b
-Node name : SimpleType
-Type is : Integer
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: c
-Node name : ArrayType: low bound is: 2, up bound is: 8
-Node name : IdeType
-Node name : VariableDeclaration. Var name is: aaa
-Node name : RecordType
-Node name : RecordList
+Node name : DeclarationList
 Node name : VariableDeclaration. Var name is: x
 Node name : SimpleType
 Type is : Integer
-Node name : RecordList
 Node name : VariableDeclaration. Var name is: y
-Node name : IdeType
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: z
 Node name : SimpleType
 Type is : Integer
+Node name : VariableDeclaration. Var name is: c
+Node name : ArrayType: low bound is: 2, up bound is: 8
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: point
+Node name : AddressType
+Node name : ArrayType: low bound is: 2, up bound is: 8
+Node name : SimpleType
+Type is : Integer
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :4
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : ArrayRef
+Node name : AddressRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :3
 Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :3
 Node name : IdeType

@@ -1,35 +1,38 @@
 ==================  Abstract Syntax Tree ================
-decleration s
-decleration rec
-kom mra 3ml he
-here
-decleration a
-1
-kom mra 3ml he
-here
-decleration b
-1
-kom mra 3ml he
-1
-decleration c
-2
-2
-2
-decleration aaa
-kom mra 3ml he
-here
 decleration x
-1
-kom mra 3ml he
-here
 decleration y
+decleration c
+twwwwwwwwwwwwwwwwe c
+hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo
+this is our name c
+decleration point
 1
-kom mra 3ml he
-1
-decleration z
+twwwwwwwwwwwwwwwwe point
+hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo
+this is our name point
 2
-2
-2
-ldc 98
+size is :7
+name is :point
+type is :Integer
+ldc 6
+ldc 4
+fuck you 
+sto
+ldc 14
+pointinside dim
 ldc 3
+fuck you 
+pointafter exp pcode
+fuck you 2
+fuck you 3
+fuck you 4
+1    1
+ixa 1
+dec 2
+ldc 5
+fuck you 
+sto
+ldc 6
+ldc 3
+fuck you 
 sto
