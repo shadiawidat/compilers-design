@@ -1,10 +1,13 @@
 PROGRAM H
-	x FIXED;
-	y FIXED;
-	c ARRAY[2:8] OF x;
-	point ^ARRAY[2:8] OF FIXED;
+	a FIXED;
+	b ^a;
+	c ^b;
+	
 {
-	y=4;
-	point^[3]=5;
-	y=3;  
+	b=5;
+	c=6;
+	b^=1;
+	c^^=2;
+	WRITE(a);
+	
 }

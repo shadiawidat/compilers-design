@@ -1,38 +1,19 @@
 ==================  Abstract Syntax Tree ================
-decleration x
-decleration y
-decleration c
-twwwwwwwwwwwwwwwwe c
-hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo
-this is our name c
-decleration point
-1
-twwwwwwwwwwwwwwwwe point
-hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo
-this is our name point
-2
-size is :7
-name is :point
-type is :Integer
 ldc 6
-ldc 4
-fuck you 
-sto
-ldc 14
-pointinside dim
-ldc 3
-fuck you 
-pointafter exp pcode
-fuck you 2
-fuck you 3
-fuck you 4
-1    1
-ixa 1
-dec 2
 ldc 5
-fuck you 
+sto
+ldc 7
+ldc 6
 sto
 ldc 6
-ldc 3
-fuck you 
+ind
+ldc 1
 sto
+ldc 7
+ind
+ind
+ldc 2
+sto
+ldc 5
+ind
+print

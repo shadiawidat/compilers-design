@@ -109,6 +109,8 @@ static int dim_temp = 1;
 static int record_index = 0;
 static string record_name = "";
 static string addres_name_temp = "";
+static int pointer_ind_flag = 0;
+static string array_type_temp = "";
 //******************************
 class ArrayList {
 public:
@@ -314,7 +316,13 @@ public:
      codel_coder_flag = 0;
      left_->pcodegen(os);
      if (if_ldc_print) {
-         os << "ldc " << SYT.find(codel_name_help) << endl;
+         if (!pointer_ind_flag) {
+             os << "ldc " << SYT.find(codel_name_help) << endl;
+             pointer_ind_flag = 0;
+         }
+         else {
+             pointer_ind_flag = 0;
+         }
      }
      if_ldc_print = 1;
      
@@ -549,24 +557,18 @@ public:
   }
   void pcodegen(ostream& os) {
       assert(exp_);
-      os << codel_name_help <<"inside dim" << endl;
-
       exp_->pcodegen(os);
-      os << codel_name_help << "after exp pcode" << endl;
 
-      os << "fuck you 2" << endl;
       int dim_num = SYT.findBase(codel_name_help)->dimensions->len;
-      os << "fuck you 3" << endl;
 
       int dim = dim_temp;
       dim_temp++;
       int ixa = 1;
       ArrayList* temp = SYT.findBase(codel_name_help)->dimensions;
-      os << "fuck you 4" << endl;
       for (int i = 0; i < dim; i++) {
           temp = temp->next;
       }
-      os << dim<<"    " <<dim_num<< endl;
+      //os << dim<<"    " <<dim_num<< endl;
       for (int i = dim; i < dim_num; i++) {
           ixa *= (temp->up - temp->low + 1);
           temp = temp->next;
@@ -612,7 +614,6 @@ public:
               os << "ldc " << i_ << endl;
           }
       }
-      os << "fuck you "<<endl;
   }
   virtual Object * clone () const { return new IntConst(*this);}
 private:
@@ -709,12 +710,17 @@ public :
       int y;
       ArrayList* l = SYT.findBase(codel_name_help)->dimensions;
       for (int i = 0; i < SYT.findBase(codel_name_help)->dimensions->len; i++) {
-
           if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool") {
-              y = l->low * SYT.findBase(l->type)->size;
+              if (l->type != "Integer" && l->type != "Real" && l->type != "Bool") {
+                  y = l->low * SYT.findBase(l->type)->size;
+              }
+              else {
+                  y = l->low * 1;
+              }
           }else{
               y = l->low * 1;
           }
+
           l = l->next;
           int x = 1;
           ArrayList* l1 = l;
@@ -722,6 +728,7 @@ public :
               x *= (l1->up - l1->low + 1);
               l1 = l1->next;
           }
+
           subpart += x * y;
       }
       os << "dec " << subpart << endl;;
@@ -782,10 +789,10 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_);
-      
+      pointer_ind_flag = 1;
       var_->pcodegen(os);
       //os << "ldc " << SYT.findBase(var_name_temp)->address << endl;
-      //os << "ind" << endl;
+      os << "ind" << endl;
 
   }
   virtual Object * clone () { return new AddressRef(*this);}
@@ -1326,10 +1333,18 @@ public:
 
   void pcodegen(ostream& os) {
       if (!if_decliration) {
+          var_type_temp = *name_;
+          codel_name_help = *name_;
 
           if (codel_coder_flag == 0) {
               //var_name_temp = *name_;
               codel_name_help = *name_;
+              if (pointer_ind_flag) {
+                  os << "ldc " << SYT.find(codel_name_help) << endl;
+
+                  //os << "ind" << endl;
+                  //pointer_ind_flag = 0;
+              }
           }
           else {
               os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
@@ -1337,7 +1352,9 @@ public:
       }
       else {
           var_type_temp = *name_;
+
           var_size_temp = SYT.findBase(*name_)->size;
+          //os << "type is " << var_type_temp << endl;
       }
     
 
@@ -1361,7 +1378,7 @@ public :
   }
 
   void print (ostream& os) {
-		os<<"Node name : ArrayType: low bound is: "<<low_<<", up bound is: "<<up_<<endl;
+	  os<<"Node name : ArrayType: low bound is: "<<low_<<", up bound is: "<<up_<<endl;
 	  assert(type_);
 	  type_->print(os);
   }
@@ -1371,15 +1388,14 @@ public :
       if (addres_name_temp != "") {
           var_name_temp = addres_name_temp;
       }
-      os << "twwwwwwwwwwwwwwwwe " << var_name_temp << endl;
 
       if (SYT.find(var_name_temp) == -1|| addres_name_temp != "") {
-          os << "hhhhhhhhhhhhheeeeeeeeeeeeeelllllllllllllllooooooooooooooooooooo" << endl;
           ArrayList* l = new ArrayList();
-          os << "this is our name " << var_name_temp << endl;
           if (addres_name_temp == "") {
               SYT.insert(var_name_temp, var_type_temp, Stack_Address, 0);      ///////////////////////////////size is zero check in the future
+          
           }
+          addres_name_temp = "";
           SYT.findBase(var_name_temp)->dimensions = l;
           var_len_temp=1;
           SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
@@ -1395,6 +1411,8 @@ public :
                   SYT.findBase(var_name_temp)->dimensions->next = SYT.findBase(var_type_temp)->dimensions;
                   var_len_temp = 1 + SYT.findBase(var_type_temp)->dimensions->len;
                   SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
+                  array_type_temp = SYT.findBase(var_type_temp)->dimensions->type;
+                  SYT.findBase(var_name_temp)->dimensions->type = array_type_temp;
               }
           }
 
@@ -1408,7 +1426,7 @@ public :
           l->up = up_;
           l->next = SYT.findBase(var_name_temp)->dimensions;
           SYT.findBase(var_name_temp)->dimensions = l;
-          l->type = var_type_temp;   //////////////////////////////////////////////////////////////
+          l->type = array_type_temp;   //////////////////////////////////////////////////////////////
           //l->type = "Array";
           //Linkedlist* temp=l;
           //while (temp != NULL) {
@@ -1480,21 +1498,19 @@ public :
       assert(type_);
       string name = var_name_temp;
       addres_name_temp = name;
-      os << "1" << endl;
 
       SYT.insert(var_name_temp, "Address", Stack_Address, 1);
       Pointers* p = new Pointers();
       SYT.findBase(name)->var = p;
       type_->pcodegen(os);
-      os << "2" << endl;
       SYT.findBase(name)->var->size = var_size_temp;
-      os <<"size is :" << var_size_temp << endl;
+      //os <<"size is :" << var_size_temp << endl;
 
       SYT.findBase(name)->var->key = var_name_temp;
-      os << "name is :" << var_name_temp << endl;
+      //os << "name is :" << var_name_temp << endl;
 
       SYT.findBase(name)->var->type = var_type_temp;
-      os << "type is :" << var_type_temp << endl;
+      //os << "type is :" << var_type_temp << endl;
       if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool"){
           SYT.findBase(name)->dimensions = SYT.findBase(SYT.findBase(name)->var->key)->dimensions;
       }
@@ -1536,7 +1552,7 @@ public:
 	  type_->print(os);
   }
   void pcodegen(ostream& os) {
-      os <<"decleration " << *name_ << endl;
+      //os <<"decleration " << *name_ << endl;
       assert(type_);
       if_decliration = 1;
       var_name_temp = *name_;
