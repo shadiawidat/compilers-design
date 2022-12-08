@@ -111,6 +111,8 @@ static string record_name = "";
 static string addres_name_temp = "";
 static int pointer_ind_flag = 0;
 static string array_type_temp = "";
+static int array_flag = 0;
+static int size_of_record_temp = 0;
 //******************************
 class ArrayList {
 public:
@@ -1389,12 +1391,13 @@ public :
           var_name_temp = addres_name_temp;
       }
 
-      if (SYT.find(var_name_temp) == -1|| addres_name_temp != "") {
+      if ((SYT.find(var_name_temp) == -1|| addres_name_temp != "") && !array_flag) {
           ArrayList* l = new ArrayList();
           if (addres_name_temp == "") {
               SYT.insert(var_name_temp, var_type_temp, Stack_Address, 0);      ///////////////////////////////size is zero check in the future
           
           }
+          array_flag = 1;
           addres_name_temp = "";
           SYT.findBase(var_name_temp)->dimensions = l;
           var_len_temp=1;
@@ -1463,12 +1466,16 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(record_list_);
+
       record_name = var_name_temp;
       SYT.insert(var_name_temp, "Record", Stack_Address, 0);
       RecList* l = new RecList();
       SYT.findBase(var_name_temp)->reclist = l;
       SYT.findBase(var_name_temp)->dimensions = NULL;
+
       record_list_->pcodegen(os);
+
+      SYT.findBase(record_name)->size = size_of_record_temp;
   }
   virtual Object * clone () const { return new RecordType(*this);}
 
@@ -1561,16 +1568,24 @@ public:
           
           SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
+          size_of_record_temp += 1;
       }
       else if (idhelp == "Real") {
           SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
+          size_of_record_temp += 1;
+
       }else if(idhelp == "Array"){
           SYT.findBase(*name_)->size = var_size_temp;
           Stack_Address += var_size_temp;
+          size_of_record_temp += var_size_temp;
+          array_flag = 0;
+
+
       }
       else if (idhelp == "Address") {
           Stack_Address += 1;
+          size_of_record_temp += 1;
           addres_name_temp = "";
       }
       else if (idhelp == "Record") {

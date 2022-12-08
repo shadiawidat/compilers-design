@@ -1,13 +1,13 @@
 PROGRAM H
-	a FIXED;
-	b ^a;
-	c ^b;
-	
-{
-	b=5;
-	c=6;
-	b^=1;
-	c^^=2;
-	WRITE(a);
-	
+	x FIXED;
+	y FIXED;
+	rec    RECORD{	
+		a     FIXED;                                                            
+		b     ^rec;  		
+		arr ARRAY[1:2] OF ARRAY [1:3] OF ARRAY [1:4] OF FIXED;		
+	};
+	point ^rec;
+{	
+	x=3;
+	WRITE(point^.a);
 }

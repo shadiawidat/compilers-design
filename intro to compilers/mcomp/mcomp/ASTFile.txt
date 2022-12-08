@@ -4,29 +4,38 @@ Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: x
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: y
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: rec
+Node name : RecordType
+Node name : RecordList
 Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
+Node name : RecordList
 Node name : VariableDeclaration. Var name is: b
 Node name : AddressType
 Node name : IdeType
-Node name : VariableDeclaration. Var name is: c
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: arr
+Node name : ArrayType: low bound is: 1, up bound is: 2
+Node name : ArrayType: low bound is: 1, up bound is: 3
+Node name : ArrayType: low bound is: 1, up bound is: 4
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: point
 Node name : AddressType
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :5
+Node name : AssignNode name : IntConst. Value is :3
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
+Node name : WriteVarStatementNode name : RecordRef
 Node name : AddressRef
 Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :2
-Node name : AddressRef
-Node name : AddressRef
 Node name : IdeType
-Node name : StatementList
-Node name : WriteVarStatementNode name : IdeType
