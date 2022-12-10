@@ -1,12 +1,27 @@
 ==================  Abstract Syntax Tree ================
-hello
-f
-inside the if
-inside the if
-inside the if
-first array node
-the end
-the rest of the nodes
-the end
-the rest of the nodes
-the end
+rec list is null
+Addressrec list is NOT null
+rec list is NOT null
+$$$$$$$$$$rec
+Addressldc 33
+ldc 26
+new
+ldc 33
+ind
+inc 1
+ldc 0
+new
+ldc 33
+ind
+inc 1
+ind
+inc 2
+ldc 1
+ixa 12
+ldc 2
+ixa 4
+ldc 3
+ixa 1
+dec 17
+ldc 1
+sto

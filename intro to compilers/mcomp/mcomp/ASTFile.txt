@@ -32,10 +32,25 @@ Node name : VariableDeclaration. Var name is: point
 Node name : AddressType
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :3
-Node name : IdeType
+Node name : NewStatementNode name : IdeType
 Node name : StatementList
-Node name : WriteVarStatementNode name : RecordRef
+Node name : NewStatementNode name : RecordRef
 Node name : AddressRef
 Node name : IdeType
 Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :1
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :1
+Node name : Dim
+Node name : IntConst. Value is :2
+Node name : Dim
+Node name : IntConst. Value is :3

@@ -1,16 +1,10 @@
 PROGRAM H
-s ARRAY[1:6] OF FIXED; 
-rec RECORD{
-	a FIXED;
-	b FIXED;
-	c ARRAY[2:8] OF s;
-	};
-aaa RECORD {
+
+	y ARRAY[1:6] OF ARRAY[1:6] OF ARRAY[1:6] OF FIXED;
+	s ARRAY[1:6] OF ARRAY[1:6] OF ARRAY[1:6] OF y;
 	x FIXED;
-	y rec;
-	z FIXED;
-	};
+point ^rec;WRITE(point^.a);
 {
-	y=3;
+	x=3;
 	
 }

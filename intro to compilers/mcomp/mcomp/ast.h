@@ -113,7 +113,21 @@ static int pointer_ind_flag = 0;
 static string array_type_temp = "";
 static int array_flag = 0;
 static int size_of_record_temp = 0;
+static int record_dec_flag = 0;
+static string record_dec_name = "";
+static int record_dec_index = 0;
+
+static int address_ref_flag = 0;
+static string address_name_temp = "";
+static int record_ref_flag = 0;
+static string record_ref_name = "";
+static int address_1_not_0 = 0;
 //******************************
+
+//need to check
+//              shadi: if we want in print the value of the var in the record we do address_1_not_0=1 we need to put it in all the places that are related to record it is related to records;
+//              shadi: we need to do that the type of the pointer is the name of the record in case we have pointer to the same record inside it so that the newstatement will ldc the currect size;
+//
 class ArrayList {
 public:
     int low;
@@ -133,6 +147,7 @@ public:
     string key;
     int index;
     int size;
+    string type;
     RecList* next;
 
     RecList() {
@@ -763,8 +778,20 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(varExt_ && varIn_);
+      if (record_ref_flag != 2) {
+          record_ref_flag = 1;
+      }
+
+
       varExt_->pcodegen(os);
+      record_ref_flag = 2;
+
       varIn_->pcodegen(os);
+      record_ref_flag = 0;
+      if (address_1_not_0) {
+          os << "ind " << endl;
+      }
+
   }
   virtual Object * clone () const { return new RecordRef(*this);}
 
@@ -792,10 +819,11 @@ public :
   void pcodegen(ostream& os) {
       assert(var_);
       pointer_ind_flag = 1;
+      address_ref_flag = 1;
       var_->pcodegen(os);
       //os << "ldc " << SYT.findBase(var_name_temp)->address << endl;
       os << "ind" << endl;
-
+      address_ref_flag = 0;
   }
   virtual Object * clone () { return new AddressRef(*this);}
 
@@ -826,7 +854,19 @@ public :
       assert(var_);
       codel(var_,os);
       Base* t = SYT.findBase(codel_name_help);
-      os << "ldc "<< t->getsize() << endl;
+      if (t->var == NULL) {
+          os << "ldc " << t->getsize() << endl;
+          os << t->var->type << endl;
+
+      }
+      else {
+          
+          os << "ldc " << t->var->size << endl;
+
+          t->dimensions = SYT.findBase(t->var->type)->dimensions;
+          t->reclist = SYT.findBase(t->var->type)->reclist;
+      }
+
       os << "new" << endl;
   }
   virtual Object * clone () { return new NewStatement(*this);}
@@ -884,8 +924,10 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(exp_);
+      address_1_not_0 = 1;
       coder(exp_, os);
       os << "print" << endl;
+      address_1_not_0 = 0;
   }
   virtual Object * clone () const { return new WriteVarStatement(*this);}
   
@@ -1301,8 +1343,7 @@ public:
   void pcodegen(ostream& os) {
       idhelp = *name_;
       var_type_temp = *name_;
-      var_name_temp = *name_;
-
+      //var_name_temp = *name_;
       var_size_temp = 1;
   }
   virtual Object * clone () const { return new SimpleType(*this);}
@@ -1337,25 +1378,91 @@ public:
       if (!if_decliration) {
           var_type_temp = *name_;
           codel_name_help = *name_;
-
+          //os << *name_ << endl;
           if (codel_coder_flag == 0) {
               //var_name_temp = *name_;
               codel_name_help = *name_;
+              //os << "************" << codel_name_help << endl;
               if (pointer_ind_flag) {
-                  os << "ldc " << SYT.find(codel_name_help) << endl;
+                 // os << "1 " << endl;
+                  //os << "ldc " << SYT.find(codel_name_help) << endl;
+                  if (!record_ref_flag) {
+                      //os << "2" << endl;
+                      os << "ldc " << SYT.find(codel_name_help) << endl; 
+                  }
+                  else {
+                      if (record_ref_flag == 1) {
+                          os << "ldc " << SYT.find(codel_name_help) << endl;
+                          record_ref_name = codel_name_help;
+                      }
+                      else {
+                          RecList* r = SYT.findBase(record_ref_name)->reclist;
+                          //os << record_ref_name << endl;
+                          // os << record_ref_name << endl;
 
+                          while (r->key != *name_) {
+                              r = r->next;
+                          }
+                          os << "inc " << r->index << endl;
+                      }
+                      
+
+                      
+                  }
                   //os << "ind" << endl;
                   //pointer_ind_flag = 0;
               }
           }
           else {
-              os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+              if (!record_ref_flag) {
+                  if (!address_ref_flag) {
+                      os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+                  }
+                  else {
+                     // os << "2 " << endl;
+                      os << "ldc " << SYT.find(*name_) << endl;
+
+                  }
+                 
+
+              }
+              else if(record_ref_flag==1) {
+                  //os << "1" << endl;
+                  os << "ldc " << SYT.find(*name_) << endl;
+                  //os << "2" << endl;
+
+                  record_ref_name = SYT.findBase(*name_)->key;
+                  //os << "3" << endl;
+                  if (address_ref_flag) {
+                      record_ref_name = SYT.findBase(*name_)->var->key;
+                   //   os << "4       " << record_ref_name << endl;
+
+                     
+                  }
+              }
+              else {
+
+                  
+                //  os << "5" << endl;
+
+                  RecList* r= SYT.findBase(record_ref_name)->reclist;
+                  
+                 // os << record_ref_name << endl;
+
+                  while (r->key != *name_) {
+                      r = r->next;
+                  }
+                  os << "inc " << r->index << endl;
+
+              }
           }
       }
       else {
           var_type_temp = *name_;
-
+          address_name_temp = *name_;
+          //os << "ide type size:" << *name_ << endl;
           var_size_temp = SYT.findBase(*name_)->size;
+          //os << "ide type size:" << var_size_temp << endl;
           //os << "type is " << var_type_temp << endl;
       }
     
@@ -1390,12 +1497,14 @@ public :
       if (addres_name_temp != "") {
           var_name_temp = addres_name_temp;
       }
-
+      //os << "ssssssss" << endl;
       if ((SYT.find(var_name_temp) == -1|| addres_name_temp != "") && !array_flag) {
+         // os << "if the first array" << endl;
+
           ArrayList* l = new ArrayList();
           if (addres_name_temp == "") {
               SYT.insert(var_name_temp, var_type_temp, Stack_Address, 0);      ///////////////////////////////size is zero check in the future
-          
+              //os << "inserted and the name is : " << var_name_temp << endl;
           }
           array_flag = 1;
           addres_name_temp = "";
@@ -1406,11 +1515,14 @@ public :
           SYT.findBase(var_name_temp)->dimensions->up = up_;
           SYT.findBase(var_name_temp)->dimensions->next = NULL;
           SYT.findBase(var_name_temp)->dimensions->type = var_type_temp;
+          array_type_temp = var_type_temp;
           //SYT.findBase(var_name_temp)->dimensions->type = "Array";
           var_size_temp = var_size_temp * (up_ - low_ + 1);
           SYT.findBase(var_name_temp)->size = var_size_temp;
+          //os << var_type_temp << endl;
           if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool") {
               if (SYT.findBase(var_type_temp)->dimensions != NULL) {
+                  //os << "array of arrays in the if" << endl;
                   SYT.findBase(var_name_temp)->dimensions->next = SYT.findBase(var_type_temp)->dimensions;
                   var_len_temp = 1 + SYT.findBase(var_type_temp)->dimensions->len;
                   SYT.findBase(var_name_temp)->dimensions->len = var_len_temp;
@@ -1421,15 +1533,15 @@ public :
 
       }
       else {
-          ArrayList* l = new ArrayList();
+          ArrayList* l1 = new ArrayList();
           var_len_temp++;
-          l->len = var_len_temp;
+          l1->len = var_len_temp;
 
-          l->low = low_;
-          l->up = up_;
-          l->next = SYT.findBase(var_name_temp)->dimensions;
-          SYT.findBase(var_name_temp)->dimensions = l;
-          l->type = array_type_temp;   //////////////////////////////////////////////////////////////
+          l1->low = low_;
+          l1->up = up_;
+          l1->next = SYT.findBase(var_name_temp)->dimensions;
+          SYT.findBase(var_name_temp)->dimensions = l1;
+          l1->type = array_type_temp;   //////////////////////////////////////////////////////////////
           //l->type = "Array";
           //Linkedlist* temp=l;
           //while (temp != NULL) {
@@ -1466,16 +1578,24 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(record_list_);
-
+      record_dec_flag = 1;
+      record_dec_name = var_name_temp;
+      record_dec_index = 0;
+      size_of_record_temp = 0;
       record_name = var_name_temp;
       SYT.insert(var_name_temp, "Record", Stack_Address, 0);
-      RecList* l = new RecList();
-      SYT.findBase(var_name_temp)->reclist = l;
+     /* RecList* l = new RecList();
+      SYT.findBase(var_name_temp)->reclist = l;*/
       SYT.findBase(var_name_temp)->dimensions = NULL;
+      //os << "the name of the current record is :" << record_name << endl;
 
       record_list_->pcodegen(os);
-
+      //os << "the name of the current record is :" << record_name << endl;
       SYT.findBase(record_name)->size = size_of_record_temp;
+      record_dec_flag = 0;
+      record_dec_name = "";
+      record_dec_index = 0;
+      idhelp = "Record";
   }
   virtual Object * clone () const { return new RecordType(*this);}
 
@@ -1509,16 +1629,20 @@ public :
       SYT.insert(var_name_temp, "Address", Stack_Address, 1);
       Pointers* p = new Pointers();
       SYT.findBase(name)->var = p;
+      //os << "in address pcodegen before type" << endl;
+
       type_->pcodegen(os);
+      //os << "in address pcodegen afrer type" << endl;
       SYT.findBase(name)->var->size = var_size_temp;
       //os <<"size is :" << var_size_temp << endl;
 
-      SYT.findBase(name)->var->key = var_name_temp;
-      //os << "name is :" << var_name_temp << endl;
+      SYT.findBase(name)->var->key = address_name_temp;
+      //os << "name is :" << address_name_temp << endl;
 
       SYT.findBase(name)->var->type = var_type_temp;
       //os << "type is :" << var_type_temp << endl;
       if (var_type_temp != "Integer" && var_type_temp != "Real" && var_type_temp != "Bool"){
+          //os <<"ssssssssssssssssssss" << SYT.findBase(name)->var->key << endl;
           SYT.findBase(name)->dimensions = SYT.findBase(SYT.findBase(name)->var->key)->dimensions;
       }
       idhelp = "Address";
@@ -1563,34 +1687,99 @@ public:
       assert(type_);
       if_decliration = 1;
       var_name_temp = *name_;
+      string record = "";
       type_->pcodegen(os);
       if (idhelp == "Integer") {
-          
+          //os << "var_Dec integer" << endl;
+          //os << "integer" << endl;
           SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
           size_of_record_temp += 1;
+          //os << SYT.findBase(*name_)->size << endl;
+
       }
       else if (idhelp == "Real") {
+         // os << "real" << endl;
+
           SYT.insert(*name_, "Integer", Stack_Address, 1);
           Stack_Address += 1;
           size_of_record_temp += 1;
+          //os << SYT.findBase(*name_)->size << endl;
+
 
       }else if(idhelp == "Array"){
-          SYT.findBase(*name_)->size = var_size_temp;
+          //os << "array" << endl;
+          //os << "var_Dec array" << endl;
+          SYT.findBase(var_name_temp)->size = var_size_temp;
           Stack_Address += var_size_temp;
           size_of_record_temp += var_size_temp;
           array_flag = 0;
-
+          //os << "var_Dec end of array" << endl;
+          //os << "the size of the array is: " << SYT.findBase(var_name_temp)->size << endl;
+          //os << "the stack address is: " << Stack_Address << endl;
+          //os << SYT.findBase(*name_)->size << endl;
 
       }
       else if (idhelp == "Address") {
+        //  os << "address" << endl;
+
           Stack_Address += 1;
           size_of_record_temp += 1;
           addres_name_temp = "";
-      }
-      else if (idhelp == "Record") {
+          os << SYT.findBase(*name_)->type;
+         // os << SYT.findBase(*name_)->size << endl;
 
       }
+      else if (idhelp == "Record") {
+         // os << "record" << endl;
+          //os << SYT.findBase(*name_)->size << endl;
+          RecList* l = SYT.findBase(*name_)->reclist;
+          os <<"$$$$$$$$$$" << *name_ << endl;
+          while (l != NULL) {
+              if (l->key == *name_) {
+                  l->size = SYT.findBase(*name_)->size;  
+              }
+              l = l->next;
+          }
+
+      }
+      
+      if (record_dec_flag) {//insert all the var in the record to the record list
+          if (SYT.findBase(record_dec_name)->reclist == NULL) {
+              os << "rec list is null" << endl;
+              RecList* l = new RecList();
+              l->index = record_dec_index;
+              record_dec_index++;
+              l->key = *name_;
+              l->next = NULL;
+              l->size = SYT.findBase(*name_)->size;
+              SYT.findBase(record_dec_name)->reclist = l;
+          }
+          else {
+              os << "rec list is NOT null" << endl;
+
+              RecList* l = new RecList();
+              RecList* l1 = SYT.findBase(record_dec_name)->reclist;
+              l->index = record_dec_index;
+              record_dec_index++;
+              l->key = *name_;
+              l->next = NULL;
+
+              l->size = SYT.findBase(*name_)->size;
+
+              while (l1->next != NULL) {
+                  l1 = l1->next;
+              }
+
+              if (l1->next == NULL) {
+                  l1->next = l;
+
+              }
+
+          }
+          //os << "end of dec" << endl;
+      }
+      
       if_decliration = 0;
   }
   virtual Object * clone () const { return new VariableDeclaration(*this);}
