@@ -14,3 +14,4 @@ ldc 55
 inc 45
 ldc 22
 sto
+aaa.y.c[4]=5;
