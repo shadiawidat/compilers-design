@@ -1,3 +1,181 @@
 ==================  Abstract Syntax Tree ================
-ldc 63
-ldc 2
+*********************** decleration for : rec*************************************
+*********************** decleration for : a*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  6
+end_var_Dec integer
+idhelp is empty
+-----------end of dec------------
+*********************** decleration for : b*************************************
+after type _>pcode gen
+var_Dec array
+rec
+my size is :343
+ Stack_Address is:  349
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+*********************** decleration for : c*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  350
+end_var_Dec integer
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+*********************** decleration for : d*************************************
+holyyyy golyyyyy d
+after type _>pcode gen
+1
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+after type _>pcode gen
+var_Dec record
+the record size is :346
+ Stack_Address is:  351
+end_ var_Dec record
+idhelp is empty
+-----------end of dec------------
+*********************** decleration for : rec1*************************************
+*********************** decleration for : b*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  352
+end_var_Dec integer
+idhelp is empty
+-----------end of dec------------
+*********************** decleration for : a*************************************
+555555  stack pointer before : 352
+6666
+SIZE 222346
+after type _>pcode gen
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+*********************** decleration for : c*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  699
+end_var_Dec integer
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+after type _>pcode gen
+var_Dec record
+the record size is :348
+ Stack_Address is:  699
+end_ var_Dec record
+idhelp is empty
+-----------end of dec------------
+*********************** decleration for : rec2*************************************
+*********************** decleration for : a*************************************
+555555  stack pointer before : 699
+6666
+SIZE 222348
+after type _>pcode gen
+idhelp is empty
+-----------end of dec------------
+*********************** decleration for : b*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  1048
+end_var_Dec integer
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+*********************** decleration for : c*************************************
+after type _>pcode gen
+var_Dec integer
+my size is :1
+ Stack_Address is:  1049
+end_var_Dec integer
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+*********************** decleration for : d*************************************
+holyyyy golyyyyy d
+after type _>pcode gen
+1
+idhelp is empty
+REC LIST IS NOT NULL
+1
+12
+123
+1234
+12345
+123456
+1234567
+-----------end of dec------------
+after type _>pcode gen
+var_Dec record
+the record size is :351
+ Stack_Address is:  1050
+end_ var_Dec record
+idhelp is empty
+-----------end of dec------------
+ldc 5
+the addres flag this time is : 1
+here 1 
+root is :rec
+
+here 2 
+ind
+the addres flag this time is : 0
+inc 0
+the addres flag this time is : 0

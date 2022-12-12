@@ -1,6 +1,6 @@
 PROGRAM H
 	x FIXED;
-	y FIXED;	
+	y FIXED;
 	rec    RECORD{	
 		a     FIXED;                                                            
 		b     ^rec;  		

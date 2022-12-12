@@ -1,10 +1,26 @@
 PROGRAM H
 
-	y ARRAY[1:6] OF ARRAY[1:6] OF ARRAY[1:6] OF FIXED;
-	s ARRAY[1:6] OF ARRAY[1:6] OF ARRAY[1:6] OF y;
-	x FIXED;
-point ^rec;WRITE(point^.a);
+	rec    RECORD{	
+		a     FIXED; 
+		b     ARRAY[3:9] OF ARRAY[3:9] OF ARRAY[3:9] OF FIXED; 
+		c     FIXED;
+		d     ^b;                        	
+	};                            
+ 
+	rec1    RECORD{	
+		
+		b     FIXED;  
+		a     rec; 
+		c     FIXED;                             	
+	};
+	rec2    RECORD{	
+		a     rec1;    
+		b     FIXED;
+		c     FIXED;
+		d     ^rec1;                                                    	
+	};
+
 {
-	x=3;
+	rec.d^.a.b[4][7][6]=5;
 	
 }
