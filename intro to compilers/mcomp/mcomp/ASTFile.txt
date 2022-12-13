@@ -8,6 +8,7 @@ Node name : VariableDeclaration. Var name is: rec
 Node name : RecordType
 Node name : RecordList
 Node name : VariableDeclaration. Var name is: a
+Node name : ArrayType: low bound is: 3, up bound is: 9
 Node name : SimpleType
 Type is : Integer
 Node name : RecordList
@@ -15,8 +16,7 @@ Node name : VariableDeclaration. Var name is: b
 Node name : ArrayType: low bound is: 3, up bound is: 9
 Node name : ArrayType: low bound is: 3, up bound is: 9
 Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : SimpleType
-Type is : Integer
+Node name : IdeType
 Node name : RecordList
 Node name : VariableDeclaration. Var name is: c
 Node name : SimpleType
@@ -59,12 +59,8 @@ Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :5
 Node name : RecordRef
 Node name : IdeType
-Node name : RecordRef
-Node name : AddressRef
-Node name : IdeType
-Node name : RecordRef
-Node name : IdeType
 Node name : ArrayRef
+Node name : AddressRef
 Node name : IdeType
 Node name : Dim
 Node name : IntConst. Value is :4
@@ -72,3 +68,5 @@ Node name : Dim
 Node name : IntConst. Value is :7
 Node name : Dim
 Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :5

@@ -1,19 +1,43 @@
 ==================  Abstract Syntax Tree ================
 *********************** decleration for : rec*************************************
 *********************** decleration for : a*************************************
-after type _>pcode gen
-var_Dec integer
-my size is :1
- Stack_Address is:  6
-end_var_Dec integer
+addres_name_temp  : 
+FUN 0
+var_name_temp  : a
+11
+FUN 0.5
+FUN 1
+var_Dec array
+rec
+1
+my size is :7
+ Stack_Address is:  12
 idhelp is empty
 -----------end of dec------------
 *********************** decleration for : b*************************************
-after type _>pcode gen
+addres_name_temp  : 
+FUN 0
+var_name_temp  : b
+11
+FUN 0.5
+FUN 1
+FUN 2
+FUN 3
+WE DID THE ARRAY OF ARRAYS1 
+my len now is 2
+addres_name_temp  : 
+FUN 0
+var_name_temp  : b
+33
+addres_name_temp  : 
+FUN 0
+var_name_temp  : b
+33
 var_Dec array
 rec
-my size is :343
- Stack_Address is:  349
+3
+my size is :2401
+ Stack_Address is:  2413
 idhelp is empty
 REC LIST IS NOT NULL
 1
@@ -25,10 +49,9 @@ REC LIST IS NOT NULL
 1234567
 -----------end of dec------------
 *********************** decleration for : c*************************************
-after type _>pcode gen
 var_Dec integer
 my size is :1
- Stack_Address is:  350
+ Stack_Address is:  2414
 end_var_Dec integer
 idhelp is empty
 REC LIST IS NOT NULL
@@ -42,7 +65,6 @@ REC LIST IS NOT NULL
 -----------end of dec------------
 *********************** decleration for : d*************************************
 holyyyy golyyyyy d
-after type _>pcode gen
 1
 idhelp is empty
 REC LIST IS NOT NULL
@@ -54,27 +76,24 @@ REC LIST IS NOT NULL
 123456
 1234567
 -----------end of dec------------
-after type _>pcode gen
 var_Dec record
-the record size is :346
- Stack_Address is:  351
+the record size is :2410
+ Stack_Address is:  2415
 end_ var_Dec record
 idhelp is empty
 -----------end of dec------------
 *********************** decleration for : rec1*************************************
 *********************** decleration for : b*************************************
-after type _>pcode gen
 var_Dec integer
 my size is :1
- Stack_Address is:  352
+ Stack_Address is:  2416
 end_var_Dec integer
 idhelp is empty
 -----------end of dec------------
 *********************** decleration for : a*************************************
-555555  stack pointer before : 352
+555555  stack pointer before : 2416
 6666
-SIZE 222346
-after type _>pcode gen
+SIZE 2222410
 idhelp is empty
 REC LIST IS NOT NULL
 1
@@ -86,10 +105,9 @@ REC LIST IS NOT NULL
 1234567
 -----------end of dec------------
 *********************** decleration for : c*************************************
-after type _>pcode gen
 var_Dec integer
 my size is :1
- Stack_Address is:  699
+ Stack_Address is:  4827
 end_var_Dec integer
 idhelp is empty
 REC LIST IS NOT NULL
@@ -101,26 +119,23 @@ REC LIST IS NOT NULL
 123456
 1234567
 -----------end of dec------------
-after type _>pcode gen
 var_Dec record
-the record size is :348
- Stack_Address is:  699
+the record size is :2412
+ Stack_Address is:  4827
 end_ var_Dec record
 idhelp is empty
 -----------end of dec------------
 *********************** decleration for : rec2*************************************
 *********************** decleration for : a*************************************
-555555  stack pointer before : 699
+555555  stack pointer before : 4827
 6666
-SIZE 222348
-after type _>pcode gen
+SIZE 2222412
 idhelp is empty
 -----------end of dec------------
 *********************** decleration for : b*************************************
-after type _>pcode gen
 var_Dec integer
 my size is :1
- Stack_Address is:  1048
+ Stack_Address is:  7240
 end_var_Dec integer
 idhelp is empty
 REC LIST IS NOT NULL
@@ -133,10 +148,9 @@ REC LIST IS NOT NULL
 1234567
 -----------end of dec------------
 *********************** decleration for : c*************************************
-after type _>pcode gen
 var_Dec integer
 my size is :1
- Stack_Address is:  1049
+ Stack_Address is:  7241
 end_var_Dec integer
 idhelp is empty
 REC LIST IS NOT NULL
@@ -150,7 +164,6 @@ REC LIST IS NOT NULL
 -----------end of dec------------
 *********************** decleration for : d*************************************
 holyyyy golyyyyy d
-after type _>pcode gen
 1
 idhelp is empty
 REC LIST IS NOT NULL
@@ -162,20 +175,35 @@ REC LIST IS NOT NULL
 123456
 1234567
 -----------end of dec------------
-after type _>pcode gen
 var_Dec record
-the record size is :351
- Stack_Address is:  1050
+the record size is :2415
+ Stack_Address is:  7242
 end_ var_Dec record
 idhelp is empty
 -----------end of dec------------
 ldc 5
-the addres flag this time is : 1
-here 1 
-root is :rec
-
-here 2 
+array ref before code l :
+inc 2409
 ind
-the addres flag this time is : 0
-inc 0
-the addres flag this time is : 0
+array ref after code l :
+ldc 4
+1    4
+3   :::   7
+ixa 343
+ldc 7
+2    4
+3   :::   7
+ixa 7
+ldc 6
+3    4
+3   :::   7
+ixa 7
+dec 1197
+ldc 5
+4    4
+3   :::   7
+8
+ixa 49
+dec 3
+ldc 5
+sto
