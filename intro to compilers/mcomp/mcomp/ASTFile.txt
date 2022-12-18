@@ -3,6 +3,8 @@ Node name : Root/Program. Program name is: H
 Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
 Node name : VariableDeclaration. Var name is: a
 Node name : ArrayType: low bound is: 3, up bound is: 9
 Node name : SimpleType
@@ -11,9 +13,29 @@ Node name : VariableDeclaration. Var name is: b
 Node name : ArrayType: low bound is: 3, up bound is: 9
 Node name : SimpleType
 Type is : Integer
+Node name : VariableDeclaration. Var name is: u
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: aaa
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: x
+Node name : SimpleType
+Type is : Integer
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: z
+Node name : SimpleType
+Type is : Integer
 Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :5
-Node name : ArrayRef
 Node name : IdeType
-Node name : Dim
-Node name : IntConst. Value is :4
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :8
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :18
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType

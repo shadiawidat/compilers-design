@@ -1,7 +1,14 @@
 ==================  Abstract Syntax Tree ================
-ldc 12
-ldc 4
-ixa 1
-dec 3
+record_decleration
+record_decleration
+ldc 19
 ldc 5
+sto
+ldc 20
+inc 0
+ldc 8
+sto
+ldc 20
+inc 1
+ldc 18
 sto

@@ -107,7 +107,11 @@ static int variable_decleration = 0;
 static string type_of_id = "";
 static int size_of_id = 0;
 static int dim_count = 0;
-
+static int index_in_record_list = 0;
+static string record_decliration_name = "";
+static string record_ref_name = "";
+static int size_of_record_decliration = 0;
+static int record_ref_flag = 0;
 
 class ArrayList {
 public:
@@ -126,6 +130,27 @@ public:
     }
 
 };
+
+class RecList {
+public:
+    string key;
+    string record_name;
+    int index;
+    int size;
+
+    string type;
+    RecList* next;
+
+    ArrayList* dimensions;
+    RecList* reclist;
+
+    RecList() {
+        dimensions = NULL;
+        reclist = NULL;
+        next = NULL;
+    }
+
+};
 //end of newwww 
 
 
@@ -140,7 +165,7 @@ public:
     int subpart;
     Base* next;
     ArrayList* dimensions;
-
+    RecList* reclist;
 
     Base()
     {
@@ -643,6 +668,7 @@ public :
 
       codel(var_, os);
       flag_print = 1;
+      dim_count = 0;
       dim_->pcodegen(os);
 
   }
@@ -674,8 +700,16 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(varExt_ && varIn_);
+      flag_print = 0;
+      if (record_ref_flag != 2) {
+          record_ref_flag = 1;
+      }
       varExt_->pcodegen(os);
+      record_ref_flag = 2;
       varIn_->pcodegen(os);
+      record_ref_flag = 0;
+      flag_print = 1;
+
   }
   virtual Object * clone () const { return new RecordRef(*this);}
 
@@ -1187,12 +1221,12 @@ public:
   void print (ostream& os) {
 		os<<"Node name : SimpleType"<<endl;;
 		os<<"Type is : "<< (*name_) <<endl;
-        idhelp = *name_;
+        
 
 	}
   void pcodegen(ostream& os) {
       type_of_id = "SimpleType";
-      
+      idhelp = *name_;
   }
   virtual Object * clone () const { return new SimpleType(*this);}
 
@@ -1222,15 +1256,32 @@ public:
   void pcodegen(ostream& os) {
       if (!variable_decleration) {
 
-          if (codel_coder_flag == 0) {
-              codel_name_help = *name_;
+
+          if (!record_ref_flag) {
+              if (codel_coder_flag == 0) {
+                  codel_name_help = *name_;
+              }
+              else {
+                  os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+              }
           }
-          else {
-              os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+          else if (record_ref_flag == 1) {
+
+              os << "ldc " << SYT.findbase(*name_)->address << endl;
+              record_ref_name = *name_;
           }
+          else if (record_ref_flag == 2) {
+              RecList* r = SYT.findbase(record_ref_name)->reclist;
+              while (r->key != *name_) {
+                  r = r->next;
+              }
+              os << "inc " << r->index << endl;;
+          }
+          
       }
       else {
           type_of_id = *name_;
+
       }
   }
   virtual Object * clone () const { return new IdeType(*this);}
@@ -1299,7 +1350,109 @@ public :
               l->next = SYT.findbase(id_key)->dimensions;
               SYT.findbase(id_key)->dimensions = l;
           }
+      }
+      else if (record_decleration) {
+          ArrayList* l = new ArrayList();
+          RecList* r = SYT.findbase(record_decliration_name)->reclist;
+          RecList* r1 = r;
+          RecList* r2 = r;
+          RecList* r3 = r;
+          RecList* r4 = r;
 
+
+          while (r1 != NULL) {
+              if (r1->key == id_key) {
+                  break;
+              }
+          }
+          if (r1 == NULL) {
+              r1 = new RecList();
+              l->array_name = id_key;
+              l->type = type_of_id;
+              l->up = up_;
+              l->low = low_;
+              l->len = 1;
+              if (type_of_id != "SimpleType") {
+                  while (r2 != NULL) {
+                      if (r2->key == type_of_id) {
+                          l->ixa = r2->size;
+                          size_of_id = r2->size;
+                          break;
+                      }
+                  }
+                  if (r2 == NULL) {
+                      l->ixa = SYT.findbase(type_of_id)->size;
+                      size_of_id = SYT.findbase(type_of_id)->size;
+                  }
+
+              }
+              else {                    //array    ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF a;  =2
+                  size_of_id = 1;
+                  l->ixa = 1;
+              }
+              size_of_id *= (up_ - low_ + 1);
+              l->next = NULL;
+              l->flag_new_array_will_start = 1;
+              r1->dimensions = l;
+              r1->index = index_in_record_list;
+              r1->key = id_key;
+              r1->next = NULL;
+              r1->record_name = record_decliration_name;
+              r1->type = "ARRAY";
+
+              if (type_of_id != "SimpleType") {
+                  while (r3 != NULL) {
+                      if (r3->key == type_of_id) {
+                          if (r3->type == "ARRAY") {
+                              l->next = r3->dimensions;
+                              l->len = r3->dimensions->len + 1;
+                          }
+                          break;
+                      }
+                  }
+                  if (r3 == NULL) {
+                      if (SYT.findbase(type_of_id)->type == "ARRAY") {
+                          l->next = SYT.findbase(type_of_id)->dimensions;
+                          l->len = SYT.findbase(type_of_id)->dimensions->len + 1;
+                      }
+                  }
+              }
+              if (r4 == NULL) {
+                  SYT.findbase(record_decliration_name)->reclist = r1;
+              }
+              else {
+                  while (r4->next != NULL) {
+                      r4 = r4->next;
+                  }
+                  r4->next = r1;
+              }
+
+          }
+          else if(r1 != NULL) {
+              r1 = new RecList();
+              l->array_name = id_key;
+              l->type = type_of_id;
+              l->up = up_;
+              l->low = low_;
+              l->len = r1->dimensions->len + 1;
+              l->ixa = r1->dimensions->ixa * (r1->dimensions->up - r1->dimensions->low + 1);
+              size_of_id *= (up_ - low_ + 1);
+              l->next = r1->dimensions;
+              l->flag_new_array_will_start = 0;
+              r1->dimensions = l;
+              r1->next = NULL;
+              r1->record_name = record_decliration_name;
+              r1->type = "ARRAY";
+              if (r4 == NULL) {
+                  SYT.findbase(record_decliration_name)->reclist = r1;
+              }
+              else {
+                  while (r4->next != NULL) {
+                      r4 = r4->next;
+                  }
+                  r4->next = r1;
+              }
+          }
       }
       idhelp = "ARRAY";
 
@@ -1330,8 +1483,11 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(record_list_);
+      record_decliration_name = id_key;
+      SYT.insert(id_key, "Record", Stack_Address, 0);
       record_decleration = 1;
       record_list_->pcodegen(os);
+      record_decleration = 0;
   }
   virtual Object * clone () const { return new RecordType(*this);}
 
@@ -1404,6 +1560,7 @@ public:
               SYT.insert(*name_, "Integer", Stack_Address, sizeof(int));
               Stack_Address += 1;
           }
+
           if (idhelp == "ARRAY") {
               SYT.findbase(id_key)->size = size_of_id;
               Stack_Address += size_of_id;
@@ -1447,10 +1604,85 @@ public:
               }
               SYT.findbase(id_key)->subpart = subpart;
           }
+          if (idhelp == "Record") {
+              SYT.findbase(record_decliration_name)->size = size_of_record_decliration;
+              size_of_record_decliration = 0;
+          }
 
+      }else if(record_decleration){
+          if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
+              RecList* r = new RecList();
+              r->index = index_in_record_list;
+              index_in_record_list++;
+              r->key = id_key;
+              r->next = NULL;
+              r->record_name = record_decliration_name;
+              r->size = 1;
+              r->type = idhelp;
+              if (SYT.findbase(record_decliration_name)->reclist == NULL) {
+                  SYT.findbase(record_decliration_name)->reclist = r;
+              }
+              else {
+                  RecList* r1 = SYT.findbase(record_decliration_name)->reclist;
+                  while (r1->next != NULL) {
+                      r1 = r1->next;
+                  }
+                  r1->next = r;
+              }
+              Stack_Address += 1;
+              size_of_record_decliration += 1;
+          }
+          if (idhelp == "ARRAY") {
+              RecList* r = SYT.findbase(record_decliration_name)->reclist;
+              RecList* r1 = r;
+              while (r->key != id_key) {
+                  r = r->next;
+              }
+              r->size = size_of_id;
+              index_in_record_list += size_of_id;
+              size_of_record_decliration += size_of_id;
+              //Stack_Address += size_of_id;
+              size_of_id = 0;
+
+              int subpart = 0;
+              int y;
+
+              ArrayList* l = r->dimensions;
+              while (l->flag_new_array_will_start != 1) {
+                  if (type_of_id != "SimpleType") {     //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
+                      y = l->low * SYT.findbase(type_of_id)->size;
+                  }
+                  else {
+                      y = l->low * 1;
+                  }
+                  l = l->next;
+                  int x = 1;
+                  ArrayList* l1 = l;
+                  while (l1->flag_new_array_will_start != 1) {
+                      if (l1 != NULL) {
+                          x *= (l1->up - l1->low + 1);
+                          l1 = l1->next;
+                      }
+                  }
+                  if (l1 != NULL) {
+                      x *= (l1->up - l1->low + 1);
+                      l1 = l1->next;
+                  }
+                  subpart += x * y;
+
+              }
+              if (l != NULL) {
+                  if (type_of_id != "SimpleType") {
+                      y = l->low * SYT.findbase(type_of_id)->size;
+                  }
+                  else {
+                      y = l->low * 1;
+                  }
+                  subpart += y;
+              }
+              SYT.findbase(id_key)->subpart = subpart;
+          }
       }
-      //if(idhelp == "Integer"){
-      //}
       variable_decleration = 0;
   }
   virtual Object * clone () const { return new VariableDeclaration(*this);}
