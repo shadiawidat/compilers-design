@@ -1,16 +1,18 @@
 PROGRAM H
+	u ARRAY[3:9] OF ARRAY[3:9] OF FIXED;
 
-
-	a     ARRAY[3:9] OF FIXED; 
-	b     ARRAY[3:9] OF FIXED;
-	u FIXED;
+	p ^u;
+	q ^p;
+	arr ARRAY[3:9] OF ARRAY[3:9] OF q;
 	aaa RECORD {
 		x FIXED;
-		z FIXED;
+		
+		array ARRAY[3:9] OF ARRAY[3:9] OF FIXED;
+		z ^ARRAY[3:9] OF ARRAY[3:9] OF x;
 	};
 
+
 {
-	u=5;
-	aaa.x=8;
-	aaa.z=18;
+	aaa.z^[4][6]=5;
+	
 }
