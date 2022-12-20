@@ -120,7 +120,7 @@ static string pointer_decliration_name = "";
 static string pointer_ref_name = "";
 static int size_of_pointer_decliration = 0;
 static int pointer_of_array_decleration = 0;
-
+static int dim_count_temp = 0;
 class ArrayList {
 public:
     int low;
@@ -557,6 +557,7 @@ public:
   void pcodegen(ostream& os) {
       assert(exp_);
       exp_->pcodegen(os);
+      dim_count =  dim_count_temp;
       if (!record_ref_flag) {
 
           ArrayList* temp = SYT.findbase(codel_name_help)->dimensions;
@@ -571,13 +572,17 @@ public:
           }
           if (temp->flag_new_array_will_start) {
               os << "dec " << SYT.findbase(temp->array_name)->subpart << endl;
+              if (temp->next == NULL) {
+                  dim_count_temp = -1;
+              }
           }
           dim_count++;
-
+          dim_count_temp++;
       }
       else if(record_ref_flag) {
           RecList* r = SYT.findbase(record_ref_name)->reclist;
           RecList* r1 = r;
+
           ArrayList* temp;
           while (r1 != NULL) {
               if (r1->key == name_of_array_in_record_ref) {
@@ -595,9 +600,37 @@ public:
               os << "ixa " << temp->ixa << endl;
           }
           if (temp->flag_new_array_will_start) {
-              os << "dec " << r1->subpart << endl;
+              if (r1->type == "Address") {
+                  if (temp->array_name == r1->key) {
+                      os << "dec " << r1->subpart << endl;
+                  }
+                  else {
+                      RecList* r2 = SYT.findbase(record_ref_name)->reclist;
+                      while (r2 != NULL && r2->key != temp->array_name) {
+                          r2 = r2->next;
+                      }
+                      if (r2 != NULL) {
+                          os << "dec " << r2->subpart << endl;
+                          
+                      }
+                      else {
+
+                          os << "dec " << SYT.findbase(temp->array_name)->subpart << endl;
+
+                      }
+
+                  }
+              }
+              else {
+                  os << "dec " << r1->subpart << endl;
+              }
+          }
+          if (temp->next == NULL) {
+
+              dim_count_temp = -1;
           }
           dim_count++;
+          dim_count_temp++;
       }
       if (dim_) {
           dim_->pcodegen(os);
@@ -730,7 +763,7 @@ public :
       else {
           var_->pcodegen(os);
       }
-    
+      
       dim_count = 0;
       dim_->pcodegen(os);
 
@@ -798,10 +831,20 @@ public :
     var_->print(os);
   }
   void pcodegen(ostream& os) {
+
+
       assert(var_);
       pointer_ref = 1;
       var_->pcodegen(os);
       os << "ind" << endl;
+      //RecList* r = SYT.findbase(record_ref_name)->reclist;
+      //while (r->key != name_of_array_in_record_ref) {
+      //    r = r->next;
+      //}
+      //os << "r->pointer->key  :" << r->pointer->name_of_var << endl;
+      //os << " SYT.findbase(r->pointer->name_of_var)->type:  :" << SYT.findbase(r->pointer->name_of_var)->dimensions->type << endl;
+      //os << "name_of_array_in_record_ref  2:  " << name_of_array_in_record_ref << endl;
+
       pointer_ref = 0;
 
 
@@ -833,7 +876,17 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_);
-      var_->pcodegen(os);
+      //var_->pcodegen(os);
+      codel(var_, os);
+      Base* t = SYT.findbase(codel_name_help);
+      if (t->pointer == NULL) {
+          os << "ldc " << t->getsize() << endl;
+      }
+      else {
+          os << "ldc " << t->pointer->size_of_var << endl;
+      }
+
+      os << "new" << endl;
   }
   virtual Object * clone () { return new NewStatement(*this);}
   
@@ -1183,6 +1236,7 @@ public :
     exp_->print(os);
   }
   void pcodegen(ostream& os) {
+      dim_count_temp = 0;
       assert(var_ && exp_);
       codel(exp_, os);
       coder(var_, os);
@@ -1326,6 +1380,7 @@ public:
 
           codel_name_help = *name_;
           if (!record_ref_flag) {
+
               if (!pointer_ref) {
                   if (codel_coder_flag == 0) {
                       codel_name_help = *name_;
@@ -1347,6 +1402,7 @@ public:
               record_ref_name = *name_;
           }
           else if (record_ref_flag == 2) {
+
               RecList* r = SYT.findbase(record_ref_name)->reclist;
               while (r->key != *name_) {
                   r = r->next;
@@ -1357,7 +1413,6 @@ public:
           
       }
       else {
-          os <<"in ide type" << *name_ << endl;
           type_of_id = *name_;
 
       }
@@ -1388,6 +1443,7 @@ public :
   void pcodegen(ostream& os) {
       assert(type_);
       type_->pcodegen(os);
+
       if (!record_decleration) { // if we dont have record decleration we will insert it normally
           ArrayList* l = new ArrayList();
           if (SYT.findbase(id_key) == NULL || pointer_decleration) {               //  A    ARRAY [3:9] OF ARRAY [2:5] OF ARRAY[8:10] OF FIXED;
@@ -1417,9 +1473,17 @@ public :
               l->flag_new_array_will_start = 1;
               SYT.findbase(id_key)->dimensions = l;
               if (type_of_id != "SimpleType") {
-                  if (SYT.findbase(type_of_id)->type == "ARRAY") {
-                      l->next = SYT.findbase(type_of_id)->dimensions;
-                      l->len = SYT.findbase(type_of_id)->dimensions->len+1;
+               /*   os << "if (SYT.findbase(type_of_id)->dimensions != NULL) {        333333 :" << endl;
+                  os << "type_of_id" << type_of_id << endl;
+                  os << "SYT.findbase(type_of_id)->type   :" << SYT.findbase(type_of_id)->type << endl;*/
+                  if (SYT.findbase(type_of_id)->type == "ARRAY"|| SYT.findbase(type_of_id)->type == "Address") {
+                      //os << "if (SYT.findbase(type_of_id)->dimensions != NULL) {        22222 :" << endl;
+
+                      if (SYT.findbase(type_of_id)->dimensions != NULL) {
+                        //  os << "if (SYT.findbase(type_of_id)->dimensions != NULL) {        11111 :" << endl;
+                          l->next = SYT.findbase(type_of_id)->dimensions;
+                          l->len = SYT.findbase(type_of_id)->dimensions->len + 1;
+                      }
                   }
               }
           }
@@ -1437,10 +1501,10 @@ public :
           }
       }
       else if (record_decleration) {                          // decleration array inside of a record;
+
           if (pointer_decleration) {
               pointer_of_array_decleration = 1;
           }
-          os << "1" << endl;
           ArrayList* l = new ArrayList();
           RecList* r = SYT.findbase(record_decliration_name)->reclist;
           RecList* r1 = r;
@@ -1448,7 +1512,6 @@ public :
           RecList* r3 = r;
           RecList* r4 = r;
 
-          os << "2" << endl;
 
           while (r1 != NULL) {
               if (r1->key == id_key) {
@@ -1456,7 +1519,6 @@ public :
               }
               r1 = r1->next;
           }
-          os << "3" << endl;
 
           if (r1 == NULL || pointer_decleration) {
               if (!pointer_decleration) {
@@ -1485,7 +1547,6 @@ public :
                       size_of_id = 1;
                       l->ixa = 1;
                   }
-                  os << "5" << endl;
 
                   size_of_id *= (up_ - low_ + 1);
                   l->next = NULL;
@@ -1500,22 +1561,32 @@ public :
                   if (type_of_id != "SimpleType") {
                       while (r3 != NULL) {
                           if (r3->key == type_of_id) {
-                              if (r3->type == "ARRAY") {
-                                  l->next = r3->dimensions;
-                                  l->len = r3->dimensions->len + 1;
+                              if (r3->type == "ARRAY"||r3->type=="Adress") {
+                                  if (r3->type == "Adress") {///////////////////////////////////////////////
+                                      if (r3->dimensions != NULL) {
+                                          l->next = r3->dimensions;
+                                          l->len = r3->dimensions->len + 1;
+                                      }
+                                  }
+                                  else {
+                                      l->next = r3->dimensions;
+                                      l->len = r3->dimensions->len + 1;
+                                  }
+
                               }
                               break;
                           }
                           r3 = r3->next;
                       }
                       if (r3 == NULL) {
-                          if (SYT.findbase(type_of_id)->type == "ARRAY") {
-                              l->next = SYT.findbase(type_of_id)->dimensions;
-                              l->len = SYT.findbase(type_of_id)->dimensions->len + 1;
+                          if (SYT.findbase(type_of_id)->type == "ARRAY" || SYT.findbase(type_of_id)->type == "Adress") {
+                              if (SYT.findbase(type_of_id)->dimensions != NULL) {
+                                  l->next = SYT.findbase(type_of_id)->dimensions;
+                                  l->len = SYT.findbase(type_of_id)->dimensions->len + 1;
+                              }
                           }
                       }
                   }
-                  os << "6" << endl;
 
                   if (r4 == NULL) {
                       SYT.findbase(record_decliration_name)->reclist = r1;
@@ -1526,7 +1597,6 @@ public :
                       }
                       r4->next = r1;
                   }
-                  os << "7" << endl;
               }
               else if(pointer_decleration) {
                   l->array_name = id_key;
@@ -1553,7 +1623,6 @@ public :
                       size_of_id = 1;
                       l->ixa = 1;
                   }
-                  os << "5" << endl;
 
                   size_of_id *= (up_ - low_ + 1);
                   l->next = NULL;
@@ -1580,13 +1649,11 @@ public :
                           }
                       }
                   }
-                  os << "6" << endl;
 
                   pointer_decleration = 0;
               }
           }
           else if(r1 != NULL) {
-              os << "a" << endl;
               l->array_name = id_key;
               l->type = type_of_id;
               l->up = up_;
@@ -1597,7 +1664,6 @@ public :
               l->next = r1->dimensions;
               l->flag_new_array_will_start = 0;
               r1->dimensions = l;
-              os << "b" << endl;
 
           }
       }
@@ -1669,8 +1735,10 @@ public :
 
           Pointers* p = new Pointers();
           SYT.insert(id_key, "Address", Stack_Address, 1);
-
+          os << "+++++++++++++++++++++++22222+++++++++++++++++++++++++++" << endl;
           type_->pcodegen(os);
+          os << "++++++++++++++++++++++++33333++++++++++++++++++++++++++" << endl;
+          os << "type_of_id is : " << type_of_id << endl;
           if (type_of_id != "SimpleType" || pointer_of_array_decleration) {
               if (!pointer_of_array_decleration) {
                   p->key = id_key;
@@ -1684,9 +1752,13 @@ public :
                   p->var_pointer = SYT.findbase(type_of_id)->pointer;
                 //  p->var_reclist = SYT.findbase(type_of_id)->reclist;
                   SYT.findbase(id_key)->pointer = p;
+
                   SYT.findbase(id_key)->dimensions = SYT.findbase(type_of_id)->dimensions;
                   SYT.findbase(id_key)->reclist = SYT.findbase(type_of_id)->reclist;
-                  SYT.findbase(id_key)->pointer = SYT.findbase(type_of_id)->pointer;
+                  if (SYT.findbase(type_of_id)->pointer != NULL) {
+                      SYT.findbase(id_key)->pointer = SYT.findbase(type_of_id)->pointer;
+
+                  }
               }
               else {
                   p->key = id_key;
@@ -1698,12 +1770,15 @@ public :
                   p->var_pointer = NULL;
                  // p->var_reclist = NULL;
                   SYT.findbase(id_key)->reclist = NULL;
+                  if (SYT.findbase(type_of_id)->reclist != NULL) {
+                      os << "++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+                      SYT.findbase(id_key)->reclist = SYT.findbase(type_of_id)->reclist;
+                  }
                   SYT.findbase(id_key)->pointer = p;
                   size_of_id = 0;
 
                   int subpart = 0;
                   int y;
-
                   ArrayList* l = SYT.findbase(id_key)->dimensions;
                   while (l->flag_new_array_will_start != 1) {
                       if (type_of_id != "SimpleType") {                       //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
@@ -1739,7 +1814,6 @@ public :
                   }
                   SYT.findbase(id_key)->subpart = subpart;
 
-
               }
           }
           else {
@@ -1760,6 +1834,7 @@ public :
           idhelp = "Address";
       }
       else if (record_decleration) {                           //if decleration pointer inside of record
+
           pointer_decleration = 1;
           pointer_decliration_name = id_key;
           Pointers* p = new Pointers();
@@ -1770,8 +1845,8 @@ public :
           RecList* r4 = r;
           RecList* r5 = r;
           RecList* r6 = r;
-          os << "2" << endl;
-
+          RecList* r7 = r;
+          os << "id_key " << id_key << endl;
           while (r1 != NULL) {
               if (r1->key == id_key) {
                   break;
@@ -1780,6 +1855,8 @@ public :
           }
 
           if (r1 == NULL) {
+              os << "id_1111111111key " << id_key << endl;
+
               r1 = new RecList();
               r1->index = index_in_record_list;
               index_in_record_list += 1;
@@ -1800,14 +1877,12 @@ public :
                   r5->next = r1;
               }
           }
+          os << "id_ke222222222y " << id_key << endl;
 
           type_->pcodegen(os);
-          os << "type_of_id is : " << type_of_id << endl;
-          os << pointer_of_array_decleration << endl;
+
           if (type_of_id != "SimpleType" || pointer_of_array_decleration) {
               if (!pointer_of_array_decleration) {
-                  os << "hello" << endl;
-                  os << "type_of_id : is :"<<type_of_id << endl;
                   while (r2 != NULL) {
                       if (r2->key == type_of_id) {
                           break;
@@ -1815,7 +1890,7 @@ public :
                       r2 = r2->next;
                   }
                   if (r2 == NULL) {
-                      os << "type_of_id : is aaaaaaaaaaaaaaaaa:" << type_of_id << endl;
+                      os << "hello 2 hello " << endl;
 
                       p->key = id_key;
                       p->name_of_var = type_of_id;
@@ -1823,14 +1898,29 @@ public :
                       p->size_of_var = SYT.findbase(type_of_id)->size;
                       p->type = "Address";
                       p->type_of_var = SYT.findbase(type_of_id)->type;
+                      os << "hello 3 hello " << endl;
 
                       p->var_dimensions = SYT.findbase(type_of_id)->dimensions;
+                      os << "hello 4 hello " << endl;
+
                       p->var_pointer = SYT.findbase(type_of_id)->pointer;
+                      os << "hello 5 hello " << endl;
+
                 //      p->var_reclist = SYT.findbase(type_of_id)->reclist;
+                      os << "id_key : " << id_key << endl;
+                      if (SYT.findbase(id_key) == NULL) { ////////////////////////////////////////////////////// we are in record it will not find id_key in find base in line 1911
+                          os << "NULL" << endl;
+                      }
                       SYT.findbase(id_key)->pointer = p;
+                      os << "hello 6 hello " << endl;
+
                       SYT.findbase(id_key)->dimensions = SYT.findbase(type_of_id)->dimensions;
+                      os << "hello 2 hello " << endl;
                       SYT.findbase(id_key)->reclist = SYT.findbase(type_of_id)->reclist;
-                      SYT.findbase(id_key)->pointer = SYT.findbase(type_of_id)->pointer;
+                      if (SYT.findbase(type_of_id)->pointer != NULL) {
+                          SYT.findbase(id_key)->pointer = SYT.findbase(type_of_id)->pointer;
+
+                      }
                   }
                   else {
                       p->key = id_key;
@@ -1849,16 +1939,17 @@ public :
                    //   r2->reclist = r2->reclist;
                      // r1->pointer = r2->pointer;
                   }
-                 
+
               }
               else {
+                  os << "---------------------------11122222211------------------" << endl;
+
                   while (r6 != NULL) {
                       if (r6->key == id_key) {
                           break;
                       }
                       r6 = r6->next;
                   }
-                  os << "2" << endl;
                   p->key = id_key;
                   p->name_of_var = type_of_id;
                   p->size = 1;
@@ -1867,28 +1958,43 @@ public :
                   p->var_dimensions = r6->dimensions;
                   p->var_pointer = NULL;
               //    p->var_reclist = NULL;
-                  os << "3" << endl;
-
+                  os << "---------------------------11111------------------" << endl;
+                  os << "type_of_id is : " << type_of_id << endl;
                   r6->reclist = NULL;
-                  os << "4" << endl;
+                  if (SYT.findbase(type_of_id)->reclist != NULL) {
+                      r6->reclist = SYT.findbase(type_of_id)->reclist;
 
+                  }
                   r6->pointer = p;
-                  os << "5" << endl;
 
                   size_of_id = 0;
 
                   int subpart = 0;
                   int y;
-                  os << "6" << endl;
 
                   ArrayList* l = r6->dimensions;
-                  os << "7" << endl;
 
                   while (l->flag_new_array_will_start != 1) {
-                      if (type_of_id != "SimpleType") {                       //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
-                          y = l->low * SYT.findbase(type_of_id)->size;     ///////////////////////check this needs to be fixed accordint to the input because x is in the record and not out side it
+                      if (type_of_id != "SimpleType") {    //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
+
+                          r7=SYT.findbase(record_decliration_name)->reclist;
+
+                          while (r7 != NULL && r7->key != type_of_id) {
+
+                              r7 = r7->next;
+                          }
+                          if (r7 == NULL) {
+
+                              y = l->low * SYT.findbase(type_of_id)->size;     
+
+                          }
+                          else {
+
+                              y = l->low * r7->size;
+                          }
                       }
                       else {
+
                           y = l->low * 1;
                       }
                       l = l->next;
@@ -1909,7 +2015,17 @@ public :
                   }
                   if (l != NULL) {
                       if (type_of_id != "SimpleType") {
-                          y = l->low * SYT.findbase(type_of_id)->size;
+                          r7 = SYT.findbase(record_decliration_name)->reclist;
+                          while (r7 != NULL && r7->key != type_of_id) {
+                              r7 = r7->next;
+                          }
+                          if (r7 == NULL) {
+                              y = l->low * SYT.findbase(type_of_id)->size;
+
+                          }
+                          else {
+                              y = l->low * r7->size;
+                          }
                       }
                       else {
                           y = l->low * 1;
@@ -1917,7 +2033,6 @@ public :
                       subpart += y;
                   }
                   r6->subpart = subpart;
-                  os << "8" << endl;
 
 
               }
@@ -2034,7 +2149,6 @@ public:
           }
 
           if (idhelp == "Record") {
-              os << "HELLO0" << endl;
               SYT.findbase(record_decliration_name)->size = size_of_record_decliration;
               size_of_record_decliration = 0;
           }
