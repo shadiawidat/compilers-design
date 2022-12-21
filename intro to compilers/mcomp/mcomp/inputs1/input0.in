@@ -1,16 +1,62 @@
 PROGRAM H
-	u ARRAY[3:9] OF ARRAY[3:9] OF ARRAY[3:9] OF FIXED;
-	
-	aa RECORD {
-		b ARRAY[3:9] OF ARRAY[3:9] OF FIXED;
-	};
-	aaa RECORD {
-		x ARRAY[3:9] OF ARRAY[3:9] OF FIXED;
-		q ^aa;
-	};
+g FIXED;
+gg FLOAT;
+ggg BOOLEAN;
+y ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF FIXED;
+h ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF g;
 
+p ^h;
+l  ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF p;
+q ^p;
+u ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF q;
+rec2 RECORD{
+	a FIXED;
+};
+rec RECORD{
+	a FIXED;
+	b ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF FIXED;
+	d ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF rec2;
+	c a;
+	};
+arr ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF rec;
+pp ^rec;
+arrr ARRAY[7:10] OF ARRAY[4:10] OF ARRAY[2:6] OF pp;
 {
+	g=1;
+	gg=2;
 
-	aaa.q^.x[5][4] = 4;
+	ggg = TRUE;
 
+	ggg = FALSE;
+
+	y[5][6][7]=3;
+
+	h[5][6][7]=TRUE;
+
+	p^[5][6][7]=TRUE;
+
+	l[5][6][7]^[5][6][7]=TRUE;
+
+	q^^[5][6][7]=TRUE;
+
+	u[5][6][7]^^[5][6][7]=FALSE;
+
+	rec2.a=3;
+
+	rec.b[5][6][7] = 4;
+
+	rec.d[5][6][7].a=3;
+
+	rec.c=8;
+
+	arr[5][6][7].d[5][6][7].a=5;
+
+	pp^.b[5][6][7]=4;
+
+	pp^.d[5][6][7].a=5;
+
+	arrr[5][6][7]^.a=5;
+
+	arrr[5][6][7]^.d[5][6][7].a=3;
+	
 }

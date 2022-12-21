@@ -2,7 +2,7 @@ PROGRAM H
 rec RECORD{
 	a FIXED;
 	b FIXED;
-	c FIXED;
+	c a;
 	};
 x ARRAY[3:7] OF FIXED;
 y ARRAY[1:10] OF x;

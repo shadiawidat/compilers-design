@@ -4,36 +4,254 @@ Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: u
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : ArrayType: low bound is: 3, up bound is: 9
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: g
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: aa
-Node name : RecordType
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: b
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : ArrayType: low bound is: 3, up bound is: 9
+Node name : VariableDeclaration. Var name is: gg
+Node name : SimpleType
+Type is : Real
+Node name : VariableDeclaration. Var name is: ggg
+Node name : SimpleType
+Type is : Boolean
+Node name : VariableDeclaration. Var name is: y
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: aaa
-Node name : RecordType
-Node name : RecordList
-Node name : VariableDeclaration. Var name is: x
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : SimpleType
-Type is : Integer
-Node name : RecordList
+Node name : VariableDeclaration. Var name is: h
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: p
+Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: l
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
 Node name : VariableDeclaration. Var name is: q
 Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: u
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: rec2
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: a
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: rec
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: a
+Node name : SimpleType
+Type is : Integer
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: b
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : SimpleType
+Type is : Integer
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: d
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: c
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: arr
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: pp
+Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: arrr
+Node name : ArrayType: low bound is: 7, up bound is: 10
+Node name : ArrayType: low bound is: 4, up bound is: 10
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :1
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :2
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is false
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :3
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : ArrayRef
+Node name : AddressRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : ArrayRef
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : ArrayRef
+Node name : AddressRef
+Node name : AddressRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is false
+Node name : ArrayRef
+Node name : AddressRef
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :3
+Node name : RecordRef
+Node name : IdeType
 Node name : IdeType
 Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :4
 Node name : RecordRef
 Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :3
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :8
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :4
 Node name : RecordRef
 Node name : AddressRef
 Node name : IdeType
@@ -42,4 +260,56 @@ Node name : IdeType
 Node name : Dim
 Node name : IntConst. Value is :5
 Node name : Dim
-Node name : IntConst. Value is :4
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : RecordRef
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :3
+Node name : RecordRef
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : IdeType

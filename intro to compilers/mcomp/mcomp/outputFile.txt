@@ -1,10 +1,208 @@
 ==================  Abstract Syntax Tree ================
-id_key q
-id_1111111111key q
-id_ke222222222y q
-hello 2 hello 
-hello 3 hello 
-hello 4 hello 
-hello 5 hello 
-id_key : q
-NULL
+ldc 5
+ldc 1
+sto
+ldc 6
+ldc 2
+sto
+ldc 7
+ldc 1
+sto
+ldc 7
+ldc 0
+sto
+ldc 8
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 8
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+inc 3
+sto
+ldc 148
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 1
+sto
+ldc 288
+ind
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 1
+sto
+ldc 289
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ind
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 1
+sto
+ldc 429
+ind
+ind
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 1
+sto
+ldc 430
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ind
+ind
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 0
+sto
+ldc 570
+inc 0
+ldc 3
+sto
+ldc 571
+inc 1
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 4
+sto
+ldc 571
+inc 141
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+inc 0
+ldc 3
+sto
+ldc 571
+inc 281
+ldc 8
+sto
+ldc 853
+ldc 5
+ixa 9870
+ldc 6
+ixa 1410
+ldc 7
+ixa 282
+dec 75294
+inc 141
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+inc 0
+ldc 5
+sto
+ldc 40333
+ind
+inc 1
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ldc 4
+sto
+ldc 40333
+ind
+inc 141
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+inc 0
+ldc 5
+sto
+ldc 40334
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ind
+inc 0
+ldc 5
+sto
+ldc 40334
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+ind
+inc 141
+ldc 5
+ixa 35
+ldc 6
+ixa 5
+ldc 7
+ixa 1
+dec 267
+inc 0
+ldc 3
+sto
