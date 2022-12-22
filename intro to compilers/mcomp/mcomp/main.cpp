@@ -30,6 +30,35 @@ int codel_coder_flag = 0;
 string codel_name_help = "";
 int Stack_Address = 5;
 
+int flag_print = 0;
+int record_decleration = 0;
+string id_key = "";
+int variable_decleration = 0;
+string type_of_id = "";
+int size_of_id = 0;
+int dim_count = 0;
+int index_in_record_list = 0;
+string record_decliration_name = "";
+string record_ref_name = "";
+int size_of_record_decliration = 0;
+int record_ref_flag = 0;
+string name_of_array_in_record_ref = "";
+
+int pointer_decleration = 0;
+int pointer_ref = 0;
+string pointer_decliration_name = "";
+string pointer_ref_name = "";
+int size_of_pointer_decliration = 0;
+int pointer_of_array_decleration = 0;
+int dim_count_temp = 0;
+
+string old_record_ref_name = "";
+int old_record_ref_name_flag = 0;
+
+string record_ref_name_in_array = "";
+int record_ref_name_in_array_flag = 0;
+int ind_flag_ind = 0;
+int array_ref_flag = 0;
 
 
 extern int yydebug;

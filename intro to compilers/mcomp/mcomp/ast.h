@@ -100,35 +100,32 @@ extern string codel_name_help;
 
 
 /// newwww
-static int flag_print = 0;
-static int record_decleration = 0;
-static string id_key = "";
-static int variable_decleration = 0;
-static string type_of_id = "";
-static int size_of_id = 0;
-static int dim_count = 0;
-static int index_in_record_list = 0;
-static string record_decliration_name = "";
-static string record_ref_name = "";
-static int size_of_record_decliration = 0;
-static int record_ref_flag = 0;
-static string name_of_array_in_record_ref = "";
-
-static int pointer_decleration = 0;
-static int pointer_ref = 0;
-static string pointer_decliration_name = "";
-static string pointer_ref_name = "";
-static int size_of_pointer_decliration = 0;
-static int pointer_of_array_decleration = 0;
-static int dim_count_temp = 0;
-
-static string old_record_ref_name = "";
-static int old_record_ref_name_flag = 0;
-
-static string record_ref_name_in_array = "";
-static int record_ref_name_in_array_flag = 0;
-static int ind_flag_ind = 0;
-static int array_ref_flag = 0;
+extern int flag_print;
+extern int record_decleration;
+extern string id_key;
+extern int variable_decleration;
+extern string type_of_id;
+extern int size_of_id;
+extern int dim_count;
+extern int index_in_record_list;
+extern string record_decliration_name;
+extern string record_ref_name;
+extern int size_of_record_decliration;
+extern int record_ref_flag;
+extern string name_of_array_in_record_ref;
+extern int pointer_decleration;
+extern int pointer_ref;
+extern string pointer_decliration_name;
+extern string pointer_ref_name;
+extern int size_of_pointer_decliration;
+extern int pointer_of_array_decleration;
+extern int dim_count_temp;
+extern string old_record_ref_name;
+extern int old_record_ref_name_flag;
+extern string record_ref_name_in_array;
+extern int record_ref_name_in_array_flag;
+extern int ind_flag_ind;
+extern int array_ref_flag;
 
 
 class ArrayList {
