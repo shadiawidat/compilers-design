@@ -127,6 +127,10 @@ static int old_record_ref_name_flag = 0;
 
 static string record_ref_name_in_array = "";
 static int record_ref_name_in_array_flag = 0;
+static int ind_flag_ind = 0;
+static int array_ref_flag = 0;
+
+
 class ArrayList {
 public:
     int low;
@@ -633,8 +637,26 @@ public:
 
                       }
                   }
-                  else {
-                      os << "dec " << r1->subpart << endl;
+                  else {////////////////////////////////was only    os << "dec " << r1->subpart << endl;
+                      if (temp->array_name == r1->key) {
+                          os << "dec " << r1->subpart << endl;
+                      }
+                      else {
+                          RecList* r2 = SYT.findbase(record_ref_name)->reclist;
+                          while (r2 != NULL && r2->key != temp->array_name) {
+                              r2 = r2->next;
+                          }
+                          if (r2 != NULL) {
+                              os << "dec " << r2->subpart << endl;
+
+                          }
+                          else {
+
+                              os << "dec " << SYT.findbase(temp->array_name)->subpart << endl;
+
+                          }
+
+                      }
                   }
               }
               else if(r1==NULL) {
@@ -776,18 +798,30 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(var_ && dim_);
+      array_ref_flag = 1;
       if (!record_ref_flag) {
-          flag_print = 0; ///// wee added this need to check if some thing else gone wrong
-
-          codel(var_, os);
+          flag_print = 0; 
+          ind_flag_ind = 0;
+          var_->pcodegen(os);
+          os << "ldc " << SYT.find(codel_name_help) << endl;
           flag_print = 1;
       }
       else {
+          ind_flag_ind = 0;
+
           var_->pcodegen(os);
       }
       
       dim_count = 0;
+      ind_flag_ind = 0;
+
       dim_->pcodegen(os);
+      if (codel_coder_flag && !record_ref_flag && !ind_flag_ind) {
+          os << "ind" << endl;
+          ind_flag_ind = 1;
+
+      }
+      array_ref_flag = 0;
 
   }
   virtual Object * clone () const { return new ArrayRef(*this);}
@@ -822,11 +856,19 @@ public :
       if (record_ref_flag != 2) {
           record_ref_flag = 1;
       }
+      ind_flag_ind = 0;
+
       varExt_->pcodegen(os);
       record_ref_flag = 2;
+      ind_flag_ind = 0;
+
       varIn_->pcodegen(os);
       record_ref_flag = 0;
       flag_print = 1;
+      if (codel_coder_flag && !record_ref_flag && !ind_flag_ind) {
+          os << "ind" << endl;
+          ind_flag_ind = 1;
+      }
 
   }
   virtual Object * clone () const { return new RecordRef(*this);}
@@ -857,12 +899,17 @@ public :
 
       assert(var_);
       pointer_ref = 1;
+      ind_flag_ind = 0;
       var_->pcodegen(os);
       os << "ind" << endl;
 
 
       pointer_ref = 0;
+      if (codel_coder_flag && !record_ref_flag && !ind_flag_ind) {
+          os << "ind" << endl;
+          ind_flag_ind = 1;
 
+      }
 
   }
   virtual Object * clone () { return new AddressRef(*this);}
@@ -1425,7 +1472,9 @@ public:
                       codel_name_help = *name_;
                   }
                   else {
-                      os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+                      if (!array_ref_flag) {
+                          os << "ldc " << SYT.find(*name_) << endl << "ind" << endl;
+                      }
                   }
               }
               else if(pointer_ref) {
