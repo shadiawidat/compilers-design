@@ -1,0 +1,18 @@
+PROGRAM H
+
+	a FIXED;
+	b ^a;
+	c RECORD{
+		d BOOLEAN;
+		e FIXED;
+
+	};
+
+	{
+
+	b=5;
+	b^=14;
+	c.e=b^;
+
+	}
+

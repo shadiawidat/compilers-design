@@ -1,0 +1,17 @@
+PROGRAM H
+
+	a FIXED;
+	b ^a;
+	c RECORD{
+		d BOOLEAN;
+		e FIXED;
+
+	};
+
+	{
+
+	NEW(b);
+	b^=13;
+
+	}
+

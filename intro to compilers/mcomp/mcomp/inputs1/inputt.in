@@ -1,0 +1,9 @@
+PROGRAM H
+	a RECORD{
+		b FIXED;
+		c ^a;
+	};
+	d ARRAY [3:6] OF ARRAY[4:8] OF a;
+{
+	d[6][5]=d[d[3][4].b][a.c^.b];
+}

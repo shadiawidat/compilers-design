@@ -1,0 +1,130 @@
+ldc 17
+inc 8
+ldc 13
+sto
+
+ldc 5
+ldc 2
+ixa 1
+dec 2
+ldc 3
+ldc 2
+mul
+sto
+
+ldc 5
+ldc 5
+ixa 1
+dec 2
+ldc 5
+ldc 2
+ixa 1
+dec 2
+ind
+ldc 5
+ldc 2
+ixa 1
+dec 2
+ind
+mul
+sto
+
+ldc 9
+inc 0
+ldc 1
+ixa 2
+ldc 3
+ixa 1
+dec 4
+ldc 1
+ldc 0
+and
+sto
+
+ldc 9
+inc 6
+ldc 9
+sto
+
+ldc 5
+ldc 5
+ixa 1
+dec 2
+ldc 5
+ldc 2
+ixa 1
+dec 2
+ind
+ldc 5
+ldc 2
+ixa 1
+dec 2
+ind
+mul
+sto
+
+ldc 9
+inc 6
+ind
+ldc 1
+ixa 2
+ldc 2
+ixa 1
+dec 4
+ldc 17
+inc 8
+ind
+ldc 4.3
+les
+sto
+
+ldc 9
+inc 6
+ind
+ldc 2
+ixa 2
+ldc 3
+ixa 1
+dec 4
+ldc 9
+inc 6
+ind
+ldc 1
+ixa 2
+ldc 2
+ixa 1
+dec 4
+ind
+sto
+
+ldc 1
+neg
+ixj end_switch_1
+case_1_1:
+ldc 5
+ldc 3
+ixa 1
+dec 2
+ind
+ldc 5
+ldc 4
+ixa 1
+dec 2
+ind
+sub
+print
+ujp end_switch_1
+case_2_1:
+ldc 9
+inc 0
+ldc 1
+ixa 2
+ldc 3
+ixa 1
+dec 4
+ind
+print
+ujp end_switch_1
+ujp case_2_1
+ujp case_1_1
+end_switch_1:

@@ -564,20 +564,22 @@ public:
   }
   void pcodegen(ostream& os) {
       assert(exp_);
+      string sss = codel_name_help;//////////////////////////////////////////////////////
       exp_->pcodegen(os);
+      codel_name_help = sss;
       dim_count =  dim_count_temp;
       if (!record_ref_flag) {
-
           ArrayList* temp = SYT.findbase(codel_name_help)->dimensions;
-
           for (int i = 0; i < dim_count; i++) {
               if (temp != NULL) {
                   temp = temp->next;
               }
           }
           if (temp != NULL) {
+
               os << "ixa " << temp->ixa << endl;
           }
+
           if (temp->flag_new_array_will_start) {
               os << "dec " << SYT.findbase(temp->array_name)->subpart << endl;
               if (temp->next == NULL) {
@@ -796,6 +798,7 @@ public :
   void pcodegen(ostream& os) {
       assert(var_ && dim_);
       array_ref_flag = 1;
+      string aaa = codel_name_help;
       if (!record_ref_flag) {
           flag_print = 0; 
           ind_flag_ind = 0;
@@ -813,7 +816,7 @@ public :
       ind_flag_ind = 0;
 
       dim_->pcodegen(os);
-      if (codel_coder_flag && !record_ref_flag && !ind_flag_ind) {
+      if (codel_coder_flag && !record_ref_flag ) { ////////////check !ind_flag_ind
           os << "ind" << endl;
           ind_flag_ind = 1;
 
@@ -1467,6 +1470,7 @@ public:
               if (!pointer_ref) {
                   if (codel_coder_flag == 0) {
                       codel_name_help = *name_;
+                      flag_print = 0;
                   }
                   else {
                       if (!array_ref_flag) {

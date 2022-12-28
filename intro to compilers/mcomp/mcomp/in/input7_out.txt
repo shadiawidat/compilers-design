@@ -1,0 +1,8 @@
+ldc 6
+ldc 1
+new
+
+ldc 6
+ind
+ldc 13
+sto

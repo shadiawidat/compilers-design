@@ -1,0 +1,15 @@
+ldc 6
+ldc 5
+sto
+
+ldc 6
+ind
+ldc 14
+sto
+
+ldc 7
+inc 1
+ldc 6
+ind
+ind
+sto

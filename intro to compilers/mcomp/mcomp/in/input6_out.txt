@@ -1,0 +1,30 @@
+==================  Abstract Syntax Tree ================
+
+ldc 8
+ldc 1
+ixa 720
+ldc 3
+ixa 180
+ldc 3
+ixa 36
+ldc 4
+ixa 6
+ldc 6
+ixa 3
+dec 1227
+inc 1
+ldc 8
+ldc 3
+ixa 720
+ldc 2
+ixa 180
+ldc 6
+ixa 36
+ldc 5
+ixa 6
+ldc 5
+ixa 3
+dec 1227
+inc 2
+ind
+sto

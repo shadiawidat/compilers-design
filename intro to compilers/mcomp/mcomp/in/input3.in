@@ -1,0 +1,21 @@
+PROGRAM H
+
+	a RECORD{
+		b BOOLEAN;
+		c RECORD{
+			d FIXED;
+			e ^a;		
+		};	
+	};
+
+
+
+
+{
+	a.b = TRUE;
+	a.c.d=7;
+	a.c.e=5;
+	a.c.e^.b= FALSE;
+	WRITE(a.b);
+	
+}

@@ -1,0 +1,105 @@
+==================  Abstract Syntax Tree ================
+                                             
+ldc 5
+ldc 1
+ixa 20
+ldc 8
+ixa 4
+ldc 5
+ixa 1
+dec 51
+ldc 2
+ldc 5
+ldc 4
+ixa 20
+ldc 8
+ixa 4
+ldc 4
+ixa 1
+dec 51
+ind
+mul
+sto
+
+ldc 185
+inc 0
+ldc 1
+ixa 180
+dec 180
+ldc 2
+ixa 20
+ldc 8
+ixa 4
+ldc 4
+ixa 1
+dec 51
+ind
+ldc 386
+equ
+fjp end_if_1
+ldc 5
+ldc 5
+ldc 2
+ixa 20
+ldc 7
+ixa 4
+ldc 2
+ixa 1
+dec 51
+ixa 20
+ldc 7
+ixa 4
+ldc 2
+ixa 1
+dec 51
+ind
+print
+end_if_1:
+
+ldc 185
+inc 1260
+ldc 3
+ixa 21420
+ldc 7
+ixa 1260
+dec 42840
+ldc 3
+ixa 180
+dec 180
+ldc 3
+ixa 20
+ldc 9
+ixa 4
+ldc 3
+ixa 1
+dec 51
+ldc 5
+ldc 1
+ixa 20
+ldc 11
+ixa 4
+ldc 5
+ixa 1
+dec 51
+ind
+sto
+
+ldc 185
+inc 1260
+ldc 2
+ixa 21420
+ldc 0
+ixa 1260
+dec 42840
+ldc 5
+ixa 180
+dec 180
+ldc 5
+ixa 20
+ldc 10
+ixa 4
+ldc 6
+ixa 1
+dec 51
+ind
+print

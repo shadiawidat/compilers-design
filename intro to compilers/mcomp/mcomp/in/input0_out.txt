@@ -1,0 +1,50 @@
+ldc 13
+ldc 1
+new
+
+ldc 13
+ind
+inc 0
+ldc 2
+new
+
+ldc 7
+inc 0
+ldc 10
+inc 0
+ind
+sto
+
+ldc 12
+ldc 2
+new
+
+ldc 12
+ind
+inc 1
+ldc 2
+new
+
+ldc 7
+inc 1
+ldc 2
+new
+
+ldc 13
+ind
+inc 0
+ind
+inc 1
+ldc 2
+new
+
+ldc 13
+ind
+inc 0
+ind
+inc 1
+ldc 12
+ind
+inc 1
+ind
+sto

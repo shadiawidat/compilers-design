@@ -1,0 +1,48 @@
+PROGRAM H
+	x FIXED;
+	y FIXED;
+	rec    RECORD{	
+		a     FIXED;                                                            
+		b     ^rec;  				
+	};
+
+	rec1  RECORD{
+		f  ^rec;
+
+	};
+	
+	
+	z RECORD{	
+		d     FIXED;                                                            
+		e     FIXED;  				
+	};
+
+
+
+	point ^rec;
+	point1 ^rec1;
+{
+
+
+	
+	NEW(point1);
+
+	NEW(point1^.f);
+
+	rec.a=z.d;
+
+	NEW(point); 	 
+  
+	NEW(point^.b); 
+
+	NEW(rec.b);
+
+	NEW(point1^.f^.b);
+
+	point1^.f^.b=point^.b;
+
+
+	
+	   
+	
+}

@@ -1,0 +1,51 @@
+PROGRAM H
+
+
+	a ARRAY[2:5] OF FLOAT;
+
+	b RECORD
+	{
+		c ARRAY[1:3] OF ARRAY [2:3] OF BOOLEAN;
+		d ^c;
+		e ^a;
+	};
+	
+	f RECORD
+	{
+		g b;
+		h FIXED;
+
+	};
+		
+	
+{
+	
+	f.h =13;
+
+	a[2]=3*2;
+
+	a[5]=a[2]*a[2];
+
+	b.c[1][3] = TRUE & FALSE;
+
+	b.d =9;
+	
+	a[5]=a[2]*a[2];
+
+	b.d^[1][2]=f.h < 4.3;
+
+	b.d^[2][3]=b.d^[1][2];
+
+	
+
+	CASE (1) OF {
+	0:WRITE(a[3]-a[4]);
+	
+	1:WRITE(b.c[1][3]);
+	
+	
+	}
+
+}
+
+
