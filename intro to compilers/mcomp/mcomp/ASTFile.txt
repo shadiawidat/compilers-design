@@ -1,34 +1,429 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: p
+Node name : Root/Program. Program name is: BF
 Node name : Begin
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: n
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: x
+Node name : RecordType
+Node name : RecordList
 Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
+Node name : RecordList
 Node name : VariableDeclaration. Var name is: b
+Node name : SimpleType
+Type is : Real
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: c
+Node name : SimpleType
+Type is : Boolean
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: d
 Node name : AddressType
 Node name : IdeType
-Node name : VariableDeclaration. Var name is: c
+Node name : VariableDeclaration. Var name is: y
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: e
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: f
 Node name : AddressType
+Node name : SimpleType
+Type is : Integer
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: g
+Node name : SimpleType
+Type is : Boolean
+Node name : VariableDeclaration. Var name is: m
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: l
+Node name : AddressType
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: p
+Node name : AddressType
+Node name : AddressType
+Node name : SimpleType
+Type is : Integer
+Node name : VariableDeclaration. Var name is: q
+Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: arr0
+Node name : ArrayType: low bound is: 1, up bound is: 4
+Node name : SimpleType
+Type is : Boolean
+Node name : VariableDeclaration. Var name is: arr1
+Node name : ArrayType: low bound is: 3, up bound is: 8
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: z
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: h
+Node name : AddressType
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: i
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: j
+Node name : AddressType
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: arr2
+Node name : ArrayType: low bound is: 5, up bound is: 5
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: arr3
+Node name : ArrayType: low bound is: 1, up bound is: 4
+Node name : ArrayType: low bound is: 3, up bound is: 9
+Node name : ArrayType: low bound is: 2, up bound is: 10
+Node name : SimpleType
+Type is : Integer
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: arr4
+Node name : ArrayType: low bound is: 5, up bound is: 6
+Node name : IdeType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: arr5
+Node name : ArrayType: low bound is: 7, up bound is: 9
+Node name : ArrayType: low bound is: 2, up bound is: 6
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: arr6
+Node name : ArrayType: low bound is: 0, up bound is: 2
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: ptp
+Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: w
+Node name : AddressType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :100
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : Expr
+Binary op is : 288Node name : IntConst. Value is :3
+Node name : IntConst. Value is :2
+Node name : Expr
+Binary op is : 287Node name : IdeType
+Node name : IntConst. Value is :1
 Node name : IdeType
 Node name : StatementList
 Node name : AssignNode name : IntConst. Value is :5
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :6
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
+Node name : AssignNode name : IntConst. Value is :200
 Node name : AddressRef
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :2
+Node name : AssignNode name : RealConst. Value is :3.33
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is false
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :300
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :17
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :400
 Node name : AddressRef
 Node name : AddressRef
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :18
 Node name : IdeType
 Node name : StatementList
 Node name : WriteVarStatementNode name : AddressRef
 Node name : AddressRef
+Node name : AddressRef
 Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :4
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :1000
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :3
+Node name : StatementList
+Node name : ConditionalStatementNode name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :3
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :500
+Node name : RecordRef
+Node name : IdeType
+Node name : AddressRef
+Node name : AddressRef
+Node name : AddressRef
+Node name : AddressRef
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :5
+Node name : RecordRef
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :4
+Node name : StatementList
+Node name : ConditionalStatementNode name : Expr
+Binary op is : 289Node name : RecordRef
+Node name : IdeType
+Node name : AddressRef
+Node name : IdeType
+Node name : Expr
+Binary op is : 287Node name : IntConst. Value is :3
+Node name : Expr
+Binary op is : 286Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :4
+Node name : StatementList
+Node name : AssignNode name : trueConst. Value is true
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : trueConst. Value is false
+Node name : StatementList
+Node name : LoopStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : AddressRef
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :7
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :2000
+Node name : RecordRef
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :1
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :8
+Node name : StatementList
+Node name : AssignNode name : RecordRef
+Node name : IdeType
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :1
+Node name : Dim
+Node name : IntConst. Value is :5
+Node name : Dim
+Node name : IntConst. Value is :8
+Node name : RecordRef
+Node name : IdeType
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : StatementList
+Node name : AssignNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :6
+Node name : Dim
+Node name : IntConst. Value is :3
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :16
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :0
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :3000
+Node name : AddressRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :0
+Node name : StatementList
+Node name : CaseStatementNode name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : ArrayRef
+Node name : IdeType
+Node name : Dim
+Node name : IntConst. Value is :9
+Node name : Dim
+Node name : IntConst. Value is :3
+Node name : AddressRef
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : CaseListNode name : CaseNode name : StatementList
+Node name : WriteVarStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : RecordRef
+Node name : IdeType
+Node name : AddressRef
+Node name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : NewStatementNode name : IdeType
+Node name : StatementList
+Node name : WriteVarStatementNode name : IntConst. Value is :99999

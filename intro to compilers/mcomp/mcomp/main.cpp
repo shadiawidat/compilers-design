@@ -59,7 +59,7 @@ string record_ref_name_in_array = "";
 int record_ref_name_in_array_flag = 0;
 int ind_flag_ind = 0;
 int array_ref_flag = 0;
-
+int new_flag = 0;
 
 extern int yydebug;
 

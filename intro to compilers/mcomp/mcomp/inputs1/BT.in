@@ -1,0 +1,93 @@
+PROGRAM BF
+	n FIXED;
+	
+	x RECORD {
+		a FIXED;
+		b FLOAT;
+		c BOOLEAN;
+		d^ x;
+	};
+
+	y RECORD {
+		e x;
+		f^ FIXED;
+		g BOOLEAN;
+	};
+	
+	m FIXED;
+	l^ FIXED;
+	
+	p^^ FIXED;
+	q^ p;
+
+	arr0 ARRAY[1:4] OF BOOLEAN;
+	arr1 ARRAY[3:8] OF n;
+
+	z RECORD {
+		h^ q;
+		i x;
+		j^ y;
+		arr2 ARRAY[5:5] OF arr1;
+		arr3 ARRAY[1:4] OF ARRAY[3:9] OF ARRAY[2:10] OF FIXED;
+		arr4 ARRAY[5:6] OF l;
+		arr5 ARRAY[7:9] OF ARRAY[2:6] OF y;
+
+	};
+
+	arr6 ARRAY[0:2] OF l;
+	ptp^ arr6;
+	w^ z;
+{
+	n = 100;
+	m = 1-n+2*3;
+	l = 5;	
+	l^ = 200;
+	x.b = 3.33;
+	x.a = l^;
+	x.d^.c = FALSE;
+	y.f = l;
+	y.e.a = 300;
+	p = 17;
+	p^^ = 400;
+	q = 18;
+	WRITE(q^^^);
+	arr0[4] = y.g;
+	arr1[3] = 1000;
+	IF(arr1[3]) THEN
+		z.h^^^^ = 500;
+	ELSE
+		z.arr4[4] = 5;
+		IF ((z.arr4[4]^ + m - 3)/y.f^) THEN
+			z.i.d^.c = TRUE;
+		ELSE
+			WRITE(FALSE);
+		FI
+	FI
+	WHILE (z.j^.f^) {
+		z.arr2[5][7] = y.e.a;
+		z.arr3[1][5][8] = 2000;
+		z.arr4[6]^ = z.arr3[1][5][8];
+	}
+	z.arr5[6][3].e.d^.c = z.j^.g;
+	arr6[0] = 16;
+	arr6[0]^ = 3000;
+	CASE w^.arr5[9][3].f^ OF
+	{
+		1:WRITE(x.b);
+		2:WRITE(y.e.b);
+		3:WRITE(z.i.b);
+		4:WRITE(z.j^.e.b);	
+		5:WRITE(w^.i.b);
+		6:WRITE(z.j^.e.d^.d^.d^.c);
+	}
+	NEW(l);
+	NEW(p);
+	NEW(z.h);
+	NEW(z.h^);
+	NEW(z.j);
+	NEW(z.j^.e.d^.d);
+	NEW(ptp);
+
+	WRITE(99999);	
+}
+	

@@ -1,0 +1,17 @@
+PROGRAM H
+
+	a ARRAY[3:14] OF FIXED;
+	b ^a;
+	c^ b;
+	e^ c;
+{
+
+	NEW(b);
+	NEW(c);
+	NEW(c^);
+	NEW(c^^);
+	NEW(e);
+	NEW(e^);
+	NEW(e^^);
+	NEW(e^^^);
+}

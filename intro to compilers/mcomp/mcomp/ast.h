@@ -126,7 +126,7 @@ extern string record_ref_name_in_array;
 extern int record_ref_name_in_array_flag;
 extern int ind_flag_ind;
 extern int array_ref_flag;
-
+extern int new_flag;
 
 class ArrayList {
 public:
@@ -202,9 +202,10 @@ public:
     ArrayList* dimensions;
     RecList* reclist;
     Pointers* pointer;
-
+    string pointer_to;
     Base()
     {
+        pointer_to = "";
         next = NULL;
     }
 
@@ -804,6 +805,7 @@ public :
           ind_flag_ind = 0;
           var_->pcodegen(os);
           os << "ldc " << SYT.find(codel_name_help) << endl;
+         
           flag_print = 1;
       }
       else {
@@ -869,6 +871,7 @@ public :
           os << "ind" << endl;
           ind_flag_ind = 1;
       }
+      old_record_ref_name_flag = 0;
 
   }
   virtual Object * clone () const { return new RecordRef(*this);}
@@ -900,6 +903,7 @@ public :
       assert(var_);
       pointer_ref = 1;
       ind_flag_ind = 0;
+
       var_->pcodegen(os);
       os << "ind" << endl;
 
@@ -910,7 +914,9 @@ public :
           ind_flag_ind = 1;
 
       }
-
+      if (new_flag&&!record_ref_flag) {
+          codel_name_help = SYT.findbase(codel_name_help)->pointer_to;
+      }
   }
   virtual Object * clone () { return new AddressRef(*this);}
 
@@ -938,39 +944,67 @@ public :
     var_->print(os);
   }
   void pcodegen(ostream& os) {
+      new_flag = 1;
       assert(var_);
       //var_->pcodegen(os);
       flag_print = 0;
       codel(var_, os);
 
       Base* t = SYT.findbase(codel_name_help);
+
       if (t == NULL) {
           RecList* r;
               if (!old_record_ref_name_flag) {
                   r = SYT.findbase(record_ref_name)->reclist;
-                  
               }
               else {
+
                   r = SYT.findbase(old_record_ref_name)->reclist;
                   old_record_ref_name_flag = 0;
               }
-         
+
+          
           while (r != NULL && r->key != codel_name_help) {
               r = r->next;
+          }
+          if (r == NULL) {
+              r = SYT.findbase(old_record_ref_name)->reclist;
+              old_record_ref_name_flag = 0;
+              while (r != NULL && r->key != codel_name_help) {
+                  r = r->next;
+              }
+          }
+          if (r == NULL) {
+              r = SYT.findbase(record_ref_name)->reclist;
+              old_record_ref_name_flag = 0;
+              while (r != NULL && r->key != codel_name_help) {
+                  r = r->next;
+              }
           }
           os << "ldc " << r->pointer->size_of_var << endl;
             
       }
       else {
-
           if (t->pointer == NULL) {
+
               os << "ldc " << t->getsize() << endl;
+              //os << "t->pointer_to :" << t->pointer_to << endl;
+
           }
           else {
-              os << "ldc " << t->pointer->size_of_var << endl;
+              if (codel_name_help != t->pointer->key) {
+                  os << "ldc 1"<< endl;
+              }
+              else {
+                  os << "ldc " << t->pointer->size_of_var << endl;
+              }
+              //os << "codel_name_help : " << codel_name_help << endl;
+              //os << "t->pointer . name_of_var : " << t->pointer->name_of_var << endl;
+              //os << "t->pointer . key : " << t->pointer->key << endl;
+             // os << "t->pointer_to :" << t->pointer_to << endl;
           }
       }
-     
+      new_flag = 0;
 
       os << "new" << endl;
   }
@@ -1479,7 +1513,9 @@ public:
                   }
               }
               else if(pointer_ref) {
-                  os << "ldc " << SYT.find(*name_) << endl;
+                  if (!array_ref_flag) {
+                      os << "ldc " << SYT.find(*name_) << endl;
+                  }
                   pointer_ref_name = *name_;
                   flag_print = 1;
               }
@@ -1890,6 +1926,7 @@ public :
           Pointers* p = new Pointers();
           SYT.insert(id_key, "Address", Stack_Address, 1);
           type_->pcodegen(os);
+          SYT.findbase(id_key)->pointer_to = type_of_id;
           if (type_of_id != "SimpleType" || pointer_of_array_decleration) {
               if (!pointer_of_array_decleration) {
                   p->key = id_key;
