@@ -72,7 +72,7 @@
 
 #ifndef AST_H 
 #define AST_H
-
+#include <map>
 #include <iomanip>
 #include <iostream>
 #include <assert.h>
@@ -127,6 +127,10 @@ extern int record_ref_name_in_array_flag;
 extern int ind_flag_ind;
 extern int array_ref_flag;
 extern int new_flag;
+
+
+static string father_name_temp = "";
+
 
 class ArrayList {
 public:
@@ -252,13 +256,16 @@ public:
     friend class SymbolTable;
 
 };
-
 class SymbolTable {
-    Base* table[TableSize];
+   
 public:
-
+    string father;
+    int depth;
+    Base* table[TableSize];
     SymbolTable()
     {
+        depth = 0;
+        father = "";
         for (int i = 0; i < TableSize; i++)
             table[i] = NULL;
     }
@@ -316,8 +323,13 @@ public:
 
 };
 static SymbolTable SYT;
+static map<string, SymbolTable*> m;
 
 
+
+
+//m.insert("F", new(SymbolTable));
+//m.find("F")->second->findbase
 // base class for tree nodes
 class Object :public Base {
 public:
@@ -334,6 +346,7 @@ public:
          os << "ldc " << SYT.find(codel_name_help) << endl;
          flag_print = 0;
      }
+
  }
  void coder(Object* exp_, ostream& os) {
      codel_coder_flag = 1;
@@ -2608,7 +2621,7 @@ public :
   virtual Object * clone () const { return new ByReferenceParameter(*this);}
 protected:
   void printWayOfPassing (ostream& os) const{
-	  os<<"Node name : ByReferenceParameter ";
+	  //os<<"Node name : ByReferenceParameter ";
 	}
 };
 
@@ -2618,7 +2631,7 @@ public :
   virtual Object * clone () const { return new ByValueParameter(*this);}
 protected:
   void printWayOfPassing (ostream& os) const{
-	  os<<"Node name : ByValueParameter ";
+	  //os<<"Node name : ByValueParameter ";
 	}
 };
 
@@ -2696,6 +2709,11 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(type_ && block_);
+      os << *name_ << ":" << endl;
+      m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
+      m.find(*name_)->second->father = father_name_temp;
+      m.find(*name_)->second->depth = m.find(father_name_temp)->second->depth + 1;
+      father_name_temp = *name_;
       type_->pcodegen(os);
       if (formal_list_) {
           formal_list_->pcodegen(os);
@@ -2730,6 +2748,7 @@ public :
   }
 
   ProcedureDeclaration(const ProcedureDeclaration& pd){
+
     block_ = pd.block_->clone();
     formal_list_ = pd.formal_list_->clone();
     name_ = new string(*pd.name_);
@@ -2741,14 +2760,21 @@ public :
 	  if (formal_list_){
 		  formal_list_->print(os);
 	  }
+      os << "heelo " << endl;
 	  block_->print(os);
   }
   void pcodegen(ostream& os) {
       assert(block_);
+      os << *name_ << ":" << endl;
+      m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
+      m.find(*name_)->second->father = father_name_temp;
+      m.find(*name_)->second->depth = m.find(father_name_temp)->second->depth + 1;
+      father_name_temp = *name_;
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
       block_->pcodegen(os);
+
   }
   virtual Object * clone () const { return new ProcedureDeclaration(*this);}
   
@@ -2812,18 +2838,30 @@ public :
   
   void print (ostream& os) {
 	  os<<"Node name : Begin"<<endl;
+      os << "$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
 	  if (decl_list_){
+
 		  decl_list_->print(os);
 	  }
+      os << "----------------------------" << endl;
+
 	  assert(stat_seq_);
 	  stat_seq_->print(os);
+      os << "++++++++++++++++++++++++++++" << endl;
   }
   void pcodegen(ostream& os) {
+
       if (decl_list_) {
+
           decl_list_->pcodegen(os);
-      }
+      }     
+
+      os << "ujp " << father_name_temp << "_begin" << endl;
       assert(stat_seq_);
+      os <<father_name_temp << "_begin" << endl;
+      father_name_temp = m.find(father_name_temp)->second->father;
       stat_seq_->pcodegen(os);
+
   }
 
   virtual Object * clone () const { return new Block(*this);}
@@ -2859,7 +2897,15 @@ public :
   }
   void pcodegen(ostream& os) {
       assert(block_);
+      os << *name_ << ":" << endl;
+
+      m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
+      m.find(*name_)->second->depth = 0;
+      m.find(*name_)->second->father = "";
+      father_name_temp = *name_;
+
       block_->pcodegen(os);
+
   }
   virtual Object * clone () const { return new Program(*this);}
   

@@ -1,20 +1,42 @@
 ==================  Abstract Syntax Tree ================
-Node name : ByValueParameter Node name : ByValueParameter Node name : ByValueParameter ldc -1
+h:
+ujp p_begin
+p_begin
+p:
+ujp f_begin
+f_begin
+f:
+ujp h_begin
+h_begin
+ldc 5
+ldc 1
+sto
+loop_1:
+ldc 5
+ind
+ldc 25
+les
+fjp end_loop_1
+ldc 6
 ldc 5
 ind
 ldc 6
 ind
 add
+inc 70
 sto
-ldc 5
-ldc -1
+ldc 6
+ldc 6
 ind
+inc 1
 sto
-ldc 3
 ldc 5
-ldc 9
-sto
 ldc 5
 ind
 inc 1
-ldc 2
+sto
+ujp loop_1
+end_loop_1:
+ldc 5
+ldc 1
+sto

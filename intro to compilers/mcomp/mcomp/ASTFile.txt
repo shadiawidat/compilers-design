@@ -1,58 +1,77 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: procedures
+Node name : Root/Program. Program name is: h
 Node name : Begin
+$$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: a
+Node name : VariableDeclaration. Var name is: i
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: x
+Node name : VariableDeclaration. Var name is: j
 Node name : SimpleType
 Type is : Integer
-Node name : ProcedureDeclaration. Proc name is: external
+Node name : ProcedureDeclaration. Proc name is: f
 Node name : ParameterList
 Node name : ParameterList
-Node name : ByValueParameter Parameter name :0xf0ca18
+Parameter name :0x112ca10
 Node name : SimpleType
 Type is : Integer
-Node name : ByValueParameter Parameter name :0xf0c8a8
+Parameter name :0x112c8a0
 Node name : SimpleType
 Type is : Integer
+heelo 
 Node name : Begin
+$$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
-Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: d
-Node name : SimpleType
-Type is : Integer
-Node name : ProcedureDeclaration. Proc name is: internal
+Node name : ProcedureDeclaration. Proc name is: p
 Node name : ParameterList
-Node name : ByValueParameter Parameter name :0xf004b0
-Node name : SimpleType
-Type is : Integer
+Parameter name :0x112ccc0
+Node name : IdeType
+heelo 
 Node name : Begin
-Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: s
-Node name : ArrayType: low bound is: 1, up bound is: 9
-Node name : SimpleType
-Type is : Integer
+$$$$$$$$$$$$$$$$$$$$$$$$$$$
+----------------------------
+Node name : StatementList
+Node name : ProcedureStatement. Proc name : a
+Node name : ExprListNode name : IdeType
+Node name : ExprListNode name : IdeType
+Node name : StatementList
+Node name : ProcedureStatement. Proc name : a
+Node name : ExprListNode name : IdeType
+Node name : ExprListNode name : IdeType
+++++++++++++++++++++++++++++
+----------------------------
+Node name : StatementList
+Node name : ProcedureStatement. Proc name : p
+Node name : ExprListNode name : IdeType
+++++++++++++++++++++++++++++
+----------------------------
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :1
+Node name : IdeType
+Node name : StatementList
+Node name : LoopStatementNode name : Expr
+Binary op is : 292Node name : IntConst. Value is :25
+Node name : IdeType
 Node name : StatementList
 Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :70
+Node name : Expr
 Binary op is : 286Node name : IdeType
 Node name : IdeType
 Node name : IdeType
 Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : IdeType
-Node name : StatementList
-Node name : ProcedureStatement. Proc name : internal
-Node name : ExprListNode name : IntConst. Value is :3
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :9
-Node name : IdeType
-Node name : StatementList
-Node name : ProcedureStatement. Proc name : external
-Node name : ExprListNode name : Expr
+Node name : AssignNode name : Expr
 Binary op is : 286Node name : IntConst. Value is :1
 Node name : IdeType
-Node name : ExprListNode name : IntConst. Value is :2
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 286Node name : IntConst. Value is :1
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : IntConst. Value is :1
+Node name : IdeType
+++++++++++++++++++++++++++++
