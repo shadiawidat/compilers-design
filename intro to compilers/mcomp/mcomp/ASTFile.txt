@@ -5,73 +5,60 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: i
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: j
+Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
 Node name : ProcedureDeclaration. Proc name is: f
 Node name : ParameterList
 Node name : ParameterList
-Parameter name :0x112ca10
+Parameter name :0x82c8d8
 Node name : SimpleType
 Type is : Integer
-Parameter name :0x112c8a0
+Parameter name :0x82c730
 Node name : SimpleType
 Type is : Integer
-heelo 
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
-Node name : DeclarationList
-Node name : ProcedureDeclaration. Proc name is: p
+----------------------------
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 288Node name : IntConst. Value is :2
+Node name : IdeType
+Node name : IdeType
+Node name : StatementList
+Node name : AssignNode name : Expr
+Binary op is : 287Node name : IdeType
+Node name : IdeType
+Node name : IdeType
+++++++++++++++++++++++++++++
+XXXXXXXXXXXXXXXXXXXX  ==  0   ==  XXXXXXXXXXXXXXXXXXXXX
+Node name : ProcedureDeclaration. Proc name is: g
 Node name : ParameterList
-Parameter name :0x112ccc0
-Node name : IdeType
-heelo 
+Node name : ParameterList
+Parameter name :0x82e698
+Node name : SimpleType
+Type is : Integer
+Parameter name :0x82e7f8
+Node name : SimpleType
+Type is : Integer
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
 ----------------------------
 Node name : StatementList
-Node name : ProcedureStatement. Proc name : a
-Node name : ExprListNode name : IdeType
-Node name : ExprListNode name : IdeType
+Node name : AssignNode name : Expr
+Binary op is : 288Node name : IntConst. Value is :2
+Node name : IdeType
+Node name : IdeType
 Node name : StatementList
-Node name : ProcedureStatement. Proc name : a
-Node name : ExprListNode name : IdeType
-Node name : ExprListNode name : IdeType
+Node name : AssignNode name : Expr
+Binary op is : 287Node name : IdeType
+Node name : IdeType
+Node name : IdeType
 ++++++++++++++++++++++++++++
+XXXXXXXXXXXXXXXXXXXX  ==  0   ==  XXXXXXXXXXXXXXXXXXXXX
 ----------------------------
 Node name : StatementList
-Node name : ProcedureStatement. Proc name : p
+Node name : ProcedureStatement. Proc name : f
 Node name : ExprListNode name : IdeType
-++++++++++++++++++++++++++++
-----------------------------
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
-Node name : IdeType
-Node name : StatementList
-Node name : LoopStatementNode name : Expr
-Binary op is : 292Node name : IntConst. Value is :25
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : Expr
-Binary op is : 286Node name : IntConst. Value is :70
-Node name : Expr
-Binary op is : 286Node name : IdeType
-Node name : IdeType
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : Expr
-Binary op is : 286Node name : IntConst. Value is :1
-Node name : IdeType
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : Expr
-Binary op is : 286Node name : IntConst. Value is :1
-Node name : IdeType
-Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : IntConst. Value is :1
-Node name : IdeType
+Node name : ExprListNode name : IdeType
 ++++++++++++++++++++++++++++
