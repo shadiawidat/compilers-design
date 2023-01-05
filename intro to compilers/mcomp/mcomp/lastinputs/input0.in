@@ -1,13 +1,19 @@
 PROGRAM h
-     a  FIXED;
-     PROCEDURE f ( m FIXED IDENTICAL, f  FIXED)	{
-	 m = m * 2;
- 	 a = x - m;
-      }
-     PROCEDURE g ( q FIXED IDENTICAL, w  FIXED)	{
-	 q = q * 2;
- 	 a = w - q;
-      }
+a  FIXED;
+PROCEDURE f ( x  FIXED )
+     PROCEDURE g ( w  f)
+		PROCEDURE b ( z  w)
+			{
+				z(10);
+				a=5;
+			}
+	{
+		w(5);
+        }
 {
-      f(a, a);
+	x=x+1;	
+}
+
+{
+      f(a);
 }

@@ -79,7 +79,7 @@
 #include <string>
 using namespace std;
 const int TableSize = 150;
-extern int Stack_Address;
+//extern int Stack_Address;
 extern int if_count;
 extern int if_else_count;
 extern int while_count;
@@ -130,9 +130,11 @@ extern int new_flag;
 
 static string current_fp_name = "";
 static string father_name_temp = "";
+static string father_name_pcodegen_temp = "";
+static string current_name_pcodegen_temp = "";
 static int sep_counter = 0;
 static int sep_counter_max = 0;
-
+//static int parameter_counter=0;
 class ArrayList {
 public:
     int low;
@@ -210,6 +212,7 @@ public:
     string pointer_to;
     int if_func;
     string if_func_name;
+    int depth;
     Base()
     {
         if_func_name = "";
@@ -261,6 +264,10 @@ public:
     friend class SymbolTable;
 
 };
+
+
+
+
 class SymbolTable {
    
 public:
@@ -293,12 +300,45 @@ public:
     {
         int i = hashf(name);
         Base* newvar = new Base(name, type, address, size);
+        newvar->depth = depth;
+        newvar->next = NULL;
+
+
         if (table[i] == NULL) {
             table[i] = newvar;
             return true;
         }
         else {
             Base* head = table[i];
+            while (head->next != NULL)
+                head = head->next;
+            head->next = newvar;
+            return true;
+        }
+        return false;
+    }
+    bool insert_copy(Base* b)
+    {
+        Base* newvar = new Base(b->key, b->type, b->address, b->size);
+        newvar->depth = b->depth;
+        newvar->dimensions = b->dimensions;
+        newvar->if_func = b->if_func;
+        newvar->if_func_name = b->if_func_name;
+        newvar->next = NULL;
+        newvar->pointer = b->pointer;
+        newvar->pointer_to = b->pointer_to;
+        newvar->reclist = b->reclist;
+        newvar->subpart = b->subpart;
+        
+        int i = hashf(newvar->key);
+
+        if (table[i] == NULL) {
+            table[i] = newvar;
+            return true;
+        }
+        else {
+
+            Base* head = table[i];                           
             while (head->next != NULL)
                 head = head->next;
             head->next = newvar;
@@ -328,12 +368,12 @@ public:
         if (head == NULL)
             return NULL;
         while (head != NULL) {
-
             if (head->key == name) {
                 return head;
             }
             head = head->next;
-        }
+       }
+
         return NULL;
     }
 
@@ -359,7 +399,8 @@ public:
      left_->pcodegen(os);
      if (!flag_print) {
 
-         os << "ldc " <<  (*ST).find(codel_name_help) << endl;
+         //os << "ldc " <<  (*ST).find(codel_name_help) << endl;
+         os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;;
          sep_counter += 1;
          if (sep_counter >= sep_counter_max) {
              sep_counter_max = sep_counter;
@@ -867,7 +908,9 @@ public :
           flag_print = 0; 
           ind_flag_ind = 0;
           var_->pcodegen(os);
-          os << "ldc " << (*ST).find(codel_name_help) << endl;
+          //os << "ldc " << (*ST).find(codel_name_help) << endl;
+          os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;;
+
           sep_counter += 1;
           if (sep_counter >= sep_counter_max) {
               sep_counter_max = sep_counter;
@@ -1603,7 +1646,9 @@ public:
                   }
                   else {
                       if (!array_ref_flag) {
-                          os << "ldc " << (*ST).find(*name_) << endl << "ind" << endl;
+                          //os << "ldc " << (*ST).find(*name_) << endl << "ind" << endl;
+                          os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+                          os<< "ind" << endl;
                           sep_counter += 1;
                           if (sep_counter >= sep_counter_max) {
                               sep_counter_max = sep_counter;
@@ -1613,7 +1658,9 @@ public:
               }
               else if(pointer_ref) {
                   if (!array_ref_flag) {
-                      os << "ldc " << (*ST).find(*name_) << endl;
+                      //os << "ldc " << (*ST).find(*name_) << endl;
+                      os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+
                       sep_counter += 1;
                       if (sep_counter >= sep_counter_max) {
                           sep_counter_max = sep_counter;
@@ -1626,7 +1673,9 @@ public:
           }
           else if (record_ref_flag == 1) {
 
-              os << "ldc " << (*ST).findbase(*name_)->address << endl;
+              //os << "ldc " << (*ST).findbase(*name_)->address << endl;
+              os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+
               sep_counter += 1;
               if (sep_counter >= sep_counter_max) {
                   sep_counter_max = sep_counter;
@@ -1736,7 +1785,7 @@ public :
           ArrayList* l = new ArrayList();
           if ((*ST).findbase(id_key) == NULL || pointer_decleration) {               //  A    ARRAY [3:9] OF ARRAY [2:5] OF ARRAY[8:10] OF FIXED;
               if (!pointer_decleration) {
-                  (*ST).insert(id_key, "ARRAY", Stack_Address, 0);
+                  (*ST).insert(id_key, "ARRAY", (*ST).Stack_Address, 0);
                   
               }
               else {
@@ -1994,7 +2043,7 @@ public :
   void pcodegen(ostream& os) {
       assert(record_list_);
       record_decliration_name = id_key;
-      (*ST).insert(id_key, "Record", Stack_Address, 0);
+      (*ST).insert(id_key, "Record", (*ST).Stack_Address, 0);
       record_decleration = 1;
       record_list_->pcodegen(os);
       record_decleration = 0;
@@ -2031,7 +2080,8 @@ public :
           pointer_decliration_name = id_key;
 
           Pointers* p = new Pointers();
-          (*ST).insert(id_key, "Address", Stack_Address, 1);
+          (*ST).insert(id_key, "Address", (*ST).Stack_Address, 1);
+
           type_->pcodegen(os);
           (*ST).findbase(id_key)->pointer_to = type_of_id;
           if (type_of_id != "SimpleType" || pointer_of_array_decleration) {
@@ -2155,7 +2205,7 @@ public :
               r1->index = index_in_record_list;
               index_in_record_list += 1;
               size_of_record_decliration += 1;
-              Stack_Address += 1;
+              (*ST).Stack_Address += 1;
               r1->dimensions = NULL;
               r1->key = id_key;
               r1->reclist = NULL;
@@ -2425,301 +2475,19 @@ public:
       id_key = *name_;
       assert(type_);
       type_->pcodegen(os);
-
-      if (idhelp == "decleration_of_var") {
-          if (!record_decleration) {
-
-              (*ST).insert(*name_, (*ST).findbase(type_of_id)->type, Stack_Address, (*ST).findbase(type_of_id)->size);
-              Stack_Address += (*ST).findbase(type_of_id)->size;
-              Base* b = (*ST).findbase(*name_);
-              Base* v = (*ST).findbase(type_of_id);
-              b->dimensions = v->dimensions;
-              b->pointer = v->pointer;
-              b->reclist = v->reclist;
-              b->subpart = v->subpart;
-              b->size = v->size;
-              b->type = v->type;
-          }
-          else if(record_decleration) {
-              RecList* temp = new RecList();
-              RecList* r = (*ST).findbase(record_decliration_name)->reclist;
-              RecList* r1 = r;
-              RecList* r2 = r;
-              while (r1 != NULL && r1->key != type_of_id) {
-                  r1 = r1->next;
-              }
-              if (r1 == NULL) {
-                  Base* v = (*ST).findbase(type_of_id);
-                  temp->dimensions = v->dimensions;
-                  temp->key = *name_;
-                  temp->next = NULL;
-                  temp->pointer = v->pointer;
-                  temp->reclist = v->reclist;
-                  temp->record_name = record_decliration_name;
-                  temp->subpart = v->subpart;
-                  temp->type = v->type;
-                  temp->size = v->size;
-                  temp->index = index_in_record_list;
-                  index_in_record_list += temp->size;
-                  size_of_record_decliration += temp->size;
-                  Stack_Address += temp->size;
-                  r2= (*ST).findbase(record_decliration_name)->reclist;
-                  if (r2 == NULL) {
-                      (*ST).findbase(record_decliration_name)->reclist = temp;
-                  }
-                  else {
-                      while (r2->next != NULL) {
-                          r2 = r2->next;
-                      }
-                      r2->next = temp;
-                  }
-              }
-              else if(r1 != NULL) {
-                  temp->dimensions = r1->dimensions;
-                  temp->key = *name_;
-                  temp->next = NULL;
-                  temp->pointer = r1->pointer;
-                  temp->reclist = r1->reclist;
-                  temp->record_name = record_decliration_name;
-                  temp->subpart = r1->subpart;
-                  temp->type = r1->type;
-                  temp->size = r1->size;
-                  temp->index = index_in_record_list;
-                  index_in_record_list += temp->size;
-                  size_of_record_decliration += temp->size;
-
-                  Stack_Address += temp->size;
-                  while (r2->next != NULL) {
-                      r2 = r2->next;
-                  }
-                  r2->next = temp;
-              }
-          }
-      }
-      
-      if (!record_decleration) {
-          if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
-              (*ST).insert(*name_, idhelp, Stack_Address, 1);
-              Stack_Address += 1;
-          }
-          if (idhelp == "Address") {
-              Stack_Address += 1;
-          }
-          if (idhelp == "ARRAY") {
-              (*ST).findbase(id_key)->size = size_of_id;
-              if (!pointer_of_array_decleration) {
-                  Stack_Address += size_of_id;
-                  size_of_id = 0;
-              }
-
-
-              int subpart = 0;
-              int y;
-
-              ArrayList* l = (*ST).findbase(id_key)->dimensions;
-              while (l->flag_new_array_will_start != 1) {
-                  if (type_of_id != "SimpleType") {                       //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
-                      y = l->low * (*ST).findbase(type_of_id)->size;
-                  }
-                  else {
-                      y = l->low * 1;
-                  }
-                  l = l->next;
-                  int x = 1;
-                  ArrayList* l1 = l;
-                  while (l1->flag_new_array_will_start != 1) {
-                      if (l1 != NULL) {
-                          x *= (l1->up - l1->low + 1);
-                          l1 = l1->next;
-                      }
-                  }
-                  if (l1 != NULL) {
-                      x *= (l1->up - l1->low + 1);
-                      l1 = l1->next;
-                  }
-                  subpart += x * y;
-
-              }
-              if (l != NULL) {
-                  if (type_of_id != "SimpleType") {
-                      y = l->low * (*ST).findbase(type_of_id)->size;
-                  }
-                  else {
-                      y = l->low * 1;
-                  }
-                  subpart += y;
-              }
-              (*ST).findbase(id_key)->subpart = subpart;
-
-          }
-
-          if (idhelp == "Record") {
-              (*ST).findbase(record_decliration_name)->size = size_of_record_decliration;
-              size_of_record_decliration = 0;
-              index_in_record_list = 0;
-              RecList* r = (*ST).findbase(record_decliration_name)->reclist;
-              while (r != NULL) {
-                  if (r->type == "Address") {
-                      if (r->pointer->name_of_var == record_decliration_name) {
-                          r->pointer->size_of_var = (*ST).findbase(record_decliration_name)->size;
-                      }
-                  }
-                  r = r->next;
-              }
-          }
-
-      }else if(record_decleration){
-          if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
-              RecList* r = new RecList();
-              r->index = index_in_record_list;
-              index_in_record_list++;
-              r->key = id_key;
-              r->next = NULL;
-              r->record_name = record_decliration_name;
-              r->size = 1;
-              r->type = idhelp;
-              if ((*ST).findbase(record_decliration_name)->reclist == NULL) {
-                  (*ST).findbase(record_decliration_name)->reclist = r;
-              }
-              else {
-                  RecList* r1 = (*ST).findbase(record_decliration_name)->reclist;
-                  while (r1->next != NULL) {
-                      r1 = r1->next;
-                  }
-                  r1->next = r;
-              }
-              Stack_Address += 1;
-              size_of_record_decliration += 1;
-          }
-          if (idhelp == "ARRAY") {
-              RecList* r = (*ST).findbase(record_decliration_name)->reclist;
-              RecList* r1 = r;
-              RecList* r2 = r;
-
-              while (r!=NULL && r->key != id_key) {
-                  r = r->next;
-              }
-              r->size = size_of_id;
-              index_in_record_list += size_of_id;
-              size_of_record_decliration += size_of_id;
-              Stack_Address += size_of_id;
-
-              //Stack_Address += size_of_id;
-              size_of_id = 0;
-
-              int subpart = 0;
-              int y;
-
-              ArrayList* l = r->dimensions;
-              while (l->flag_new_array_will_start != 1) {
-                  if (type_of_id != "SimpleType") {     //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
-                      while (r1 != NULL && r1->key != type_of_id) {
-                          r1 = r1->next;
-                      }
-                      if (r1 != NULL) {
-                          y = l->low * r1->size;
-                      }
-                      else {
-                          y = l->low * (*ST).findbase(type_of_id)->size;
-                      }
-                  }
-                  else {
-                      y = l->low * 1;
-                  }
-                  l = l->next;
-                  int x = 1;
-                  ArrayList* l1 = l;
-                  while (l1->flag_new_array_will_start != 1) {
-                      if (l1 != NULL) {
-                          x *= (l1->up - l1->low + 1);
-                          l1 = l1->next;
-                      }
-                  }
-                  if (l1 != NULL) {
-                      x *= (l1->up - l1->low + 1);
-                      l1 = l1->next;
-                  }
-                  subpart += x * y;
-
-              }
-              if (l != NULL) {
-                  if (type_of_id != "SimpleType") {
-                      while (r2 != NULL && r2->key != type_of_id) {
-                          r2 = r2->next;
-                      }
-                      if (r2 != NULL) {
-                          y = l->low * r2->size;
-                      }
-                      else {
-                          y = l->low * (*ST).findbase(type_of_id)->size;
-                      }
-                  }
-                  else {
-                      y = l->low * 1;
-                  }
-                  subpart += y;
-              }
-              r->subpart = subpart;
-          }
-      }
-      variable_decleration = 0;
-
-  }
-  virtual Object * clone () const { return new VariableDeclaration(*this);}
-
-private:
-  Object * type_;
-  string * name_;
-};
-
-class Parameter : public Object {
-public :
-  Parameter (Object * type, const char * name) : type_(type){
-    assert(type_);
-    name_ = new string(name);
-  }
-  
-  Parameter(const Parameter& p){
-    type_ = p.type_->clone();
-    name_ = new string(*p.name_);
-  }
-
-  virtual ~Parameter () {
-    if (type_) delete type_;
-		delete name_;
-	}
-  
-  void print (ostream& os) {
-		printWayOfPassing(os);
-    os<<"Parameter name :" <<name_<<endl;
-		assert(type_);
-	  type_->print(os);
-  }
-  void pcodegen(ostream& os) {
-      //printWayOfPassing(os);
-      //assert(type_);
-
-      //type_->pcodegen(os);
-      variable_decleration = 1;
-      id_key = *name_;
-      assert(type_);
-      type_->pcodegen(os);
       if (m.find(type_of_id)->first != "") {
-          (*ST).insert(*name_, type_of_id, Stack_Address, 2);
+          (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
           (*ST).findbase(*name_)->if_func = 1;
           (*ST).findbase(*name_)->if_func_name = type_of_id;
-          Stack_Address += 2;
+
+          (*ST).Stack_Address += 2;
       }
-      //else if () {
-      // aza al parameter kan mn tebos var ele hoe mn tevos var ele goe mn tebos func or proc
-      //}
-      else
-      {
+      else {
           if (idhelp == "decleration_of_var") {
               if (!record_decleration) {
 
-                  (*ST).insert(*name_, (*ST).findbase(type_of_id)->type, Stack_Address, (*ST).findbase(type_of_id)->size);
-                  Stack_Address += (*ST).findbase(type_of_id)->size;
+                  (*ST).insert(*name_, (*ST).findbase(type_of_id)->type, (*ST).Stack_Address, (*ST).findbase(type_of_id)->size);
+                  (*ST).Stack_Address += (*ST).findbase(type_of_id)->size;
                   Base* b = (*ST).findbase(*name_);
                   Base* v = (*ST).findbase(type_of_id);
                   b->dimensions = v->dimensions;
@@ -2751,7 +2519,7 @@ public :
                       temp->index = index_in_record_list;
                       index_in_record_list += temp->size;
                       size_of_record_decliration += temp->size;
-                      Stack_Address += temp->size;
+                      (*ST).Stack_Address += temp->size;
                       r2 = (*ST).findbase(record_decliration_name)->reclist;
                       if (r2 == NULL) {
                           (*ST).findbase(record_decliration_name)->reclist = temp;
@@ -2777,7 +2545,7 @@ public :
                       index_in_record_list += temp->size;
                       size_of_record_decliration += temp->size;
 
-                      Stack_Address += temp->size;
+                      (*ST).Stack_Address += temp->size;
                       while (r2->next != NULL) {
                           r2 = r2->next;
                       }
@@ -2788,16 +2556,16 @@ public :
 
           if (!record_decleration) {
               if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
-                  (*ST).insert(*name_, idhelp, Stack_Address, 1);
-                  Stack_Address += 1;
+                  (*ST).insert(*name_, idhelp, (*ST).Stack_Address, 1);
+                  (*ST).Stack_Address += 1;
               }
               if (idhelp == "Address") {
-                  Stack_Address += 1;
+                  (*ST).Stack_Address += 1;
               }
               if (idhelp == "ARRAY") {
                   (*ST).findbase(id_key)->size = size_of_id;
                   if (!pointer_of_array_decleration) {
-                      Stack_Address += size_of_id;
+                      (*ST).Stack_Address += size_of_id;
                       size_of_id = 0;
                   }
 
@@ -2878,7 +2646,7 @@ public :
                       }
                       r1->next = r;
                   }
-                  Stack_Address += 1;
+                  (*ST).Stack_Address += 1;
                   size_of_record_decliration += 1;
               }
               if (idhelp == "ARRAY") {
@@ -2892,7 +2660,7 @@ public :
                   r->size = size_of_id;
                   index_in_record_list += size_of_id;
                   size_of_record_decliration += size_of_id;
-                  Stack_Address += size_of_id;
+                  (*ST).Stack_Address += size_of_id;
 
                   //Stack_Address += size_of_id;
                   size_of_id = 0;
@@ -2952,8 +2720,301 @@ public :
                   r->subpart = subpart;
               }
           }
-          variable_decleration = 0;
       }
+      variable_decleration = 0;
+
+  }
+  virtual Object * clone () const { return new VariableDeclaration(*this);}
+
+private:
+  Object * type_;
+  string * name_;
+};
+
+class Parameter : public Object {
+public :
+  Parameter (Object * type, const char * name) : type_(type){
+    assert(type_);
+    name_ = new string(name);
+  }
+  
+  Parameter(const Parameter& p){
+    type_ = p.type_->clone();
+    name_ = new string(*p.name_);
+  }
+
+  virtual ~Parameter () {
+    if (type_) delete type_;
+		delete name_;
+	}
+  
+  void print (ostream& os) {
+		printWayOfPassing(os);
+    os<<"Parameter name :" <<*name_<<endl;
+		assert(type_);
+	  type_->print(os);
+  }
+  void pcodegen(ostream& os) {
+      //printWayOfPassing(os);
+      //assert(type_);
+
+
+      //type_->pcodegen(os);
+      variable_decleration = 1;
+      id_key = *name_;
+      assert(type_);
+      type_->pcodegen(os);
+      if (m.find(type_of_id)->first != "") {
+          (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
+          (*ST).findbase(*name_)->if_func = 1;
+          (*ST).findbase(*name_)->if_func_name = type_of_id;
+          (*ST).Stack_Address += 2;
+      }
+      //else if () {
+      // aza al parameter kan mn tebos var ele hoe mn tevos var ele goe mn tebos func or proc
+      //}
+      else
+      {
+          if (idhelp == "decleration_of_var") {
+              if (!record_decleration) {
+                  (*ST).insert(*name_, (*ST).findbase(type_of_id)->type, (*ST).Stack_Address, (*ST).findbase(type_of_id)->size);
+                  (*ST).Stack_Address += (*ST).findbase(type_of_id)->size;
+
+                  Base* b = (*ST).findbase(*name_);
+                  Base* v = (*ST).findbase(type_of_id);
+                  b->dimensions = v->dimensions;
+                  b->pointer = v->pointer;
+                  b->reclist = v->reclist;
+                  b->subpart = v->subpart;
+                  b->size = v->size;
+                  b->type = v->type;
+              }
+              else if (record_decleration) {
+                  RecList* temp = new RecList();
+                  RecList* r = (*ST).findbase(record_decliration_name)->reclist;
+                  RecList* r1 = r;
+                  RecList* r2 = r;
+                  while (r1 != NULL && r1->key != type_of_id) {
+                      r1 = r1->next;
+                  }
+                  if (r1 == NULL) {
+                      Base* v = (*ST).findbase(type_of_id);
+                      temp->dimensions = v->dimensions;
+                      temp->key = *name_;
+                      temp->next = NULL;
+                      temp->pointer = v->pointer;
+                      temp->reclist = v->reclist;
+                      temp->record_name = record_decliration_name;
+                      temp->subpart = v->subpart;
+                      temp->type = v->type;
+                      temp->size = v->size;
+                      temp->index = index_in_record_list;
+                      index_in_record_list += temp->size;
+                      size_of_record_decliration += temp->size;
+                      (*ST).Stack_Address += temp->size;
+                      r2 = (*ST).findbase(record_decliration_name)->reclist;
+                      if (r2 == NULL) {
+                          (*ST).findbase(record_decliration_name)->reclist = temp;
+                      }
+                      else {
+                          while (r2->next != NULL) {
+                              r2 = r2->next;
+                          }
+                          r2->next = temp;
+                      }
+                  }
+                  else if (r1 != NULL) {
+                      temp->dimensions = r1->dimensions;
+                      temp->key = *name_;
+                      temp->next = NULL;
+                      temp->pointer = r1->pointer;
+                      temp->reclist = r1->reclist;
+                      temp->record_name = record_decliration_name;
+                      temp->subpart = r1->subpart;
+                      temp->type = r1->type;
+                      temp->size = r1->size;
+                      temp->index = index_in_record_list;
+                      index_in_record_list += temp->size;
+                      size_of_record_decliration += temp->size;
+
+                      (*ST).Stack_Address += temp->size;
+                      while (r2->next != NULL) {
+                          r2 = r2->next;
+                      }
+                      r2->next = temp;
+                  }
+              }
+          }
+
+          if (!record_decleration) {
+              if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
+                  (*ST).insert(*name_, idhelp, (*ST).Stack_Address, 1);
+                  (*ST).Stack_Address += 1;
+              }
+              if (idhelp == "Address") {
+                  (*ST).Stack_Address += 1;
+              }
+              if (idhelp == "ARRAY") {
+                  (*ST).findbase(id_key)->size = size_of_id;
+                  if (!pointer_of_array_decleration) {
+                      (*ST).Stack_Address += size_of_id;
+                      size_of_id = 0;
+                  }
+
+
+                  int subpart = 0;
+                  int y;
+
+                  ArrayList* l = (*ST).findbase(id_key)->dimensions;
+                  while (l->flag_new_array_will_start != 1) {
+                      if (type_of_id != "SimpleType") {                       //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
+                          y = l->low * (*ST).findbase(type_of_id)->size;
+                      }
+                      else {
+                          y = l->low * 1;
+                      }
+                      l = l->next;
+                      int x = 1;
+                      ArrayList* l1 = l;
+                      while (l1->flag_new_array_will_start != 1) {
+                          if (l1 != NULL) {
+                              x *= (l1->up - l1->low + 1);
+                              l1 = l1->next;
+                          }
+                      }
+                      if (l1 != NULL) {
+                          x *= (l1->up - l1->low + 1);
+                          l1 = l1->next;
+                      }
+                      subpart += x * y;
+
+                  }
+                  if (l != NULL) {
+                      if (type_of_id != "SimpleType") {
+                          y = l->low * (*ST).findbase(type_of_id)->size;
+                      }
+                      else {
+                          y = l->low * 1;
+                      }
+                      subpart += y;
+                  }
+                  (*ST).findbase(id_key)->subpart = subpart;
+
+              }
+
+              if (idhelp == "Record") {
+                  (*ST).findbase(record_decliration_name)->size = size_of_record_decliration;
+                  size_of_record_decliration = 0;
+                  index_in_record_list = 0;
+                  RecList* r = (*ST).findbase(record_decliration_name)->reclist;
+                  while (r != NULL) {
+                      if (r->type == "Address") {
+                          if (r->pointer->name_of_var == record_decliration_name) {
+                              r->pointer->size_of_var = (*ST).findbase(record_decliration_name)->size;
+                          }
+                      }
+                      r = r->next;
+                  }
+              }
+
+          }
+          else if (record_decleration) {
+              if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
+                  RecList* r = new RecList();
+                  r->index = index_in_record_list;
+                  index_in_record_list++;
+                  r->key = id_key;
+                  r->next = NULL;
+                  r->record_name = record_decliration_name;
+                  r->size = 1;
+                  r->type = idhelp;
+                  if ((*ST).findbase(record_decliration_name)->reclist == NULL) {
+                      (*ST).findbase(record_decliration_name)->reclist = r;
+                  }
+                  else {
+                      RecList* r1 = (*ST).findbase(record_decliration_name)->reclist;
+                      while (r1->next != NULL) {
+                          r1 = r1->next;
+                      }
+                      r1->next = r;
+                  }
+                  (*ST).Stack_Address += 1;
+                  size_of_record_decliration += 1;
+              }
+              if (idhelp == "ARRAY") {
+                  RecList* r = (*ST).findbase(record_decliration_name)->reclist;
+                  RecList* r1 = r;
+                  RecList* r2 = r;
+
+                  while (r != NULL && r->key != id_key) {
+                      r = r->next;
+                  }
+                  r->size = size_of_id;
+                  index_in_record_list += size_of_id;
+                  size_of_record_decliration += size_of_id;
+                  (*ST).Stack_Address += size_of_id;
+
+                  //Stack_Address += size_of_id;
+                  size_of_id = 0;
+
+                  int subpart = 0;
+                  int y;
+
+                  ArrayList* l = r->dimensions;
+                  while (l->flag_new_array_will_start != 1) {
+                      if (type_of_id != "SimpleType") {     //a  ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF ARRAY[5:9] OF int
+                          while (r1 != NULL && r1->key != type_of_id) {
+                              r1 = r1->next;
+                          }
+                          if (r1 != NULL) {
+                              y = l->low * r1->size;
+                          }
+                          else {
+                              y = l->low * (*ST).findbase(type_of_id)->size;
+                          }
+                      }
+                      else {
+                          y = l->low * 1;
+                      }
+                      l = l->next;
+                      int x = 1;
+                      ArrayList* l1 = l;
+                      while (l1->flag_new_array_will_start != 1) {
+                          if (l1 != NULL) {
+                              x *= (l1->up - l1->low + 1);
+                              l1 = l1->next;
+                          }
+                      }
+                      if (l1 != NULL) {
+                          x *= (l1->up - l1->low + 1);
+                          l1 = l1->next;
+                      }
+                      subpart += x * y;
+
+                  }
+                  if (l != NULL) {
+                      if (type_of_id != "SimpleType") {
+                          while (r2 != NULL && r2->key != type_of_id) {
+                              r2 = r2->next;
+                          }
+                          if (r2 != NULL) {
+                              y = l->low * r2->size;
+                          }
+                          else {
+                              y = l->low * (*ST).findbase(type_of_id)->size;
+                          }
+                      }
+                      else {
+                          y = l->low * 1;
+                      }
+                      subpart += y;
+                  }
+                  r->subpart = subpart;
+              }
+          }
+
+      }
+      variable_decleration = 0;
   }
 protected:
 	virtual void printWayOfPassing (ostream& os) const = 0;
@@ -2983,7 +3044,6 @@ protected:
 	  //os<<"Node name : ByValueParameter ";
 	}
 };
-
 class ParameterList : public Object {
 public :
   ParameterList (Object * formal) : formal_(formal),  formal_list_(NULL) { assert(formal_);}
@@ -3001,18 +3061,22 @@ public :
 
   void print (ostream& os) {
 	  os<<"Node name : ParameterList"<<endl;
+ 
 	  if (formal_list_){
+
 		  formal_list_->print(os);
 	  }
 	  assert(formal_);
+
 	  formal_->print(os);
   }
   void pcodegen(ostream& os) {
+      assert(formal_);
+      formal_->pcodegen(os);
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
-      assert(formal_);
-      formal_->pcodegen(os);
+
   }
   virtual Object * clone () const { return new ParameterList(*this);}
   
@@ -3067,11 +3131,29 @@ public :
   void pcodegen(ostream& os) {
       assert(type_ && block_);
       os << *name_ << ":" << endl;
+      ST = m.find(*name_)->second;
       type_->pcodegen(os);
+      ST = m.find(*name_)->second;
+      SymbolTable* father_ST = m.find(father_name_pcodegen_temp)->second;
+      SymbolTable* my_ST = m.find(*name_)->second;
+      for (int i = 0; i < 150; i++) {
+          Base* B;
+          Base* head = (*father_ST).table[i];
+          while (head != NULL) {
+              (*my_ST).insert_copy(head);
+              head = head->next;
+          }
+      }
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
+      ST = m.find(*name_)->second;
+      father_name_pcodegen_temp = *name_;
+      current_name_pcodegen_temp = *name_;
       block_->pcodegen(os);
+      os << "retf" << endl;
+      father_name_pcodegen_temp = (*ST).father;
+      current_name_pcodegen_temp = (*ST).father;
   }
   virtual Object * clone () const { return new FunctionDeclaration(*this);}
   
@@ -3108,6 +3190,8 @@ public :
   }
 
   void print (ostream& os) {
+
+
 	  os<<"Node name : ProcedureDeclaration. Proc name is: "<<*name_<<endl;
 	  assert(block_);
       m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
@@ -3129,13 +3213,24 @@ public :
       m.find(*name_)->second->sep = sep_counter_max;
       sep_counter = sep_counter_temp;
       sep_counter_max = sep_counter_max_temp;
-      os << "XXXXXXXXXXXXXXXXXXXX  ==  " << m.find(*name_)->second->sep << "   ==  XXXXXXXXXXXXXXXXXXXXX" << endl;
 
   }
   void pcodegen(ostream& os) {
       assert(block_);
       os << *name_ << ":" << endl;
-     
+      ST = m.find(*name_)->second;
+      current_name_pcodegen_temp = *name_;
+      SymbolTable* father_ST = m.find(father_name_pcodegen_temp)->second;
+      SymbolTable* my_ST = m.find(*name_)->second;
+      for (int i = 0; i < 150; i++) {
+          Base* B;
+          Base* head = (*father_ST).table[i];
+          while (head != NULL) {
+              (*my_ST).insert_copy(head);
+              head = head->next;
+          }
+      }
+
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
@@ -3143,12 +3238,16 @@ public :
       int sep_counter_max_temp = sep_counter_max;
       sep_counter = 0;
       sep_counter_max = 0;
+      father_name_pcodegen_temp = *name_;
+      current_name_pcodegen_temp = *name_;
       block_->pcodegen(os);
+      father_name_pcodegen_temp = (*ST).father ;
+      current_name_pcodegen_temp = (*ST).father;
       m.find(*name_)->second->sep = sep_counter_max;
       sep_counter = sep_counter_temp;
       sep_counter_max = sep_counter_max_temp;
-      os << "XXXXXXXXXXXXXXXXXXXX  ==  " << m.find(*name_)->second->sep << "   ==  XXXXXXXXXXXXXXXXXXXXX" << endl;
-     
+      os << "retp" << endl;
+
 
 
   }
@@ -3227,14 +3326,16 @@ public :
       os << "++++++++++++++++++++++++++++" << endl;
   }
   void pcodegen(ostream& os) {
-
+      SymbolTable* STT = ST;
       if (decl_list_) {
 
           decl_list_->pcodegen(os);
       }     
-
+      ST = STT;
       assert(stat_seq_);
+      os <<current_name_pcodegen_temp<< "_begin:" << endl;
       stat_seq_->pcodegen(os);
+
   }
 
   virtual Object * clone () const { return new Block(*this);}
@@ -3279,11 +3380,14 @@ public :
   void pcodegen(ostream& os) {
       assert(block_);
       os << *name_ << ":" << endl;
-
+      ST = m.find(*name_)->second;
      
 
-
+      father_name_pcodegen_temp = *name_;
+      current_name_pcodegen_temp= *name_;
       block_->pcodegen(os);
+      ST = m.find(*name_)->second;
+      os << "stp" << endl;
 
   }
   virtual Object * clone () const { return new Program(*this);}

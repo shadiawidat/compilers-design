@@ -1,8 +1,16 @@
 PROGRAM h
      a  FIXED;
-     PROCEDURE f ( m FIXED IDENTICAL, x  FIXED)	{
+     arr ARRAY[3:9] OF FIXED;
+     PROCEDURE f (arg arr,m FIXED IDENTICAL, x  FIXED)
+	j FIXED;
+	k FIXED;
+	{
+	 arg[6]=9;  
 	 m = m * 2;
  	 a = x - m;
+	 arr[8]=2;
+	j=1;
+	k=6;
       }
 {
       f(a, a);

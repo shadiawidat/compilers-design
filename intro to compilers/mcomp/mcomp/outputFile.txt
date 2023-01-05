@@ -1,3 +1,42 @@
 ==================  Abstract Syntax Tree ================
 h:
 f:
+f_begin:
+lda 0 5
+ldc 6
+ixa 1
+dec 3
+ldc 9
+sto
+lda 0 12
+lda 0 12
+ind
+ldc 2
+mul
+sto
+lda 1 5
+lda 0 13
+ind
+lda 0 12
+ind
+sub
+sto
+lda 1 6
+ldc 8
+ixa 1
+dec 3
+ldc 2
+sto
+lda 0 14
+ldc 1
+sto
+lda 0 15
+ldc 6
+sto
+retp
+h_begin:
+lda 0 5
+ind
+lda 0 5
+ind
+stp
