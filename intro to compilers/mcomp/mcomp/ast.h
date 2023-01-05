@@ -401,10 +401,7 @@ public:
 
          //os << "ldc " <<  (*ST).find(codel_name_help) << endl;
          os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;;
-         sep_counter += 1;
-         if (sep_counter >= sep_counter_max) {
-             sep_counter_max = sep_counter;
-         }
+
          flag_print = 0;
      }
 
@@ -448,11 +445,73 @@ public :
       os<<"Unary op is : "<<op_;
       assert(atom_);
       atom_->print(os);
+
     }else{
       os<<"Binary op is : "<<op_;
       assert(left_ && right_);
-      left_->print(os);
+
+
       right_->print(os);
+      if (left_->name == "IntConst" || left_->name == "RealConst")
+      {
+          dec_flag = 1;
+      }
+      else {
+          dec_flag = 0;
+      }
+      left_->print(os);
+      switch (op_) {
+      case 286://ADD
+
+          sep_counter -= 1;
+
+          break;
+      case 287://SUB   **MIN
+
+          break;
+      case 288://MUL
+          sep_counter -= 1;
+
+          break;
+      case 289://DIV
+          sep_counter -= 1;
+
+          break;
+      case 292://LES
+          sep_counter -= 1;
+
+          break;
+      case 293://LEQ
+          sep_counter -= 1;
+
+          break;
+      case 294://EQU
+          sep_counter -= 1;
+
+          break;
+      case 295://NEQ
+          sep_counter -= 1;
+
+          break;
+      case 296://GRE
+          sep_counter -= 1;
+
+          break;
+      case 297://GEQ
+          sep_counter -= 1;
+
+          break;
+      case 298://AND
+          sep_counter -= 1;
+
+          break;
+      case 299://OR
+          sep_counter -= 1;
+
+          break;
+      default:
+          break;
+      }
     }
   }
  
@@ -498,7 +557,6 @@ public :
               else {
                   coder(left_, os);
                   os << "add" << endl;
-                  sep_counter -= 1;
 
               }
               break;
@@ -512,44 +570,37 @@ public :
               else {
                   coder(left_, os);
                   os << "sub" << endl;
-                  sep_counter -= 1;
               }
               break;
           case 288://MUL
               coder(right_, os);
               coder(left_, os);
               os << "mul" << endl;
-              sep_counter -= 1;
               break;
           case 289://DIV
               coder(right_, os);
               coder(left_, os);
               os << "div" << endl;
-              sep_counter -= 1;
               break; 
           case 292://LES
               coder(right_, os);
               coder(left_, os);
               os << "les" << endl;
-              sep_counter -= 1;
               break;
           case 293://LEQ
               coder(right_, os);
               coder(left_, os);
               os << "leq" << endl;
-              sep_counter -= 1;
               break;
           case 294://EQU
               coder(right_, os);
               coder(left_, os);
               os << "equ" << endl;
-              sep_counter -= 1;
               break;
           case 295://NEQ
               coder(right_, os);
               coder(left_, os);
               os << "neq" << endl;
-              sep_counter -= 1;
               break;
           case 296://GRE
               coder(right_, os);
@@ -560,19 +611,16 @@ public :
               coder(right_, os);
               coder(left_, os);
               os << "geq" << endl;
-              sep_counter -= 1;
               break;
           case 298://AND
               coder(right_, os);
               coder(left_, os);
               os << "and" << endl;
-              sep_counter -= 1;
               break;
           case 299://OR
               coder(right_, os);
               coder(left_, os);
               os << "or" << endl;
-              sep_counter -= 1;
               break;
           default:
               break;
@@ -645,6 +693,8 @@ public:
     os<<"Node name : Dim"<<endl;
     assert(exp_);
     exp_->print(os);
+    sep_counter -= 1;
+
     if (dim_){
       dim_->print(os);
     }
@@ -665,7 +715,6 @@ public:
           if (temp != NULL) {
 
               os << "ixa " << temp->ixa << endl;
-              sep_counter -= 1;
           }
 
           if (temp->flag_new_array_will_start) {
@@ -700,7 +749,6 @@ public:
           
           if (temp != NULL) {
               os << "ixa " << temp->ixa << endl;
-              sep_counter -= 1;
           }
           if (temp->flag_new_array_will_start) {
               if (r1 != NULL) {
@@ -784,6 +832,11 @@ public:
   IntConst(const IntConst& in) : i_(in.i_) {} 
   void print (ostream& os) {
     os<<"Node name : IntConst. Value is :"<<i_<<endl;
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
+   
   }
   virtual void pcodegen(ostream& os) {
       if (inc_flag == 1) {
@@ -797,10 +850,7 @@ public:
           }
           else {
               os << "ldc " << i_ << endl;
-              sep_counter += 1;
-              if (sep_counter >= sep_counter_max) {
-                  sep_counter_max = sep_counter;
-              }
+
           }
       }
      
@@ -818,6 +868,10 @@ public:
   RealConst(const RealConst& in) : r_(in.r_) {}  
   void print (ostream& os) {
     os<<"Node name : RealConst. Value is :"<<r_<<endl;
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
   }
   void pcodegen(ostream& os) {
       if (inc_flag == 1) {
@@ -831,10 +885,7 @@ public:
           }
           else {
               os << "ldc " << setprecision(1) << fixed << r_ << endl;
-              sep_counter += 1;
-              if (sep_counter >= sep_counter_max) {
-                  sep_counter_max = sep_counter;
-              }
+
           }
       }
   }
@@ -848,13 +899,15 @@ class True : public Atom {
 public:
   void print (ostream& os) {
     os<<"Node name : trueConst. Value is true"<<endl;
+
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
   }
   void pcodegen(ostream& os) {
       os << "ldc " << "1" << endl;
-      sep_counter += 1;
-      if (sep_counter >= sep_counter_max) {
-          sep_counter_max = sep_counter;
-      }
+
 
   }
   virtual Object * clone () const { return new True();}
@@ -865,13 +918,14 @@ class False : public Atom {
 public :
   void print (ostream& os) {
     os<<"Node name : trueConst. Value is false"<<endl;
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
   }
   void pcodegen(ostream& os) {
       os << "ldc " << "0" << endl;
-      sep_counter += 1;
-      if (sep_counter >= sep_counter_max) {
-          sep_counter_max = sep_counter;
-      }
+
 
   }
   virtual Object * clone () const { return new False();}
@@ -897,7 +951,10 @@ public :
   void print (ostream& os) {
     os<<"Node name : ArrayRef"<<endl;
     assert(var_ && dim_);
-    var_->print(os);
+    if (!record_ref_flag) {
+        var_->print(os);
+    }
+   
     dim_->print(os);
   }
   void pcodegen(ostream& os) {
@@ -909,12 +966,8 @@ public :
           ind_flag_ind = 0;
           var_->pcodegen(os);
           //os << "ldc " << (*ST).find(codel_name_help) << endl;
-          os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;;
+          os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;
 
-          sep_counter += 1;
-          if (sep_counter >= sep_counter_max) {
-              sep_counter_max = sep_counter;
-          }
          
           flag_print = 1;
       }
@@ -957,10 +1010,15 @@ public :
   }
 
   void print (ostream& os) {
-    os<<"Node name : RecordRef"<<endl;
-    assert(varExt_ && varIn_);
-    varExt_->print(os);
-    varIn_->print(os);
+      if (record_ref_flag != 2) {
+          record_ref_flag = 1;
+      }
+      os<<"Node name : RecordRef"<<endl;
+      assert(varExt_ && varIn_);
+      varExt_->print(os);
+      record_ref_flag = 2;
+      varIn_->print(os);
+      record_ref_flag = 0;
   }
   void pcodegen(ostream& os) {
       assert(varExt_ && varIn_);
@@ -977,6 +1035,7 @@ public :
       varIn_->pcodegen(os);
       record_ref_flag = 0;
       flag_print = 1;
+
       if (codel_coder_flag && !record_ref_flag && !ind_flag_ind) {
           os << "ind" << endl;
           ind_flag_ind = 1;
@@ -1052,6 +1111,12 @@ public :
 		os<<"Node name : NewStatement";
 		assert(var_);
     var_->print(os);
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
+    sep_counter -= 2;
+
   }
   void pcodegen(ostream& os) {
       new_flag = 1;
@@ -1092,37 +1157,25 @@ public :
               }
           }
           os << "ldc " << r->pointer->size_of_var << endl;
-          sep_counter += 1;
-          if (sep_counter >= sep_counter_max) {
-              sep_counter_max = sep_counter;
-          }
+
             
       }
       else {
           if (t->pointer == NULL) {
 
               os << "ldc " << t->getsize() << endl;
-              sep_counter += 1;
-              if (sep_counter >= sep_counter_max) {
-                  sep_counter_max = sep_counter;
-              }
+
               //os << "t->pointer_to :" << t->pointer_to << endl;
 
           }
           else {
               if (codel_name_help != t->pointer->key) {
                   os << "ldc 1"<< endl;
-                  sep_counter += 1;
-                  if (sep_counter >= sep_counter_max) {
-                      sep_counter_max = sep_counter;
-                  }
+
               }
               else {
                   os << "ldc " << t->pointer->size_of_var << endl;
-                  sep_counter += 1;
-                  if (sep_counter >= sep_counter_max) {
-                      sep_counter_max = sep_counter;
-                  }
+
               }
               //os << "codel_name_help : " << codel_name_help << endl;
               //os << "t->pointer . name_of_var : " << t->pointer->name_of_var << endl;
@@ -1133,7 +1186,6 @@ public :
       new_flag = 0;
 
       os << "new" << endl;
-      sep_counter -= 2;
   }
   virtual Object * clone () { return new NewStatement(*this);}
   
@@ -1158,16 +1210,17 @@ public :
 		os<<"Node name : WriteStrStatement";
 		assert(str_);
     os<<"Str statement is: "<<str_<<endl;
+    sep_counter += 1;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
+    sep_counter -= 1;
   }
   void pcodegen(ostream& os) {
       assert(str_);
       os << "ldc " << *str_ << endl;
-      sep_counter += 1;
-      if (sep_counter >= sep_counter_max) {
-          sep_counter_max = sep_counter;
-      }
+
       os << "print" << endl;
-      sep_counter -= 1;
 
   }
   virtual Object * clone () { return new WriteStrStatement(*this);}
@@ -1192,12 +1245,13 @@ public :
 		os<<"Node name : WriteVarStatement";
 		assert(exp_);
     exp_->print(os);
+
+    sep_counter -= 1;
   }
   void pcodegen(ostream& os) {
       assert(exp_);
       coder(exp_, os);
       os << "print" << endl;
-      sep_counter -= 1;
   }
   virtual Object * clone () const { return new WriteVarStatement(*this);}
   
@@ -1228,9 +1282,15 @@ public :
 
   void print (ostream& os) {
     os<<"Node name : ProcedureStatement. Proc name : "<<*str_<<endl;
+    sep_counter += 5;
+    if (sep_counter_max <= sep_counter) {
+        sep_counter_max = sep_counter;
+    }
+
     if (expr_list_ ){
       expr_list_->print(os);
     }
+    sep_counter -= 5;
   }
   void pcodegen(ostream& os) {
       if (expr_list_) {
@@ -1351,6 +1411,7 @@ public :
 		os<<"Node name : CaseStatement";
 		assert( exp_ && case_list_);
         exp_->print(os);
+        sep_counter -= 1;
 		case_list_->print(os);
   }
   void pcodegen(ostream& os) {
@@ -1361,7 +1422,6 @@ public :
       coder(exp_, os);
       os << "neg" << endl;
       os<<"ixj end_switch_" << switch_number << endl;
-      sep_counter -= 1;
       current_switch = switch_number;
       coder(case_list_, os);
       current_switch = switch_number;
@@ -1392,7 +1452,8 @@ public :
   void print (ostream& os) {
 		os<<"Node name : LoopStatement";
 		assert( exp_ && stat_list_);
-    exp_->print(os);
+        exp_->print(os);
+        sep_counter -= 1;
 		stat_list_->print(os);
   }
   void pcodegen(ostream& os) {
@@ -1401,7 +1462,6 @@ public :
       os << "loop_" << loop_num << ":" << endl;
       coder(exp_, os);
       os << "fjp end_loop_" << loop_num << endl;
-      sep_counter -= 1;
       coder(stat_list_, os);
       os << "ujp loop_" << loop_num << endl;
       os << "end_loop_" << loop_num << ":" << endl;
@@ -1435,7 +1495,9 @@ public :
   void print (ostream& os) {
 		os<<"Node name : ConditionalStatement";
 		assert( exp_ && stat_list_if_);
-    exp_->print(os);
+        exp_->print(os);
+        sep_counter -= 1;
+
 		stat_list_if_->print(os);
 		if (stat_list_else_){
 			stat_list_else_->print(os);
@@ -1448,11 +1510,9 @@ public :
       coder(exp_, os);
       if (stat_list_else_) {
           os << "fjp else_if_" << statement_number << endl;
-          sep_counter -= 1;
       }
       else {
           os << "fjp end_if_" << statement_number << endl;
-          sep_counter -= 1;
       }
       coder(stat_list_if_, os);
       if (stat_list_else_) {
@@ -1489,8 +1549,11 @@ public :
   void print (ostream& os) {
 		os<<"Node name : Assign";
 		assert(var_ && exp_);
-    var_->print(os);
-    exp_->print(os);
+        exp_->print(os);
+        var_->print(os);
+
+    sep_counter -= 2;
+
   }
   void pcodegen(ostream& os) {
       dim_count_temp = 0;
@@ -1498,7 +1561,6 @@ public :
       codel(exp_, os);
       coder(var_, os);
       os << "sto" << endl;
-      sep_counter -= 2;
   }
   virtual Object * clone () const { return new Assign(*this);}
 
@@ -1631,6 +1693,13 @@ public:
 
   void print (ostream& os) {
     os<<"Node name : IdeType"<<endl;
+    if (record_ref_flag != 2) {
+        sep_counter += 1;
+        if (sep_counter_max <= sep_counter) {
+            sep_counter_max = sep_counter;
+        }
+
+    }
   }
 
   void pcodegen(ostream& os) {
@@ -1649,10 +1718,7 @@ public:
                           //os << "ldc " << (*ST).find(*name_) << endl << "ind" << endl;
                           os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
                           os<< "ind" << endl;
-                          sep_counter += 1;
-                          if (sep_counter >= sep_counter_max) {
-                              sep_counter_max = sep_counter;
-                          }
+
                       }
                   }
               }
@@ -1661,10 +1727,6 @@ public:
                       //os << "ldc " << (*ST).find(*name_) << endl;
                       os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
 
-                      sep_counter += 1;
-                      if (sep_counter >= sep_counter_max) {
-                          sep_counter_max = sep_counter;
-                      }
                   }
                   pointer_ref_name = *name_;
                   flag_print = 1;
@@ -1676,10 +1738,6 @@ public:
               //os << "ldc " << (*ST).findbase(*name_)->address << endl;
               os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
 
-              sep_counter += 1;
-              if (sep_counter >= sep_counter_max) {
-                  sep_counter_max = sep_counter;
-              }
               record_ref_name = *name_;
               name_of_array_in_record_ref = *name_;
           }
@@ -3205,6 +3263,7 @@ public :
 	  if (formal_list_){
 		  formal_list_->print(os);
 	  }
+      //block_->print(os);
       int sep_counter_temp = sep_counter;
       int sep_counter_max_temp = sep_counter_max;
       sep_counter = 0;
@@ -3234,18 +3293,18 @@ public :
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
-      int sep_counter_temp = sep_counter;
-      int sep_counter_max_temp = sep_counter_max;
-      sep_counter = 0;
-      sep_counter_max = 0;
       father_name_pcodegen_temp = *name_;
       current_name_pcodegen_temp = *name_;
       block_->pcodegen(os);
-      father_name_pcodegen_temp = (*ST).father ;
+      father_name_pcodegen_temp = (*ST).father;
       current_name_pcodegen_temp = (*ST).father;
+     /* int sep_counter_temp = sep_counter;
+      int sep_counter_max_temp = sep_counter_max;
+      sep_counter = 0;
+      sep_counter_max = 0;
       m.find(*name_)->second->sep = sep_counter_max;
       sep_counter = sep_counter_temp;
-      sep_counter_max = sep_counter_max_temp;
+      sep_counter_max = sep_counter_max_temp;*/
       os << "retp" << endl;
 
 
@@ -3314,6 +3373,7 @@ public :
   void print (ostream& os) {//sep
 	  os<<"Node name : Begin"<<endl;
       os << "$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+
 	  if (decl_list_){
           string father=father_name_temp;
 		  decl_list_->print(os);
@@ -3322,18 +3382,26 @@ public :
       os << "----------------------------" << endl;
 
 	  assert(stat_seq_);
+
 	  stat_seq_->print(os);
       os << "++++++++++++++++++++++++++++" << endl;
   }
   void pcodegen(ostream& os) {
       SymbolTable* STT = ST;
+      os << "ssp " << (*ST).Stack_Address << endl;
+      os << "sep " << m.find(current_name_pcodegen_temp)->second->sep << endl;;
+
       if (decl_list_) {
 
           decl_list_->pcodegen(os);
-      }     
+      } 
+
       ST = STT;
       assert(stat_seq_);
+
+
       os <<current_name_pcodegen_temp<< "_begin:" << endl;
+
       stat_seq_->pcodegen(os);
 
   }
@@ -3375,7 +3443,14 @@ public :
     m.find(*name_)->second->ssp = 5;
     m.find(*name_)->second->Stack_Address = 5;
     father_name_temp = *name_;
+    int sep_counter_temp = sep_counter;
+    int sep_counter_max_temp = sep_counter_max;
+    sep_counter = 0;
+    sep_counter_max = 0;
     block_->print(os);
+    m.find(*name_)->second->sep = sep_counter_max;
+    sep_counter = sep_counter_temp;
+    sep_counter_max = sep_counter_max_temp;
   }
   void pcodegen(ostream& os) {
       assert(block_);
