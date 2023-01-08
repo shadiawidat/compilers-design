@@ -143,6 +143,7 @@ static int by_refrence_dec = 0;
 static int parameters_order = 0;
 static int sending_parameters_order = 0;
 static string proc_statement_name="";
+static int dim_exp_flag = 0;
 //static int parameter_counter=0;
 class ArrayList {
 public:
@@ -732,8 +733,10 @@ public:
   }
   void pcodegen(ostream& os) {
       assert(exp_);
+      dim_exp_flag = 1;
       string sss = codel_name_help;//////////////////////////////////////////////////////
       exp_->pcodegen(os);
+      dim_exp_flag = 0;
       codel_name_help = sss;
       dim_count =  dim_count_temp;
       if (!record_ref_flag) {
@@ -992,6 +995,7 @@ public :
       assert(var_ && dim_);
       array_ref_flag = 1;
       string aaa = codel_name_help;
+
       if (!record_ref_flag) {
           flag_print = 0; 
           ind_flag_ind = 0;
@@ -1009,11 +1013,12 @@ public :
 
           var_->pcodegen(os);
       }
-      
+
       dim_count = 0;
       ind_flag_ind = 0;
-
+      int codelflagg = codel_coder_flag;
       dim_->pcodegen(os);
+      codel_coder_flag = codelflagg;
       if (codel_coder_flag && !record_ref_flag ) { ////////////check !ind_flag_ind
           os << "ind" << endl;
           ind_flag_ind = 1;
@@ -1895,7 +1900,7 @@ public:
                       }
                   }
                   else {
-                      if (!array_ref_flag) {
+                      if (!array_ref_flag || dim_exp_flag) {
                           //os << "ldc " << (*ST).find(*name_) << endl << "ind" << endl;
                           os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
                           if ((*ST).findbase(codel_name_help)->by_refrence) {
@@ -1998,7 +2003,24 @@ public:
       }
       else {
           type_of_id = *name_;
-          idhelp = "decleration_of_var";
+          int flag = 0;
+          for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+              if (it->first == *name_) {
+                  flag = 1;
+              }
+          }
+          if (!flag) {
+              if ((*ST).findbase(*name_) != NULL) {
+                  if (!(*ST).findbase(*name_)->if_func) {
+                      idhelp = "decleration_of_var";
+                  }
+              }
+              else {
+                  idhelp = "decleration_of_var";
+              }
+            
+          }
+          
 
       }
   }
@@ -2723,13 +2745,19 @@ public:
       id_key = *name_;
       assert(type_);
       type_->pcodegen(os);
-      if (m.find(type_of_id)->first != "") {
+      int flag = 0;
+      for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+          if (it->first == type_of_id) {
+              flag = 1;
+          }
+      }
+      if (flag && idhelp == "") {
           (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
           (*ST).findbase(*name_)->if_func = 1;
           (*ST).findbase(*name_)->if_func_name = type_of_id;
           (*ST).Stack_Address += 2;
       }
-      else if ((*ST).findbase(type_of_id) != NULL) {
+      else if ((*ST).findbase(type_of_id) != NULL&& idhelp == "") {
           if ((*ST).findbase(type_of_id)->if_func == 1) {
               (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
               (*ST).findbase(*name_)->if_func = 1;
@@ -2977,6 +3005,7 @@ public:
               }
           }
       }
+      idhelp = "";
       variable_decleration = 0;
 
   }
@@ -3019,19 +3048,24 @@ public :
       else {
           (*ST).parameters.insert((pair<int, string>(parameters_order, "byrefrence")));
       }
+
       parameters_order++;
       //type_->pcodegen(os);
       variable_decleration = 1;
       id_key = *name_;
       assert(type_);
+
       type_->pcodegen(os);
+
       int flag = 0;
       for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
           if (it->first == type_of_id) {
               flag = 1;
           }
       }
-      if (flag) {
+
+      if (flag && idhelp == "") {
+
           (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
           (*ST).findbase(*name_)->if_func = 1;
           (*ST).findbase(*name_)->if_func_name = type_of_id;
@@ -3043,7 +3077,8 @@ public :
               (*ST).findbase(*name_)->by_refrence = 1;
           }
       }
-      else if ((*ST).findbase(type_of_id)!=NULL) {
+      else if ((*ST).findbase(type_of_id)!=NULL && idhelp == "") {
+
           if ((*ST).findbase(type_of_id)->if_func == 1) {
               (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
               (*ST).findbase(*name_)->if_func = 1;
@@ -3327,6 +3362,7 @@ public :
           }
 
       }
+      idhelp = "";
       variable_decleration = 0;
   }
 protected:
@@ -3554,7 +3590,7 @@ public:
     }
     void pcodegen(ostream& os) {
         assert(block_);
-        
+
         //if ((((*ST).father) == "")&& program_ssp_sep==0){
         //     os << "HELLO" << endl;
         //     os << "ssp " << (*ST).Stack_Address << endl;
@@ -3586,6 +3622,7 @@ public:
         if (formal_list_) {
             formal_list_->pcodegen(os);
         }
+
         (*ST).cup_size = (*ST).Stack_Address - 5;
         father_name_pcodegen_temp = *name_;
         current_name_pcodegen_temp = *name_;
@@ -3593,13 +3630,7 @@ public:
         block_->pcodegen(os);
         father_name_pcodegen_temp = (*ST).father;
         current_name_pcodegen_temp = (*ST).father;
-        /* int sep_counter_temp = sep_counter;
-         int sep_counter_max_temp = sep_counter_max;
-         sep_counter = 0;
-         sep_counter_max = 0;
-         m.find(*name_)->second->sep = sep_counter_max;
-         sep_counter = sep_counter_temp;
-         sep_counter_max = sep_counter_max_temp;*/
+
         os << "retp" << endl;
 
 

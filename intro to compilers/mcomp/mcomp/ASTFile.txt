@@ -1,43 +1,37 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: h
+Node name : Root/Program. Program name is: p
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: x
-Node name : SimpleType
-Type is : Integer
-Node name : FunctionDeclaration. Func name is: f
-Node name : SimpleType
-Type is : Integer
-Node name : ParameterList
-Parameter name :m
-Node name : SimpleType
-Type is : Integer
-Node name : Begin
-$$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: y
+Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
+Node name : VariableDeclaration. Var name is: b
+Node name : AddressType
+Node name : IdeType
+Node name : VariableDeclaration. Var name is: c
+Node name : AddressType
+Node name : IdeType
 ----------------------------
 Node name : StatementList
 Node name : AssignNode name : IdeType
-Node name : IntConst. Value is :13
-Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : Expr
-Binary op is : 287Node name : IdeType
 Node name : IntConst. Value is :5
 Node name : StatementList
 Node name : AssignNode name : IdeType
-Node name : Expr
-Binary op is : 288Node name : IdeType
-Node name : IntConst. Value is :19
-++++++++++++++++++++++++++++
-----------------------------
+Node name : IntConst. Value is :6
 Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : ProcedureStatement. Proc name : f
-Node name : ExprListNode name : IntConst. Value is :4
+Node name : AssignNode name : AddressRef
+Node name : IdeType
+Node name : IntConst. Value is :1
+Node name : StatementList
+Node name : AssignNode name : AddressRef
+Node name : AddressRef
+Node name : IdeType
+Node name : IntConst. Value is :2
+Node name : StatementList
+Node name : WriteVarStatementNode name : AddressRef
+Node name : AddressRef
+Node name : IdeType
 ++++++++++++++++++++++++++++
