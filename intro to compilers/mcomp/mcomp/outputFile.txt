@@ -1,45 +1,27 @@
 ==================  Abstract Syntax Tree ================
 h:
-ssp 5
-sep 10
-a:
+ssp 9
+sep  waiting for mariah ... 
+f:
 ssp 7
-sep 0
-a_begin:
+sep  waiting for mariah ... 
+p:
+ssp 7
+sep  waiting for mariah ... 
+p_begin:
+2
+mstf 0 5
+im here 
+im here 2 
 lda 1 5
-dec 4
-sto
-lda 0 5
+sending_parameters_order is : 0
+1
+(*ST).parameters.find(sending_parameters_order)->second ius : byvalue
++
 ind
-ldc 1
-les
-fjp end_if_1
-lda 1 5
-ldc 0
-sto
-end_if_1:
-lda 0 6
-ind
-ldc 1
-equ
-lda 0 5
-ind
-ldc 2
-equ
-or
-fjp else_if_2
+im here 
+im here 2 
 lda 1 6
-ldc 1
-sto
-ujp end_if_2
-else_if_2:
-lda 1 6
-lda 1 5
-ind
-lda 0 5
-ind
-dec 2
-ldc 6
-add
-sto
-end_if_2:
+sending_parameters_order is : 1
+1
+(*ST).parameters.find(sending_parameters_order)->second ius : (*ST).parameters.find(sending_parameters_order)->second ius : 

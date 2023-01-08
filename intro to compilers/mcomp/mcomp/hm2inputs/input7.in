@@ -1,0 +1,17 @@
+PROGRAM p
+
+	a RECORD{
+          x FIXED;
+          y FIXED;
+};
+	b  ^a;
+	c  ^b;
+{
+	b = 5;
+	c = 6;
+	b^.x = 1;
+	c^^.y = 2;
+       NEW (b);
+       NEW (c^);
+	WRITE(c^^.y);
+}

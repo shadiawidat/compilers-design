@@ -1,0 +1,57 @@
+ldc 5
+ldc 1
+sto
+ldc 31
+ldc 3
+ixa 25
+ldc 33
+ixa 5
+ldc 333
+ixa 1
+dec 144
+ldc 5
+ind
+dec 1
+sto
+ldc 156
+ldc 5
+ind
+inc 11
+ixa 125
+dec 375
+ldc 5
+ind
+ldc 3
+mul
+inc 5
+dec 7
+ixa 25
+ldc 5
+ind
+ldc 2
+mul
+ixa 5
+ldc 5
+ind
+ixa 1
+dec 144
+ldc 3
+sto
+ldc 6
+ldc 2
+ixa 5
+ldc 22
+ixa 1
+dec 9
+ldc 31
+ldc 4
+ixa 25
+ldc 10
+ixa 5
+ldc 45
+ixa 1
+dec 144
+ind 
+sto 
+
+

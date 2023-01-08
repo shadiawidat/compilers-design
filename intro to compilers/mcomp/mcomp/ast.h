@@ -134,6 +134,14 @@ static string father_name_pcodegen_temp = "";
 static string current_name_pcodegen_temp = "";
 static int sep_counter = 0;
 static int sep_counter_max = 0;
+
+static int program_ssp_sep = 0;
+static int last_func_ssp = 0;
+static int proc_statement_flag = 0;
+static int by_value_dec= 0;
+static int by_refrence_dec = 0;
+static int parameters_order = 0;
+static int sending_parameters_order = 0;
 //static int parameter_counter=0;
 class ArrayList {
 public:
@@ -213,8 +221,12 @@ public:
     int if_func;
     string if_func_name;
     int depth;
+    int by_refrence;
+    int by_value;
     Base()
     {
+        by_refrence = 0;
+        by_value = 0;
         if_func_name = "";
         if_func = 0;
         pointer_to = "";
@@ -223,6 +235,11 @@ public:
 
     Base(string key, string type, int address, int size)
     {
+        by_refrence = 0;
+        by_value = 0;
+        if_func_name = "";
+        if_func = 0;
+        pointer_to = "";
         this->key = key;
         this->size = size;
         this->type = type;
@@ -277,12 +294,14 @@ public:
     int Stack_Address;
     int sep;
     int ssp;
+    int cup_size;
     Base* table[TableSize];
+    map<int, string> parameters;
 
     SymbolTable()
     {
         Stack_Address = 5;
-
+        cup_size = 0;
         sep=0;
         ssp=5;
         name = "";
@@ -548,6 +567,7 @@ public :
           switch (op_)
           {
           case 286://ADD
+
               coder(right_,os);
               if (left_->name == "IntConst" || left_->name == "RealConst")
               {
@@ -559,8 +579,11 @@ public :
                   os << "add" << endl;
 
               }
+              inc_flag = 0;
+
               break;
           case 287://SUB   **MIN
+
               coder(right_, os);
               if (left_->name == "IntConst" || left_->name == "RealConst")
               {
@@ -570,7 +593,10 @@ public :
               else {
                   coder(left_, os);
                   os << "sub" << endl;
+
               }
+              dec_flag = 0;
+
               break;
           case 288://MUL
               coder(right_, os);
@@ -1292,10 +1318,66 @@ public :
     }
     sep_counter -= 5;
   }
+
   void pcodegen(ostream& os) {
+      int mst_depth;
+      int flag = 0;
+      for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+          if (it->first == *str_) {
+              flag = 1;
+          }
+      }
+      if (flag) {
+          os << "1" << endl;
+           mst_depth = m.find(m.find(*str_)->second->father)->second->depth - m.find(current_name_pcodegen_temp)->second->depth;
+          //os << "elle ana fiyo " << current_name_pcodegen_temp << " " << parameter_of_fp << endl;
+
+          if (mst_depth < 0) {
+              mst_depth *= -1;
+          }
+          os << "mst " << mst_depth << endl;
+
+      }
+      else{
+          os << "2" << endl;
+
+          mst_depth = m.find(m.find(current_name_pcodegen_temp)->second->father)->second->depth - m.find(type_of_id)->second->depth;
+          if (mst_depth < 0) {
+              mst_depth *= -1;
+          }
+          os << "mstf " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
+      }
+      flag = 0;
+      proc_statement_flag = 1;
+      sending_parameters_order = 0;
       if (expr_list_) {
           expr_list_->pcodegen(os);
       }
+      proc_statement_flag = 0;
+      for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+          if (it->first == *str_) {
+              flag = 1;
+          }
+      }
+      if (flag) {
+          os << "cup " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
+      }
+      else {
+              //os << "ana asa jay atba3 smp" << endl;
+             // os << "current_name_pcodegen_temp " << current_name_pcodegen_temp << endl;
+              //os << "*str  " << *str_ << endl;
+              //os << "m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type   " << m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type << endl;
+              string ttybe = m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type;
+              os << "smp " << m.find(ttybe)->second->cup_size << endl;
+              os << "cupi " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
+              //parameter_of_fp = 0;
+
+              //os << "cupi " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
+
+      }
+     // proc_stat_flag = 0;
+
+
   }
   virtual Object * clone () const { return new ProcedureStatement(*this);}
   
@@ -1712,6 +1794,51 @@ public:
                   if (codel_coder_flag == 0) {
                       codel_name_help = *name_;
                       flag_print = 0;
+                      if (proc_statement_flag) {
+                          int flag = 0;
+                          for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+                              if (it->first == *name_) {
+                                  flag = 1;
+                              }
+                          }
+                          os << "im here " << endl;
+                          if (flag) {
+                              os << "ldc " << *name_ << endl;
+                              os << "lda " << m.find(*name_)->second->depth - (*ST).depth +1 <<" 0"<< endl;
+                          }
+                          else if((*ST).findbase(*name_)->if_func) {
+                              os << "lda " << (*ST).findbase(*name_)->depth - (*ST).depth << " " << (*ST).findbase(*name_)->address << endl;
+                              os << "movs 2" << endl;
+                          }
+
+                          else {
+                              os << "im here 2 " << endl;
+
+                              os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth  << " " << (*ST).findbase(*name_)->address << endl;
+                              os << "sending_parameters_order is : " << sending_parameters_order << endl;
+                              os << (*ST).parameters.size() << endl;
+                              os << "(*ST).parameters.find(sending_parameters_order)->second ius : " << (*ST).parameters.find(sending_parameters_order)->second << endl;
+                              os << "+" << endl;
+                              if ((*ST).parameters.find(sending_parameters_order)->second == "byvalue") {
+                                  if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
+                                      os << "ind" << endl;
+                                  }
+                                  else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                      os << "ind" << endl;
+                                      os << "ind" << endl;
+                                  }
+                                  else {
+                                      os << "ind" << endl;
+                                  }
+                              }
+                              else  if ((*ST).parameters.find(sending_parameters_order)->second == "byrefrence") {
+                                  if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                      os << "ind" << endl;
+                                  }
+                              }
+                              sending_parameters_order++;
+                          }
+                      }
                   }
                   else {
                       if (!array_ref_flag) {
@@ -2537,10 +2664,18 @@ public:
           (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
           (*ST).findbase(*name_)->if_func = 1;
           (*ST).findbase(*name_)->if_func_name = type_of_id;
-
           (*ST).Stack_Address += 2;
       }
-      else {
+      else if ((*ST).findbase(type_of_id) != NULL) {
+          if ((*ST).findbase(type_of_id)->if_func == 1) {
+              (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
+              (*ST).findbase(*name_)->if_func = 1;
+              (*ST).findbase(*name_)->if_func_name = type_of_id;
+              (*ST).Stack_Address += 2;
+          }
+      }
+      else
+      {
           if (idhelp == "decleration_of_var") {
               if (!record_decleration) {
 
@@ -2813,24 +2948,52 @@ public :
 	  type_->print(os);
   }
   void pcodegen(ostream& os) {
-      //printWayOfPassing(os);
+      printWayOfPassing(os);
       //assert(type_);
-
-
+      if (by_value_dec) {
+          (*ST).parameters.insert((pair<int, string>(parameters_order, "byvalue")));
+      }
+      else {
+          (*ST).parameters.insert((pair<int, string>(parameters_order, "byrefrence")));
+      }
+      parameters_order++;
       //type_->pcodegen(os);
       variable_decleration = 1;
       id_key = *name_;
       assert(type_);
       type_->pcodegen(os);
-      if (m.find(type_of_id)->first != "") {
+      int flag = 0;
+      for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
+          if (it->first == type_of_id) {
+              flag = 1;
+          }
+      }
+      if (flag) {
           (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
           (*ST).findbase(*name_)->if_func = 1;
           (*ST).findbase(*name_)->if_func_name = type_of_id;
           (*ST).Stack_Address += 2;
+          if (by_value_dec) {
+              (*ST).findbase(*name_)->by_value = 1;
+          }
+          else {
+              (*ST).findbase(*name_)->by_refrence = 1;
+          }
       }
-      //else if () {
-      // aza al parameter kan mn tebos var ele hoe mn tevos var ele goe mn tebos func or proc
-      //}
+      else if ((*ST).findbase(type_of_id)!=NULL) {
+          if ((*ST).findbase(type_of_id)->if_func == 1) {
+              (*ST).insert(*name_, type_of_id, (*ST).Stack_Address, 2);
+              (*ST).findbase(*name_)->if_func = 1;
+              (*ST).findbase(*name_)->if_func_name = type_of_id;
+              (*ST).Stack_Address += 2;
+              if (by_value_dec) {
+                  (*ST).findbase(*name_)->by_value = 1;
+              }
+              else {
+                  (*ST).findbase(*name_)->by_refrence = 1;
+              }
+          }
+      }
       else
       {
           if (idhelp == "decleration_of_var") {
@@ -2846,6 +3009,12 @@ public :
                   b->subpart = v->subpart;
                   b->size = v->size;
                   b->type = v->type;
+                  if (by_value_dec) {
+                      (*ST).findbase(*name_)->by_value = 1;
+                  }
+                  else {
+                      (*ST).findbase(*name_)->by_refrence = 1;
+                  }
               }
               else if (record_decleration) {
                   RecList* temp = new RecList();
@@ -2908,9 +3077,21 @@ public :
               if (idhelp == "Integer" || idhelp == "Real" || idhelp == "Boolean") {
                   (*ST).insert(*name_, idhelp, (*ST).Stack_Address, 1);
                   (*ST).Stack_Address += 1;
+                  if (by_value_dec) {
+                      (*ST).findbase(*name_)->by_value = 1;
+                  }
+                  else {
+                      (*ST).findbase(*name_)->by_refrence = 1;
+                  }
               }
               if (idhelp == "Address") {
                   (*ST).Stack_Address += 1;
+                  if (by_value_dec) {
+                      (*ST).findbase(*name_)->by_value = 1;
+                  }
+                  else {
+                      (*ST).findbase(*name_)->by_refrence = 1;
+                  }
               }
               if (idhelp == "ARRAY") {
                   (*ST).findbase(id_key)->size = size_of_id;
@@ -2918,7 +3099,12 @@ public :
                       (*ST).Stack_Address += size_of_id;
                       size_of_id = 0;
                   }
-
+                  if (by_value_dec) {
+                      (*ST).findbase(*name_)->by_value = 1;
+                  }
+                  else {
+                      (*ST).findbase(*name_)->by_refrence = 1;
+                  }
 
                   int subpart = 0;
                   int y;
@@ -2972,6 +3158,12 @@ public :
                           }
                       }
                       r = r->next;
+                  }
+                  if (by_value_dec) {
+                      (*ST).findbase(*name_)->by_value = 1;
+                  }
+                  else {
+                      (*ST).findbase(*name_)->by_refrence = 1;
                   }
               }
 
@@ -3089,7 +3281,10 @@ public :
   virtual Object * clone () const { return new ByReferenceParameter(*this);}
 protected:
   void printWayOfPassing (ostream& os) const{
+
 	  //os<<"Node name : ByReferenceParameter ";
+      by_refrence_dec = 1;
+      by_value_dec = 0;
 	}
 };
 
@@ -3100,6 +3295,8 @@ public :
 protected:
   void printWayOfPassing (ostream& os) const{
 	  //os<<"Node name : ByValueParameter ";
+      by_refrence_dec = 0;
+      by_value_dec = 1;
 	}
 };
 class ParameterList : public Object {
@@ -3165,14 +3362,14 @@ public :
   FunctionDeclaration(const FunctionDeclaration& fd){
     type_ = fd.type_->clone();
     block_ = fd.block_->clone();
-    formal_list_ = fd.formal_list_->clone();
-    name_ = new string(*fd.name_);
+formal_list_ = fd.formal_list_->clone();
+name_ = new string(*fd.name_);
   }
 
-  void print (ostream& os) {
-    os<<"Node name : FunctionDeclaration. Func name is: "<<*name_<<endl;
-	  assert(type_ && block_);
-	  type_->print(os);
+  void print(ostream& os) {
+      os << "Node name : FunctionDeclaration. Func name is: " << *name_ << endl;
+      assert(type_ && block_);
+      type_->print(os);
       m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
       m.find(*name_)->second->depth = m.find(father_name_temp)->second->depth + 1;
       m.find(*name_)->second->father = father_name_temp;
@@ -3181,14 +3378,14 @@ public :
       m.find(*name_)->second->ssp = 5;
       m.find(*name_)->second->Stack_Address = 5;
       father_name_temp = *name_;
-	  if (formal_list_){
-		  formal_list_->print(os);
-	  }
-	  block_->print(os);
+
+      if (formal_list_) {
+          formal_list_->print(os);
+      }
+      block_->print(os);
   }
   void pcodegen(ostream& os) {
       assert(type_ && block_);
-      os << *name_ << ":" << endl;
       ST = m.find(*name_)->second;
       type_->pcodegen(os);
       ST = m.find(*name_)->second;
@@ -3202,10 +3399,20 @@ public :
               head = head->next;
           }
       }
+      if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0) || (m.find((*ST).father)->second->father != "")) {
+          os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
+          os << "sep " << " waiting for mariah ... " << endl;
+          program_ssp_sep = 1;
+          last_func_ssp = 1;
+      }
+      os << *name_ << ":" << endl;
+      parameters_order = 0;
       if (formal_list_) {
           formal_list_->pcodegen(os);
       }
+
       ST = m.find(*name_)->second;
+      (*ST).cup_size = (*ST).Stack_Address - 5;
       father_name_pcodegen_temp = *name_;
       current_name_pcodegen_temp = *name_;
       block_->pcodegen(os);
@@ -3213,103 +3420,122 @@ public :
       father_name_pcodegen_temp = (*ST).father;
       current_name_pcodegen_temp = (*ST).father;
   }
-  virtual Object * clone () const { return new FunctionDeclaration(*this);}
-  
+  virtual Object* clone() const { return new FunctionDeclaration(*this); }
+
 private:
-  Object * type_;
-  Object * block_;
-  Object * formal_list_;
-  string * name_;
+    Object* type_;
+    Object* block_;
+    Object* formal_list_;
+    string* name_;
 };
 
 class ProcedureDeclaration : public Declaration {
-public :
-  ProcedureDeclaration (Object * block, const char * name) : formal_list_(NULL), block_(block) { 
-    assert(block_);
-    name_ = new string(name);
-  }
+public:
+    ProcedureDeclaration(Object* block, const char* name) : formal_list_(NULL), block_(block) {
+        assert(block_);
+        name_ = new string(name);
+    }
 
-  ProcedureDeclaration (Object * formal_list, Object * block, const char * name) : formal_list_(formal_list),block_(block)  {
-    assert(formal_list_ && block_);
-    name_ = new string(name);
-  }
+    ProcedureDeclaration(Object* formal_list, Object* block, const char* name) : formal_list_(formal_list), block_(block) {
+        assert(formal_list_ && block_);
+        name_ = new string(name);
+    }
 
-  virtual ~ProcedureDeclaration () {
-    if (block_) delete block_;
-    if (formal_list_) delete formal_list_;
-    if (name_) delete name_;
-  }
+    virtual ~ProcedureDeclaration() {
+        if (block_) delete block_;
+        if (formal_list_) delete formal_list_;
+        if (name_) delete name_;
+    }
 
-  ProcedureDeclaration(const ProcedureDeclaration& pd){
+    ProcedureDeclaration(const ProcedureDeclaration& pd) {
 
-    block_ = pd.block_->clone();
-    formal_list_ = pd.formal_list_->clone();
-    name_ = new string(*pd.name_);
-  }
+        block_ = pd.block_->clone();
+        formal_list_ = pd.formal_list_->clone();
+        name_ = new string(*pd.name_);
+    }
 
-  void print (ostream& os) {
-
-
-	  os<<"Node name : ProcedureDeclaration. Proc name is: "<<*name_<<endl;
-	  assert(block_);
-      m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
-      m.find(*name_)->second->depth = m.find(father_name_temp)->second->depth + 1;
-      m.find(*name_)->second->father = father_name_temp;
-      m.find(*name_)->second->name = *name_;
-      m.find(*name_)->second->sep = 0;
-      m.find(*name_)->second->ssp = 5;
-      m.find(*name_)->second->Stack_Address = 5;
-      father_name_temp = *name_;
-	  if (formal_list_){
-		  formal_list_->print(os);
-	  }
-      //block_->print(os);
-      int sep_counter_temp = sep_counter;
-      int sep_counter_max_temp = sep_counter_max;
-      sep_counter = 0;
-      sep_counter_max = 0;
-	  block_->print(os);
-      m.find(*name_)->second->sep = sep_counter_max;
-      sep_counter = sep_counter_temp;
-      sep_counter_max = sep_counter_max_temp;
-
-  }
-  void pcodegen(ostream& os) {
-      assert(block_);
-      os << *name_ << ":" << endl;
-      ST = m.find(*name_)->second;
-      current_name_pcodegen_temp = *name_;
-      SymbolTable* father_ST = m.find(father_name_pcodegen_temp)->second;
-      SymbolTable* my_ST = m.find(*name_)->second;
-      for (int i = 0; i < 150; i++) {
-          Base* B;
-          Base* head = (*father_ST).table[i];
-          while (head != NULL) {
-              (*my_ST).insert_copy(head);
-              head = head->next;
-          }
-      }
-
-      if (formal_list_) {
-          formal_list_->pcodegen(os);
-      }
-      father_name_pcodegen_temp = *name_;
-      current_name_pcodegen_temp = *name_;
-      block_->pcodegen(os);
-      father_name_pcodegen_temp = (*ST).father;
-      current_name_pcodegen_temp = (*ST).father;
-     /* int sep_counter_temp = sep_counter;
-      int sep_counter_max_temp = sep_counter_max;
-      sep_counter = 0;
-      sep_counter_max = 0;
-      m.find(*name_)->second->sep = sep_counter_max;
-      sep_counter = sep_counter_temp;
-      sep_counter_max = sep_counter_max_temp;*/
-      os << "retp" << endl;
+    void print(ostream& os) {
 
 
+        os << "Node name : ProcedureDeclaration. Proc name is: " << *name_ << endl;
+        assert(block_);
+        m.insert((pair<string, SymbolTable*>(*name_, new(SymbolTable))));
+        m.find(*name_)->second->depth = m.find(father_name_temp)->second->depth + 1;
+        m.find(*name_)->second->father = father_name_temp;
+        m.find(*name_)->second->name = *name_;
+        m.find(*name_)->second->sep = 0;
+        m.find(*name_)->second->ssp = 5;
+        m.find(*name_)->second->Stack_Address = 5;
+        father_name_temp = *name_;
 
-  }
+
+        if (formal_list_) {
+            formal_list_->print(os);
+        }
+        //block_->print(os);
+        int sep_counter_temp = sep_counter;
+        int sep_counter_max_temp = sep_counter_max;
+        sep_counter = 0;
+        sep_counter_max = 0;
+
+
+        block_->print(os);
+        m.find(*name_)->second->sep = sep_counter_max;
+        sep_counter = sep_counter_temp;
+        sep_counter_max = sep_counter_max_temp;
+
+    }
+    void pcodegen(ostream& os) {
+        assert(block_);
+        
+        //if ((((*ST).father) == "")&& program_ssp_sep==0){
+        //     os << "HELLO" << endl;
+        //     os << "ssp " << (*ST).Stack_Address << endl;
+        //     os << "sep " << " waiting for mariah ... " << endl;
+        //     program_ssp_sep = 1;
+        //}
+        ST = m.find(*name_)->second;
+        current_name_pcodegen_temp = *name_;
+        SymbolTable* father_ST = m.find(father_name_pcodegen_temp)->second;
+        SymbolTable* my_ST = m.find(*name_)->second;
+        for (int i = 0; i < 150; i++) {
+            Base* B;
+            Base* head = (*father_ST).table[i];
+            while (head != NULL) {
+                (*my_ST).insert_copy(head);
+                head = head->next;
+            }
+        }
+        if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0)|| (m.find((*ST).father)->second->father != "")) {
+            os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
+            os << "sep " << " waiting for mariah ... " << endl;
+            program_ssp_sep = 1;
+            last_func_ssp = 1;
+        }
+        os << *name_ << ":" << endl;
+        parameters_order = 0;
+
+        if (formal_list_) {
+            formal_list_->pcodegen(os);
+        }
+        father_name_pcodegen_temp = *name_;
+        current_name_pcodegen_temp = *name_;
+
+        block_->pcodegen(os);
+        father_name_pcodegen_temp = (*ST).father;
+        current_name_pcodegen_temp = (*ST).father;
+        /* int sep_counter_temp = sep_counter;
+         int sep_counter_max_temp = sep_counter_max;
+         sep_counter = 0;
+         sep_counter_max = 0;
+         m.find(*name_)->second->sep = sep_counter_max;
+         sep_counter = sep_counter_temp;
+         sep_counter_max = sep_counter_max_temp;*/
+        os << "retp" << endl;
+
+
+
+    }
   virtual Object * clone () const { return new ProcedureDeclaration(*this);}
   
 private:
@@ -3388,14 +3614,16 @@ public :
   }
   void pcodegen(ostream& os) {
       SymbolTable* STT = ST;
-      os << "ssp " << (*ST).Stack_Address << endl;
-      os << "sep " << m.find(current_name_pcodegen_temp)->second->sep << endl;;
 
+      last_func_ssp = 0;
       if (decl_list_) {
 
           decl_list_->pcodegen(os);
       } 
-
+      if (!last_func_ssp) {
+          os << "ssp " <<(*ST).Stack_Address << endl;
+          os << "sep " << " waiting for mariah ... " << endl;
+      }
       ST = STT;
       assert(stat_seq_);
 

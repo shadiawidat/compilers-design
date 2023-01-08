@@ -1,0 +1,30 @@
+PROGRAM main
+	a FIXED;
+	b RECORD {
+		c FIXED;
+		d  ^b;
+		e ^d;
+	};
+	f RECORD {
+		g b;
+		h FIXED;
+	};
+	i FIXED;
+{
+     a = 13;
+     b.c = a * 2 ;
+     b.d = 6;
+     b.e = 7;
+     f.g.c = b.e^^.c - b.d^.c;
+     i = f.g.c < a;
+      
+  IF ((i & (a > 12))| 1)
+THEN
+	       WHILE (f.h < a * 2)
+         {
+		WRITE (f.h);
+		f.h = f.h + 1;
+	       }
+	FI
+}
+

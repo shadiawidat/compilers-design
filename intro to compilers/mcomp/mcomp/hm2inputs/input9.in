@@ -1,0 +1,11 @@
+PROGRAM array1
+	n FIXED;
+	arr1 ARRAY[1:5] OF ARRAY [4:8] OF FIXED;
+	arr2 ARRAY[2:6] OF ARRAY[10:14] OF ARRAY [44:48] OF FIXED;
+	arr3 ARRAY[3:7] OF arr2;
+{
+	n=1;
+	arr2[3][33][333]=n-1;
+	arr3[n+11][n*3+5-7][n*2][n]=3;
+	arr1[2][22]=arr2[4][10][45];
+}
