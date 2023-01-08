@@ -1,27 +1,8 @@
 ==================  Abstract Syntax Tree ================
 h:
-ssp 9
-sep  waiting for mariah ... 
+ssp 13
+sep  waiting for mariah
 f:
-ssp 7
-sep  waiting for mariah ... 
-p:
-ssp 7
-sep  waiting for mariah ... 
-p_begin:
-2
-mstf 0 5
-im here 
-im here 2 
-lda 1 5
-sending_parameters_order is : 0
-1
-(*ST).parameters.find(sending_parameters_order)->second ius : byvalue
-+
-ind
-im here 
-im here 2 
-lda 1 6
-sending_parameters_order is : 1
-1
-(*ST).parameters.find(sending_parameters_order)->second ius : (*ST).parameters.find(sending_parameters_order)->second ius : 
+ssp 9
+sep  waiting for mariah
+f_begin:

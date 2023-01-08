@@ -142,6 +142,7 @@ static int by_value_dec= 0;
 static int by_refrence_dec = 0;
 static int parameters_order = 0;
 static int sending_parameters_order = 0;
+static string proc_statement_name="";
 //static int parameter_counter=0;
 class ArrayList {
 public:
@@ -348,6 +349,8 @@ public:
         newvar->pointer_to = b->pointer_to;
         newvar->reclist = b->reclist;
         newvar->subpart = b->subpart;
+        newvar->by_refrence = b->by_refrence;
+        newvar->by_value = b->by_value;
         
         int i = hashf(newvar->key);
 
@@ -1328,7 +1331,6 @@ public :
           }
       }
       if (flag) {
-          os << "1" << endl;
            mst_depth = m.find(m.find(*str_)->second->father)->second->depth - m.find(current_name_pcodegen_temp)->second->depth;
           //os << "elle ana fiyo " << current_name_pcodegen_temp << " " << parameter_of_fp << endl;
 
@@ -1339,7 +1341,6 @@ public :
 
       }
       else{
-          os << "2" << endl;
 
           mst_depth = m.find(m.find(current_name_pcodegen_temp)->second->father)->second->depth - m.find(type_of_id)->second->depth;
           if (mst_depth < 0) {
@@ -1350,6 +1351,7 @@ public :
       flag = 0;
       proc_statement_flag = 1;
       sending_parameters_order = 0;
+      proc_statement_name = *str_;
       if (expr_list_) {
           expr_list_->pcodegen(os);
       }
@@ -1363,16 +1365,19 @@ public :
           os << "cup " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
       }
       else {
-              //os << "ana asa jay atba3 smp" << endl;
-             // os << "current_name_pcodegen_temp " << current_name_pcodegen_temp << endl;
-              //os << "*str  " << *str_ << endl;
-              //os << "m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type   " << m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type << endl;
-              string ttybe = m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type;
-              os << "smp " << m.find(ttybe)->second->cup_size << endl;
-              os << "cupi " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
-              //parameter_of_fp = 0;
+          //os << "ana asa jay atba3 smp" << endl;
+         // os << "current_name_pcodegen_temp " << current_name_pcodegen_temp << endl;
+          //os << "*str  " << *str_ << endl;
+          //os << "m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type   " << m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type << endl;
+          //os << (*ST).findbase(*str_)->if_func_name << endl;
+          //os << "*str_ is :" << *str_ << endl;
+          //
+          string ttybe = m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type;
+          os << "smp " << m.find((*ST).findbase(*str_)->if_func_name)->second->cup_size << endl;
+          os << "cupi " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
+          //parameter_of_fp = 0;
 
-              //os << "cupi " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
+          //os << "cupi " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
 
       }
      // proc_stat_flag = 0;
@@ -1801,7 +1806,6 @@ public:
                                   flag = 1;
                               }
                           }
-                          os << "im here " << endl;
                           if (flag) {
                               os << "ldc " << *name_ << endl;
                               os << "lda " << m.find(*name_)->second->depth - (*ST).depth +1 <<" 0"<< endl;
@@ -1812,18 +1816,13 @@ public:
                           }
 
                           else {
-                              os << "im here 2 " << endl;
-
                               os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth  << " " << (*ST).findbase(*name_)->address << endl;
-                              os << "sending_parameters_order is : " << sending_parameters_order << endl;
-                              os << (*ST).parameters.size() << endl;
-                              os << "(*ST).parameters.find(sending_parameters_order)->second ius : " << (*ST).parameters.find(sending_parameters_order)->second << endl;
-                              os << "+" << endl;
-                              if ((*ST).parameters.find(sending_parameters_order)->second == "byvalue") {
+                              if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
                                   if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
                                       os << "ind" << endl;
                                   }
                                   else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+
                                       os << "ind" << endl;
                                       os << "ind" << endl;
                                   }
@@ -1831,8 +1830,9 @@ public:
                                       os << "ind" << endl;
                                   }
                               }
-                              else  if ((*ST).parameters.find(sending_parameters_order)->second == "byrefrence") {
+                              else  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
                                   if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+
                                       os << "ind" << endl;
                                   }
                               }
@@ -3282,7 +3282,7 @@ public :
 protected:
   void printWayOfPassing (ostream& os) const{
 
-	  //os<<"Node name : ByReferenceParameter ";
+     // os << "Node name : ByReferenceParameter " << endl;;
       by_refrence_dec = 1;
       by_value_dec = 0;
 	}
@@ -3294,7 +3294,7 @@ public :
   virtual Object * clone () const { return new ByValueParameter(*this);}
 protected:
   void printWayOfPassing (ostream& os) const{
-	  //os<<"Node name : ByValueParameter ";
+      //os << "Node name : ByValueParameter " << endl;;
       by_refrence_dec = 0;
       by_value_dec = 1;
 	}
@@ -3401,7 +3401,7 @@ name_ = new string(*fd.name_);
       }
       if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0) || (m.find((*ST).father)->second->father != "")) {
           os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
-          os << "sep " << " waiting for mariah ... " << endl;
+          os << "sep " << " waiting for mariah" << endl;
           program_ssp_sep = 1;
           last_func_ssp = 1;
       }
@@ -3472,6 +3472,7 @@ public:
         if (formal_list_) {
             formal_list_->print(os);
         }
+
         //block_->print(os);
         int sep_counter_temp = sep_counter;
         int sep_counter_max_temp = sep_counter_max;
@@ -3508,7 +3509,7 @@ public:
         }
         if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0)|| (m.find((*ST).father)->second->father != "")) {
             os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
-            os << "sep " << " waiting for mariah ... " << endl;
+            os << "sep " << " waiting for mariah" << endl;
             program_ssp_sep = 1;
             last_func_ssp = 1;
         }
@@ -3518,6 +3519,7 @@ public:
         if (formal_list_) {
             formal_list_->pcodegen(os);
         }
+        (*ST).cup_size = (*ST).Stack_Address - 5;
         father_name_pcodegen_temp = *name_;
         current_name_pcodegen_temp = *name_;
 
@@ -3622,7 +3624,8 @@ public :
       } 
       if (!last_func_ssp) {
           os << "ssp " <<(*ST).Stack_Address << endl;
-          os << "sep " << " waiting for mariah ... " << endl;
+          os << "sep " << " waiting for mariah" << endl;
+          last_func_ssp = 1;
       }
       ST = STT;
       assert(stat_seq_);
@@ -3681,6 +3684,8 @@ public :
     sep_counter_max = sep_counter_max_temp;
   }
   void pcodegen(ostream& os) {
+      dec_flag = 0;
+      inc_flag = 0;
       assert(block_);
       os << *name_ << ":" << endl;
       ST = m.find(*name_)->second;
