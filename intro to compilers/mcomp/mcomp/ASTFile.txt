@@ -4,16 +4,10 @@ Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : DeclarationList
 Node name : VariableDeclaration. Var name is: a
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: arr
-Node name : ArrayType: low bound is: 3, up bound is: 9
-Node name : SimpleType
-Type is : Integer
 Node name : ProcedureDeclaration. Proc name is: f
-Node name : ParameterList
 Node name : ParameterList
 Node name : ParameterList
 Parameter name :x
@@ -22,25 +16,9 @@ Type is : Integer
 Parameter name :m
 Node name : SimpleType
 Type is : Integer
-Parameter name :arg
-Node name : IdeType
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
-Node name : DeclarationList
-Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: j
-Node name : SimpleType
-Type is : Integer
-Node name : VariableDeclaration. Var name is: k
-Node name : SimpleType
-Type is : Integer
 ----------------------------
-Node name : StatementList
-Node name : AssignNode name : ArrayRef
-Node name : IdeType
-Node name : Dim
-Node name : IntConst. Value is :6
-Node name : IntConst. Value is :9
 Node name : StatementList
 Node name : AssignNode name : IdeType
 Node name : Expr
@@ -51,18 +29,6 @@ Node name : AssignNode name : IdeType
 Node name : Expr
 Binary op is : 287Node name : IdeType
 Node name : IdeType
-Node name : StatementList
-Node name : AssignNode name : ArrayRef
-Node name : IdeType
-Node name : Dim
-Node name : IntConst. Value is :8
-Node name : IntConst. Value is :2
-Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : IntConst. Value is :1
-Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : IntConst. Value is :6
 ++++++++++++++++++++++++++++
 ----------------------------
 Node name : StatementList
