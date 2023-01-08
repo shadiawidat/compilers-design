@@ -4,35 +4,40 @@ Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
-Node name : VariableDeclaration. Var name is: a
+Node name : VariableDeclaration. Var name is: x
 Node name : SimpleType
 Type is : Integer
-Node name : ProcedureDeclaration. Proc name is: f
-Node name : ParameterList
-Node name : ParameterList
-Parameter name :x
+Node name : FunctionDeclaration. Func name is: f
 Node name : SimpleType
 Type is : Integer
+Node name : ParameterList
 Parameter name :m
 Node name : SimpleType
 Type is : Integer
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
+Node name : DeclarationList
+Node name : VariableDeclaration. Var name is: y
+Node name : SimpleType
+Type is : Integer
 ----------------------------
 Node name : StatementList
 Node name : AssignNode name : IdeType
-Node name : Expr
-Binary op is : 288Node name : IdeType
-Node name : IntConst. Value is :2
+Node name : IntConst. Value is :13
 Node name : StatementList
 Node name : AssignNode name : IdeType
 Node name : Expr
 Binary op is : 287Node name : IdeType
-Node name : IdeType
+Node name : IntConst. Value is :5
+Node name : StatementList
+Node name : AssignNode name : IdeType
+Node name : Expr
+Binary op is : 288Node name : IdeType
+Node name : IntConst. Value is :19
 ++++++++++++++++++++++++++++
 ----------------------------
 Node name : StatementList
+Node name : AssignNode name : IdeType
 Node name : ProcedureStatement. Proc name : f
-Node name : ExprListNode name : IdeType
-Node name : ExprListNode name : IdeType
+Node name : ExprListNode name : IntConst. Value is :4
 ++++++++++++++++++++++++++++

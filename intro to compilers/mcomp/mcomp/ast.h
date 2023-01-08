@@ -423,7 +423,9 @@ public:
 
          //os << "ldc " <<  (*ST).find(codel_name_help) << endl;
          os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;;
-
+         if ((*ST).findbase(codel_name_help)->by_refrence) {
+             os << "ind" << endl;
+         }
          flag_print = 0;
      }
 
@@ -996,7 +998,9 @@ public :
           var_->pcodegen(os);
           //os << "ldc " << (*ST).find(codel_name_help) << endl;
           os << "lda " << (*ST).depth - (*ST).findbase(codel_name_help)->depth << " " << (*ST).findbase(codel_name_help)->address << endl;
-
+          if ((*ST).findbase(codel_name_help)->by_refrence) {
+              os << "ind" << endl;
+          }
          
           flag_print = 1;
       }
@@ -1796,10 +1800,11 @@ public:
           if (!record_ref_flag) {
 
               if (!pointer_ref) {
-                  if (codel_coder_flag == 0) {
+                  if (codel_coder_flag == 0|| proc_statement_flag) {
                       codel_name_help = *name_;
                       flag_print = 0;
                       if (proc_statement_flag) {
+                          
                           int flag = 0;
                           for (map<string, SymbolTable*>::iterator it = m.begin(); it != m.end(); it++) {
                               if (it->first == *name_) {
@@ -1807,6 +1812,7 @@ public:
                               }
                           }
                           if (flag) {
+
                               os << "ldc " << *name_ << endl;
                               os << "lda " << m.find(*name_)->second->depth - (*ST).depth +1 <<" 0"<< endl;
                           }
@@ -1816,27 +1822,75 @@ public:
                           }
 
                           else {
+                              //os << "1" << endl;
                               os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth  << " " << (*ST).findbase(*name_)->address << endl;
-                              if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
-                                  if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
-                                      os << "ind" << endl;
-                                  }
-                                  else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                              //os << "2" << endl;
+                              if ((*ST).findbase(proc_statement_name) != NULL) {
+                                  //os << "3" << endl;
+                                  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
+                                      if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
+                                         // os << "val to val" << endl;
 
-                                      os << "ind" << endl;
-                                      os << "ind" << endl;
+                                          os << "ind" << endl;
+                                      }
+                                      else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                          //os << "ref to val" << endl;
+
+                                          os << "ind" << endl;
+                                          os << "ind" << endl;
+                                      }
+                                      else {
+                                         // os << "val to val" << endl;
+
+                                          os << "ind" << endl;
+                                      }
                                   }
-                                  else {
-                                      os << "ind" << endl;
+                                  else  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
+                                      if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                          //os << "ref to ref" << endl;
+                                          os << "ind" << endl;
+                                      }
                                   }
                               }
-                              else  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
-                                  if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                              else {
+                                 /* os << "proc_statement_name"<< proc_statement_name << endl;
+                                  os << "sending_parameters_order is : " << sending_parameters_order << endl;
+                                  os << "m.find(proc_statement_name)->second->parameters.size() is " << m.find(proc_statement_name)->second->parameters.size() << endl;
+                                  os << m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second << endl;*/
+                                  if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
+                                     // os << "5" << endl;
 
-                                      os << "ind" << endl;
+                                      if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
+                                         // os << "val to val" << endl;
+
+                                          os << "ind" << endl;
+                                      }
+                                      else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                         // os << "ref to val" << endl;
+
+                                          os << "ind" << endl;
+                                          os << "ind" << endl;
+                                      }
+                                      else {
+                                         // os << "val to val" << endl;
+
+                                          os << "ind" << endl;
+                                      }
+                                  }
+                                  else  if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
+                                      if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                         // os << "ref to ref" << endl;
+                                          os << "ind" << endl;
+                                      }
                                   }
                               }
                               sending_parameters_order++;
+                          }
+                      }
+                      else {
+                          if ((*ST).findbase(*name_) == NULL) {
+                              os << "lda 0 0" << endl;
+                              flag_print = 1;
                           }
                       }
                   }
@@ -1844,6 +1898,9 @@ public:
                       if (!array_ref_flag) {
                           //os << "ldc " << (*ST).find(*name_) << endl << "ind" << endl;
                           os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+                          if ((*ST).findbase(codel_name_help)->by_refrence) {
+                              os << "ind" << endl;
+                          }
                           os<< "ind" << endl;
 
                       }
@@ -1853,6 +1910,9 @@ public:
                   if (!array_ref_flag) {
                       //os << "ldc " << (*ST).find(*name_) << endl;
                       os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+                      if ((*ST).findbase(codel_name_help)->by_refrence) {
+                          os << "ind" << endl;
+                      }
 
                   }
                   pointer_ref_name = *name_;
@@ -1864,6 +1924,9 @@ public:
 
               //os << "ldc " << (*ST).findbase(*name_)->address << endl;
               os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth << " " << (*ST).findbase(*name_)->address << endl;;
+              if ((*ST).findbase(codel_name_help)->by_refrence) {
+                  os << "ind" << endl;
+              }
 
               record_ref_name = *name_;
               name_of_array_in_record_ref = *name_;
@@ -3377,6 +3440,7 @@ name_ = new string(*fd.name_);
       m.find(*name_)->second->sep = 0;
       m.find(*name_)->second->ssp = 5;
       m.find(*name_)->second->Stack_Address = 5;
+      //m.find(*name_)->second->insert(*name_, "", 0, 2);
       father_name_temp = *name_;
 
       if (formal_list_) {
@@ -3402,6 +3466,8 @@ name_ = new string(*fd.name_);
       if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0) || (m.find((*ST).father)->second->father != "")) {
           os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
           os << "sep " << " waiting for mariah" << endl;
+          os << "ujp " << (*ST).father << "_begin" << endl;
+
           program_ssp_sep = 1;
           last_func_ssp = 1;
       }
@@ -3510,6 +3576,7 @@ public:
         if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0)|| (m.find((*ST).father)->second->father != "")) {
             os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
             os << "sep " << " waiting for mariah" << endl;
+            os<<"ujp "<< (*ST).father <<"_begin" << endl;
             program_ssp_sep = 1;
             last_func_ssp = 1;
         }
@@ -3625,6 +3692,8 @@ public :
       if (!last_func_ssp) {
           os << "ssp " <<(*ST).Stack_Address << endl;
           os << "sep " << " waiting for mariah" << endl;
+          os << "ujp " << (*ST).name << "_begin" << endl;
+
           last_func_ssp = 1;
       }
       ST = STT;
