@@ -1,37 +1,65 @@
 ==================  Abstract Syntax Tree ================
-Node name : Root/Program. Program name is: p
+Node name : Root/Program. Program name is: h
 Node name : Begin
 $$$$$$$$$$$$$$$$$$$$$$$$$$$
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : DeclarationList
 Node name : VariableDeclaration. Var name is: a
+Node name : RecordType
+Node name : RecordList
+Node name : VariableDeclaration. Var name is: b
 Node name : SimpleType
 Type is : Integer
-Node name : VariableDeclaration. Var name is: b
-Node name : AddressType
-Node name : IdeType
+Node name : RecordList
 Node name : VariableDeclaration. Var name is: c
 Node name : AddressType
 Node name : IdeType
+Node name : ProcedureDeclaration. Proc name is: p
+Node name : ParameterList
+Node name : ParameterList
+Parameter name :y
+Node name : IdeType
+Parameter name :x
+Node name : IdeType
+Node name : Begin
+$$$$$$$$$$$$$$$$$$$$$$$$$$$
 ----------------------------
 Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : IntConst. Value is :5
-Node name : StatementList
-Node name : AssignNode name : IdeType
-Node name : IntConst. Value is :6
-Node name : StatementList
-Node name : AssignNode name : AddressRef
+Node name : ProcedureStatement. Proc name : p
+Node name : ExprListNode name : IdeType
+Node name : ExprListNode name : RecordRef
 Node name : IdeType
-Node name : IntConst. Value is :1
-Node name : StatementList
-Node name : AssignNode name : AddressRef
 Node name : AddressRef
 Node name : IdeType
-Node name : IntConst. Value is :2
+++++++++++++++++++++++++++++
+Node name : ProcedureDeclaration. Proc name is: o
+Node name : ParameterList
+Node name : ParameterList
+Parameter name :yy
+Node name : IdeType
+Parameter name :xx
+Node name : IdeType
+Node name : Begin
+$$$$$$$$$$$$$$$$$$$$$$$$$$$
+----------------------------
 Node name : StatementList
-Node name : WriteVarStatementNode name : AddressRef
+Node name : ProcedureStatement. Proc name : o
+Node name : ExprListNode name : IdeType
+Node name : ExprListNode name : RecordRef
+Node name : IdeType
 Node name : AddressRef
+Node name : IdeType
+++++++++++++++++++++++++++++
+----------------------------
+Node name : StatementList
+Node name : AssignNode name : RecordRef
+Node name : IdeType
+Node name : IdeType
+Node name : RecordRef
+Node name : IdeType
+Node name : RecordRef
+Node name : AddressRef
+Node name : IdeType
 Node name : IdeType
 ++++++++++++++++++++++++++++

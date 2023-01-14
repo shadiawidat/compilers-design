@@ -1,27 +1,43 @@
 ==================  Abstract Syntax Tree ================
+h:
+ssp 7
+sep 50
+ujp h_begin
 p:
-ssp 8
-sep  waiting for mariah
+ssp 9
+sep 50
 ujp p_begin
 p_begin:
-lda 0 6
-ldc 5
-sto
+mst 1
+lda 1 5
+movs 2
 lda 0 7
-ldc 6
-sto
-lda 0 6
+inc 1
 ind
-ldc 1
-sto
+movs 2
+cup 4 p
+retp
+o:
+ssp 9
+sep 50
+ujp o_begin
+o_begin:
+mst 1
+lda 1 5
+movs 2
 lda 0 7
+inc 1
 ind
+movs 2
+cup 4 o
+retp
+h_begin:
+lda 0 5
+inc 0
+lda 0 5
+inc 1
 ind
-ldc 2
+inc 0
+ind
 sto
-lda 0 7
-ind
-ind
-ind
-print
 stp

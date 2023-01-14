@@ -144,6 +144,9 @@ static int parameters_order = 0;
 static int sending_parameters_order = 0;
 static string proc_statement_name="";
 static int dim_exp_flag = 0;
+static int you_are_not_my_first_son = 0;
+static int size_of_ponter_movs = 0;
+static int flag_print_size_movs = 0;
 //static int parameter_counter=0;
 class ArrayList {
 public:
@@ -299,9 +302,10 @@ public:
     int cup_size;
     Base* table[TableSize];
     map<int, string> parameters;
-
+    int flag_printed_ssp;
     SymbolTable()
     {
+        flag_printed_ssp = 0;
         Stack_Address = 5;
         cup_size = 0;
         sep=0;
@@ -695,6 +699,10 @@ public :
   void pcodegen(ostream& os) {
       assert(expr_);
       expr_->pcodegen(os);
+      if (flag_print_size_movs) {
+          os << "movs " << size_of_ponter_movs << endl;
+          flag_print_size_movs = 0;
+      }
       if (expr_list_) {
           expr_list_->pcodegen(os);
       }
@@ -1123,6 +1131,11 @@ public :
       }
       if (new_flag&&!record_ref_flag) {
           codel_name_help = (*ST).findbase(codel_name_help)->pointer_to;
+
+      }
+      if (!flag_print_size_movs&& !record_ref_flag) {
+          flag_print_size_movs = 1;
+          flag_print_size_movs = (*ST).findbase(codel_name_help)->pointer->size_of_var;
       }
   }
   virtual Object * clone () { return new AddressRef(*this);}
@@ -1351,11 +1364,12 @@ public :
       }
       else{
 
-          mst_depth = m.find(m.find(current_name_pcodegen_temp)->second->father)->second->depth - m.find(type_of_id)->second->depth;
+          mst_depth = m.find(current_name_pcodegen_temp)->second->depth - (*ST).findbase(*str_)->depth;
           if (mst_depth < 0) {
               mst_depth *= -1;
           }
-          os << "mstf " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
+
+          os << "mstf " << mst_depth << " " << (*ST).findbase(*str_)->address << endl;
       }
       flag = 0;
       proc_statement_flag = 1;
@@ -1383,7 +1397,7 @@ public :
           //
           string ttybe = m.find(current_name_pcodegen_temp)->second->findbase(*str_)->type;
           os << "smp " << m.find((*ST).findbase(*str_)->if_func_name)->second->cup_size << endl;
-          os << "cupi " << mst_depth << " " << m.find(current_name_pcodegen_temp)->second->findbase(id_key)->address << endl;
+          os << "cupi " << mst_depth << " " << (*ST).findbase(*str_)->address << endl;
           //parameter_of_fp = 0;
 
           //os << "cupi " << m.find(*str_)->second->cup_size << " " << *str_ << endl;
@@ -1819,7 +1833,7 @@ public:
                           if (flag) {
 
                               os << "ldc " << *name_ << endl;
-                              os << "lda " << m.find(*name_)->second->depth - (*ST).depth +1 <<" 0"<< endl;
+                              os << "lda " <<(*ST).depth -m.find(m.find(*name_)->second->father)->second->depth   <<" 0"<< endl;
                           }
                           else if((*ST).findbase(*name_)->if_func) {
                               os << "lda " << (*ST).findbase(*name_)->depth - (*ST).depth << " " << (*ST).findbase(*name_)->address << endl;
@@ -1830,62 +1844,64 @@ public:
                               //os << "1" << endl;
                               os << "lda " << (*ST).depth - (*ST).findbase(*name_)->depth  << " " << (*ST).findbase(*name_)->address << endl;
                               //os << "2" << endl;
-                              if ((*ST).findbase(proc_statement_name) != NULL) {
-                                  //os << "3" << endl;
-                                  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
-                                      if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
-                                         // os << "val to val" << endl;
-
-                                          os << "ind" << endl;
-                                      }
-                                      else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
-                                          //os << "ref to val" << endl;
-
-                                          os << "ind" << endl;
-                                          os << "ind" << endl;
-                                      }
-                                      else {
-                                         // os << "val to val" << endl;
-
-                                          os << "ind" << endl;
-                                      }
-                                  }
-                                  else  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
-                                      if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
-                                          //os << "ref to ref" << endl;
-                                          os << "ind" << endl;
-                                      }
-                                  }
+                              if ((*ST).findbase(*name_)->size != 1) {
+                                  os << "movs " << (*ST).findbase(*name_)->size << endl;
                               }
                               else {
-                                 /* os << "proc_statement_name"<< proc_statement_name << endl;
-                                  os << "sending_parameters_order is : " << sending_parameters_order << endl;
-                                  os << "m.find(proc_statement_name)->second->parameters.size() is " << m.find(proc_statement_name)->second->parameters.size() << endl;
-                                  os << m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second << endl;*/
-                                  if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
-                                     // os << "5" << endl;
+                                  if ((*ST).findbase(proc_statement_name) != NULL) {
+                                      //os << "3" << endl;
+                                      if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
+                                          if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
+                                              // os << "val to val" << endl;
 
-                                      if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
-                                         // os << "val to val" << endl;
+                                              os << "ind" << endl;
+                                          }
+                                          else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                              //os << "ref to val" << endl;
 
-                                          os << "ind" << endl;
+                                              os << "ind" << endl;
+                                              os << "ind" << endl;
+                                          }
+                                          else {
+                                              // os << "val to val" << endl;
+
+                                              os << "ind" << endl;
+                                          }
                                       }
-                                      else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
-                                         // os << "ref to val" << endl;
-
-                                          os << "ind" << endl;
-                                          os << "ind" << endl;
-                                      }
-                                      else {
-                                         // os << "val to val" << endl;
-
-                                          os << "ind" << endl;
+                                      else  if (m.find((*ST).findbase(proc_statement_name)->if_func_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
+                                          if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                              //os << "ref to ref" << endl;
+                                              os << "ind" << endl;
+                                          }
                                       }
                                   }
-                                  else  if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
-                                      if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
-                                         // os << "ref to ref" << endl;
-                                          os << "ind" << endl;
+                                  else {
+
+                                      if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byvalue") {
+                                          // os << "5" << endl;
+
+                                          if ((*ST).findbase(*name_)->by_value == 1 && (*ST).findbase(*name_)->by_refrence == 0) {
+                                              // os << "val to val" << endl;
+
+                                              os << "ind" << endl;
+                                          }
+                                          else if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                              // os << "ref to val" << endl;
+
+                                              os << "ind" << endl;
+                                              os << "ind" << endl;
+                                          }
+                                          else {
+                                              // os << "val to val" << endl;
+
+                                              os << "ind" << endl;
+                                          }
+                                      }
+                                      else  if (m.find(proc_statement_name)->second->parameters.find(sending_parameters_order)->second == "byrefrence") {
+                                          if ((*ST).findbase(*name_)->by_value == 0 && (*ST).findbase(*name_)->by_refrence == 1) {
+                                              // os << "ref to ref" << endl;
+                                              os << "ind" << endl;
+                                          }
                                       }
                                   }
                               }
@@ -1966,7 +1982,10 @@ public:
               }
 
               if (r->type == "Address") {
-
+                  if (pointer_ref) {
+                      flag_print_size_movs = 1;
+                      size_of_ponter_movs = r->pointer->size_of_var;
+                  }
                   if (r->reclist != NULL) {
                       old_record_ref_name = record_ref_name;
                       record_ref_name = r->reclist->record_name;
@@ -1981,18 +2000,25 @@ public:
 
 
                   }*/
+
               }
               else if (r->type == "Record") {
+                  flag_print_size_movs = 0;
                   record_ref_name = r->reclist->record_name;
                   
               }
 
               else if(r->type == "ARRAY") {
+                  flag_print_size_movs = 0;
+
                   if (r->reclist != NULL) {
                       record_ref_name_in_array =r->reclist->record_name;
                       record_ref_name_in_array_flag = 1;
 
                   }
+              }
+              else {
+                  flag_print_size_movs = 0;
               }
 
               name_of_array_in_record_ref = *name_;
@@ -3476,13 +3502,16 @@ name_ = new string(*fd.name_);
       m.find(*name_)->second->sep = 0;
       m.find(*name_)->second->ssp = 5;
       m.find(*name_)->second->Stack_Address = 5;
+      m.find(*name_)->second->flag_printed_ssp = 0;
       //m.find(*name_)->second->insert(*name_, "", 0, 2);
+      string father = father_name_temp;
       father_name_temp = *name_;
 
       if (formal_list_) {
           formal_list_->print(os);
       }
       block_->print(os);
+      father_name_temp = father;
   }
   void pcodegen(ostream& os) {
       assert(type_ && block_);
@@ -3500,12 +3529,15 @@ name_ = new string(*fd.name_);
           }
       }
       if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0) || (m.find((*ST).father)->second->father != "")) {
-          os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
-          os << "sep " << " waiting for mariah" << endl;
-          os << "ujp " << (*ST).father << "_begin" << endl;
+          if (!m.find((*ST).father)->second->flag_printed_ssp) {
+              m.find((*ST).father)->second->flag_printed_ssp = 1;
+              os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
+              os << "sep 50" << endl;
+              os << "ujp " << (*ST).father << "_begin" << endl;
 
-          program_ssp_sep = 1;
-          last_func_ssp = 1;
+              program_ssp_sep = 1;
+              last_func_ssp = 1;
+          }
       }
       os << *name_ << ":" << endl;
       parameters_order = 0;
@@ -3568,6 +3600,8 @@ public:
         m.find(*name_)->second->sep = 0;
         m.find(*name_)->second->ssp = 5;
         m.find(*name_)->second->Stack_Address = 5;
+        m.find(*name_)->second->flag_printed_ssp = 0;
+        string father = father_name_temp;
         father_name_temp = *name_;
 
 
@@ -3583,6 +3617,7 @@ public:
 
 
         block_->print(os);
+        father_name_temp = father;
         m.find(*name_)->second->sep = sep_counter_max;
         sep_counter = sep_counter_temp;
         sep_counter_max = sep_counter_max_temp;
@@ -3590,13 +3625,6 @@ public:
     }
     void pcodegen(ostream& os) {
         assert(block_);
-
-        //if ((((*ST).father) == "")&& program_ssp_sep==0){
-        //     os << "HELLO" << endl;
-        //     os << "ssp " << (*ST).Stack_Address << endl;
-        //     os << "sep " << " waiting for mariah ... " << endl;
-        //     program_ssp_sep = 1;
-        //}
         ST = m.find(*name_)->second;
         current_name_pcodegen_temp = *name_;
         SymbolTable* father_ST = m.find(father_name_pcodegen_temp)->second;
@@ -3610,11 +3638,15 @@ public:
             }
         }
         if ((m.find((*ST).father)->second->father == "" && program_ssp_sep == 0)|| (m.find((*ST).father)->second->father != "")) {
-            os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
-            os << "sep " << " waiting for mariah" << endl;
-            os<<"ujp "<< (*ST).father <<"_begin" << endl;
-            program_ssp_sep = 1;
-            last_func_ssp = 1;
+            if (!m.find((*ST).father)->second->flag_printed_ssp) {
+                m.find((*ST).father)->second->flag_printed_ssp = 1;
+                os << "ssp " << m.find((*ST).father)->second->Stack_Address << endl;
+                os << "sep 50" << endl;
+                os << "ujp " << (*ST).father << "_begin" << endl;
+
+                program_ssp_sep = 1;
+                last_func_ssp = 1;
+            }
         }
         os << *name_ << ":" << endl;
         parameters_order = 0;
@@ -3716,13 +3748,14 @@ public :
       SymbolTable* STT = ST;
 
       last_func_ssp = 0;
+
       if (decl_list_) {
 
           decl_list_->pcodegen(os);
       } 
       if (!last_func_ssp) {
           os << "ssp " <<(*ST).Stack_Address << endl;
-          os << "sep " << " waiting for mariah" << endl;
+          os << "sep 50" << endl;
           os << "ujp " << (*ST).name << "_begin" << endl;
 
           last_func_ssp = 1;
